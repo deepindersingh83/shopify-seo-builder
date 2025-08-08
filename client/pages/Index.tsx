@@ -423,6 +423,20 @@ export default function Index() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <Link to="/workflows">
+                <Button variant="outline" size="sm">
+                  <Zap className="h-4 w-4 mr-2" />
+                  Workflow Automation
+                </Button>
+              </Link>
+              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                <span className="font-medium">
+                  {totalProducts.toLocaleString()}
+                </span>
+                <span>total products</span>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <span className="font-medium">
                   {totalProducts.toLocaleString()}
