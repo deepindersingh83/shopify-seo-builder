@@ -24,7 +24,8 @@ import {
   Target,
   Package,
   ArrowUpDown,
-  Filter
+  Filter,
+  Plus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
