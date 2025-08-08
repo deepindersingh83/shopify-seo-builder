@@ -13,6 +13,7 @@ import DataSourcesPage from "./pages/DataSourcesPage";
 import MultiLanguageSEOPage from "./pages/MultiLanguageSEOPage";
 import MarketOpportunityPage from "./pages/MarketOpportunityPage";
 import MultiChannelListingsPage from "./pages/MultiChannelListingsPage";
+import WorkflowBuilderPage from "./pages/WorkflowBuilderPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
