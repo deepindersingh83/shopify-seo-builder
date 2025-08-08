@@ -40,6 +40,11 @@ const App = () => (
           <Route path="/market-opportunities" element={<MarketOpportunityPage />} />
           <Route path="/multi-channel-listings" element={<MultiChannelListingsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/seo/overview" element={<SEOOverviewPage />} />
+          <Route path="/seo/keywords" element={<KeywordResearchPage />} />
+          <Route path="/seo/serp-preview" element={<SERPPreviewPage />} />
+          <Route path="/seo/competitors" element={<CompetitorAnalysisPage />} />
+          <Route path="/seo/content" element={<ContentOptimizationPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
