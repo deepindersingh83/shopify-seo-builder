@@ -72,6 +72,7 @@ const App = () => (
             path="/import-export"
             element={<ThirdPartyIntegrationsPage />}
           />
+          <Route path="/links/internal" element={<InternalLinksPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
