@@ -193,7 +193,7 @@ export default function BulkEditPage() {
   return (
     <Layout>
       <div className="flex-1 overflow-auto">
-        <div className="container mx-auto px-6 py-6 h-full overflow-y-auto">
+        <div className="container mx-auto px-6 py-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
