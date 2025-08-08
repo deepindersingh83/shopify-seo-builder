@@ -20,6 +20,7 @@ import KeywordResearchPage from "./pages/KeywordResearchPage";
 import SERPPreviewPage from "./pages/SERPPreviewPage";
 import CompetitorAnalysisPage from "./pages/CompetitorAnalysisPage";
 import ContentOptimizationPage from "./pages/ContentOptimizationPage";
+import ThirdPartyIntegrationsPage from "./pages/ThirdPartyIntegrationsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
