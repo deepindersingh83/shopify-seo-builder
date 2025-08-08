@@ -99,6 +99,8 @@ const App = () => (
           <Route path="/technical/crawl" element={<TechnicalCrawlPage />} />
           <Route path="/analytics/roi" element={<AnalyticsROIPage />} />
           <Route path="/analytics/reports" element={<AnalyticsReportsPage />} />
+          <Route path="/social-media-autopost" element={<SocialMediaAutopostPage />} />
+          <Route path="/seo/collections" element={<CollectionSEOPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
