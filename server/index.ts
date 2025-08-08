@@ -21,5 +21,20 @@ export function createServer() {
 
   app.get("/api/demo", handleDemo);
 
+  // Workflow routes
+  app.get("/api/workflows/rules", workflowRoutes.getWorkflowRules);
+  app.post("/api/workflows/rules", workflowRoutes.createWorkflowRule);
+  app.post("/api/workflows/execute", workflowRoutes.executeWorkflow);
+  app.get("/api/workflows/executions", workflowRoutes.getWorkflowExecutions);
+  app.post("/api/workflows/executions/:id/cancel", workflowRoutes.cancelWorkflowExecution);
+
+  // Bulk operation routes
+  app.post("/api/bulk/operations", bulkRoutes.startBulkOperation);
+  app.get("/api/bulk/operations", bulkRoutes.getBulkOperations);
+  app.get("/api/bulk/operations/:id", bulkRoutes.getBulkOperation);
+  app.post("/api/bulk/operations/:id/cancel", bulkRoutes.cancelBulkOperation);
+  app.post("/api/bulk/operations/:id/retry", bulkRoutes.retryFailedItems);
+  app.get("/api/bulk/operations/:id/stream", bulkRoutes.streamBulkOperation);
+
   return app;
 }
