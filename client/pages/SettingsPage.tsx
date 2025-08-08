@@ -877,8 +877,7 @@ export default function SettingsPage() {
 
   return (
     <Layout>
-      <div className="flex-1 overflow-auto">
-        <div className="container mx-auto px-6 py-6">
+      <div className="container mx-auto px-6 py-6">
           <div className="flex items-center space-x-4 mb-8">
             <Settings className="h-8 w-8 text-primary" />
             <div>
@@ -940,7 +939,6 @@ export default function SettingsPage() {
             <TabsContent value="security">{renderSecurity()}</TabsContent>
           </Tabs>
         </div>
-      </div>
 
       {/* API Integration Dialog */}
       <Dialog open={showAPIDialog} onOpenChange={setShowAPIDialog}>
