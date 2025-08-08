@@ -18,7 +18,7 @@ import {
   ChevronRight,
   Play,
   Pause,
-  RotateCcw
+  RotateCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -58,7 +58,7 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
     metaTags: true,
     altText: true,
     schema: true,
-    keywords: false
+    keywords: false,
   });
 
   useEffect(() => {
@@ -71,12 +71,12 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
       const analysisData = seoService.generateMockSEOAnalysis(productId);
       const suggestions = seoService.generateMockTagSuggestions(productId);
       const schema = seoService.generateMockSchemaMarkup(productId);
-      
+
       setAnalysis(analysisData);
       setTagSuggestions(suggestions);
       setSchemaMarkup(schema);
     } catch (error) {
-      console.error('Failed to load SEO data:', error);
+      console.error("Failed to load SEO data:", error);
     }
   };
 
@@ -84,13 +84,13 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
     setIsOptimizing(true);
     try {
       // Simulate auto-fix process
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       // Reload data after fixing
       await loadSEOData();
       onUpdate?.();
     } catch (error) {
-      console.error('Auto-fix failed:', error);
+      console.error("Auto-fix failed:", error);
     } finally {
       setIsOptimizing(false);
     }
@@ -100,11 +100,11 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
     setIsOptimizing(true);
     try {
       // Run all enabled auto-fixes
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
       await loadSEOData();
       onUpdate?.();
     } catch (error) {
-      console.error('Bulk optimization failed:', error);
+      console.error("Bulk optimization failed:", error);
     } finally {
       setIsOptimizing(false);
     }
@@ -112,11 +112,11 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
 
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
-      case 'critical':
+      case "critical":
         return <XCircle className="h-4 w-4 text-red-500" />;
-      case 'warning':
+      case "warning":
         return <AlertCircle className="h-4 w-4 text-yellow-500" />;
-      case 'info':
+      case "info":
         return <CheckCircle className="h-4 w-4 text-blue-500" />;
       default:
         return <AlertCircle className="h-4 w-4 text-gray-500" />;
@@ -125,14 +125,14 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'critical':
-        return 'text-red-600';
-      case 'warning':
-        return 'text-yellow-600';
-      case 'info':
-        return 'text-blue-600';
+      case "critical":
+        return "text-red-600";
+      case "warning":
+        return "text-yellow-600";
+      case "info":
+        return "text-blue-600";
       default:
-        return 'text-gray-600';
+        return "text-gray-600";
     }
   };
 
@@ -157,11 +157,25 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
               <span>SEO Score & Quick Actions</span>
             </CardTitle>
             <div className="flex items-center space-x-2">
-              <div className={`text-2xl font-bold ${analysis.score >= 80 ? 'text-green-600' : analysis.score >= 60 ? 'text-yellow-600' : 'text-red-600'}`}>
+              <div
+                className={`text-2xl font-bold ${analysis.score >= 80 ? "text-green-600" : analysis.score >= 60 ? "text-yellow-600" : "text-red-600"}`}
+              >
                 {analysis.score}/100
               </div>
-              <Badge variant={analysis.score >= 80 ? 'default' : analysis.score >= 60 ? 'secondary' : 'destructive'}>
-                {analysis.score >= 80 ? 'Excellent' : analysis.score >= 60 ? 'Good' : 'Needs Work'}
+              <Badge
+                variant={
+                  analysis.score >= 80
+                    ? "default"
+                    : analysis.score >= 60
+                      ? "secondary"
+                      : "destructive"
+                }
+              >
+                {analysis.score >= 80
+                  ? "Excellent"
+                  : analysis.score >= 60
+                    ? "Good"
+                    : "Needs Work"}
               </Badge>
             </div>
           </div>
@@ -169,29 +183,43 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
         <CardContent>
           <div className="space-y-4">
             <Progress value={analysis.score} className="h-3" />
-            
+
             {/* Quick Action Buttons */}
             <div className="flex flex-wrap gap-2">
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 onClick={handleBulkOptimize}
                 disabled={isOptimizing}
                 className="flex items-center space-x-2"
               >
-                {isOptimizing ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
-                <span>{isOptimizing ? 'Optimizing...' : 'Auto-Optimize All'}</span>
+                {isOptimizing ? (
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Zap className="h-4 w-4" />
+                )}
+                <span>
+                  {isOptimizing ? "Optimizing..." : "Auto-Optimize All"}
+                </span>
               </Button>
-              
-              <Button size="sm" variant="outline" onClick={() => handleAutoFix('missing_meta_description')}>
+
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleAutoFix("missing_meta_description")}
+              >
                 <Wand2 className="h-4 w-4 mr-2" />
                 Fix Meta Tags
               </Button>
-              
-              <Button size="sm" variant="outline" onClick={() => handleAutoFix('missing_schema')}>
+
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleAutoFix("missing_schema")}
+              >
                 <Code className="h-4 w-4 mr-2" />
                 Generate Schema
               </Button>
-              
+
               <Dialog>
                 <DialogTrigger asChild>
                   <Button size="sm" variant="outline">
@@ -203,7 +231,8 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
                   <DialogHeader>
                     <DialogTitle>Smart Tag Suggestions</DialogTitle>
                     <DialogDescription>
-                      AI-powered tag recommendations based on your product content and category.
+                      AI-powered tag recommendations based on your product
+                      content and category.
                     </DialogDescription>
                   </DialogHeader>
                   <SmartTagSuggestions suggestions={tagSuggestions} />
@@ -219,36 +248,64 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
               </h4>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center space-x-2">
-                  <Switch 
+                  <Switch
                     id="autoMetaTags"
                     checked={autoFixEnabled.metaTags}
-                    onCheckedChange={(checked) => setAutoFixEnabled(prev => ({ ...prev, metaTags: checked }))}
+                    onCheckedChange={(checked) =>
+                      setAutoFixEnabled((prev) => ({
+                        ...prev,
+                        metaTags: checked,
+                      }))
+                    }
                   />
-                  <Label htmlFor="autoMetaTags" className="text-sm">Auto-fix meta tags</Label>
+                  <Label htmlFor="autoMetaTags" className="text-sm">
+                    Auto-fix meta tags
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Switch 
+                  <Switch
                     id="autoAltText"
                     checked={autoFixEnabled.altText}
-                    onCheckedChange={(checked) => setAutoFixEnabled(prev => ({ ...prev, altText: checked }))}
+                    onCheckedChange={(checked) =>
+                      setAutoFixEnabled((prev) => ({
+                        ...prev,
+                        altText: checked,
+                      }))
+                    }
                   />
-                  <Label htmlFor="autoAltText" className="text-sm">Auto-generate alt text</Label>
+                  <Label htmlFor="autoAltText" className="text-sm">
+                    Auto-generate alt text
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Switch 
+                  <Switch
                     id="autoSchema"
                     checked={autoFixEnabled.schema}
-                    onCheckedChange={(checked) => setAutoFixEnabled(prev => ({ ...prev, schema: checked }))}
+                    onCheckedChange={(checked) =>
+                      setAutoFixEnabled((prev) => ({
+                        ...prev,
+                        schema: checked,
+                      }))
+                    }
                   />
-                  <Label htmlFor="autoSchema" className="text-sm">Auto-generate schema</Label>
+                  <Label htmlFor="autoSchema" className="text-sm">
+                    Auto-generate schema
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Switch 
+                  <Switch
                     id="autoKeywords"
                     checked={autoFixEnabled.keywords}
-                    onCheckedChange={(checked) => setAutoFixEnabled(prev => ({ ...prev, keywords: checked }))}
+                    onCheckedChange={(checked) =>
+                      setAutoFixEnabled((prev) => ({
+                        ...prev,
+                        keywords: checked,
+                      }))
+                    }
                   />
-                  <Label htmlFor="autoKeywords" className="text-sm">Auto-optimize keywords</Label>
+                  <Label htmlFor="autoKeywords" className="text-sm">
+                    Auto-optimize keywords
+                  </Label>
                 </div>
               </div>
             </div>
@@ -278,18 +335,20 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
                       <div className="flex items-center space-x-3">
                         {getSeverityIcon(issue.severity)}
                         <div>
-                          <p className={`font-medium ${getSeverityColor(issue.severity)}`}>
+                          <p
+                            className={`font-medium ${getSeverityColor(issue.severity)}`}
+                          >
                             {issue.description}
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            {issue.type.replace(/_/g, ' ').toUpperCase()}
+                            {issue.type.replace(/_/g, " ").toUpperCase()}
                           </p>
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
                         {issue.autoFixable && (
-                          <Button 
-                            size="sm" 
+                          <Button
+                            size="sm"
                             variant="outline"
                             onClick={() => handleAutoFix(issue.type)}
                             disabled={isOptimizing}
@@ -333,36 +392,48 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <h4 className="font-medium capitalize">
-                          {suggestion.type.replace(/_/g, ' ')} Optimization
+                          {suggestion.type.replace(/_/g, " ")} Optimization
                         </h4>
                         <Badge variant="outline" className="mt-1">
                           {Math.round(suggestion.confidence * 100)}% Confidence
                         </Badge>
                       </div>
-                      <Badge variant={suggestion.estimatedImpact === 'high' ? 'default' : suggestion.estimatedImpact === 'medium' ? 'secondary' : 'outline'}>
+                      <Badge
+                        variant={
+                          suggestion.estimatedImpact === "high"
+                            ? "default"
+                            : suggestion.estimatedImpact === "medium"
+                              ? "secondary"
+                              : "outline"
+                        }
+                      >
                         {suggestion.estimatedImpact} Impact
                       </Badge>
                     </div>
-                    
+
                     <div className="space-y-3">
                       <div>
-                        <Label className="text-xs text-muted-foreground">Current:</Label>
+                        <Label className="text-xs text-muted-foreground">
+                          Current:
+                        </Label>
                         <div className="p-2 bg-red-50 border border-red-200 rounded text-sm">
                           {suggestion.current}
                         </div>
                       </div>
-                      
+
                       <div>
-                        <Label className="text-xs text-muted-foreground">Suggested:</Label>
+                        <Label className="text-xs text-muted-foreground">
+                          Suggested:
+                        </Label>
                         <div className="p-2 bg-green-50 border border-green-200 rounded text-sm">
                           {suggestion.suggested}
                         </div>
                       </div>
-                      
+
                       <div className="text-xs text-muted-foreground">
                         <strong>Reasoning:</strong> {suggestion.reasoning}
                       </div>
-                      
+
                       <div className="flex space-x-2">
                         <Button size="sm">
                           <CheckCircle className="h-3 w-3 mr-1" />
@@ -391,8 +462,10 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
                   <span>Schema Markup</span>
                 </CardTitle>
                 <div className="flex items-center space-x-2">
-                  <Badge variant={schemaMarkup?.isValid ? 'default' : 'destructive'}>
-                    {schemaMarkup?.isValid ? 'Valid' : 'Invalid'}
+                  <Badge
+                    variant={schemaMarkup?.isValid ? "default" : "destructive"}
+                  >
+                    {schemaMarkup?.isValid ? "Valid" : "Invalid"}
                   </Badge>
                   <Button size="sm" variant="outline">
                     <RefreshCw className="h-3 w-3 mr-1" />
@@ -406,13 +479,13 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
                 <div>
                   <Label>Schema Type: {schemaMarkup?.type}</Label>
                   <Textarea
-                    value={schemaMarkup?.jsonLd || ''}
+                    value={schemaMarkup?.jsonLd || ""}
                     readOnly
                     rows={12}
                     className="font-mono text-xs mt-2"
                   />
                 </div>
-                
+
                 <div className="flex space-x-2">
                   <Button size="sm">
                     <CheckCircle className="h-3 w-3 mr-1" />
@@ -443,28 +516,38 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {analysis.improvements.map((improvement: any, index: number) => (
-                  <div key={index} className="border rounded-lg p-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <h4 className="font-medium">{improvement.title}</h4>
-                      <div className="flex space-x-2">
-                        <Badge variant={improvement.impact === 'high' ? 'default' : improvement.impact === 'medium' ? 'secondary' : 'outline'}>
-                          {improvement.impact} Impact
-                        </Badge>
-                        <Badge variant="outline">
-                          {improvement.effort} Effort
-                        </Badge>
+                {analysis.improvements.map(
+                  (improvement: any, index: number) => (
+                    <div key={index} className="border rounded-lg p-4">
+                      <div className="flex items-start justify-between mb-2">
+                        <h4 className="font-medium">{improvement.title}</h4>
+                        <div className="flex space-x-2">
+                          <Badge
+                            variant={
+                              improvement.impact === "high"
+                                ? "default"
+                                : improvement.impact === "medium"
+                                  ? "secondary"
+                                  : "outline"
+                            }
+                          >
+                            {improvement.impact} Impact
+                          </Badge>
+                          <Badge variant="outline">
+                            {improvement.effort} Effort
+                          </Badge>
+                        </div>
                       </div>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        {improvement.description}
+                      </p>
+                      <Button size="sm" variant="outline">
+                        <Lightbulb className="h-3 w-3 mr-1" />
+                        Get Detailed Guide
+                      </Button>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      {improvement.description}
-                    </p>
-                    <Button size="sm" variant="outline">
-                      <Lightbulb className="h-3 w-3 mr-1" />
-                      Get Detailed Guide
-                    </Button>
-                  </div>
-                ))}
+                  ),
+                )}
               </div>
             </CardContent>
           </Card>
@@ -478,22 +561,20 @@ function SmartTagSuggestions({ suggestions }: { suggestions: any[] }) {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const toggleTag = (tag: string) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) 
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
     );
   };
 
   const getSourceIcon = (source: string) => {
     switch (source) {
-      case 'ai':
+      case "ai":
         return <Bot className="h-3 w-3" />;
-      case 'category_mapping':
+      case "category_mapping":
         return <Tags className="h-3 w-3" />;
-      case 'keyword_analysis':
+      case "keyword_analysis":
         return <TrendingUp className="h-3 w-3" />;
-      case 'competitor_analysis':
+      case "competitor_analysis":
         return <Target className="h-3 w-3" />;
       default:
         return <Lightbulb className="h-3 w-3" />;
@@ -504,12 +585,12 @@ function SmartTagSuggestions({ suggestions }: { suggestions: any[] }) {
     <div className="space-y-4">
       <div className="grid gap-3">
         {suggestions.map((suggestion, index) => (
-          <div 
+          <div
             key={index}
             className={`border rounded-lg p-3 cursor-pointer transition-colors ${
-              selectedTags.includes(suggestion.tag) 
-                ? 'border-primary bg-primary/5' 
-                : 'hover:bg-muted/30'
+              selectedTags.includes(suggestion.tag)
+                ? "border-primary bg-primary/5"
+                : "hover:bg-muted/30"
             }`}
             onClick={() => toggleTag(suggestion.tag)}
           >
@@ -517,7 +598,9 @@ function SmartTagSuggestions({ suggestions }: { suggestions: any[] }) {
               <div className="flex items-center space-x-2">
                 <Badge variant="outline" className="text-xs">
                   {getSourceIcon(suggestion.source)}
-                  <span className="ml-1 capitalize">{suggestion.source.replace(/_/g, ' ')}</span>
+                  <span className="ml-1 capitalize">
+                    {suggestion.source.replace(/_/g, " ")}
+                  </span>
                 </Badge>
                 <span className="font-medium">{suggestion.tag}</span>
               </div>
@@ -536,19 +619,22 @@ function SmartTagSuggestions({ suggestions }: { suggestions: any[] }) {
           </div>
         ))}
       </div>
-      
+
       {selectedTags.length > 0 && (
         <div className="flex items-center justify-between pt-4 border-t">
           <div className="text-sm text-muted-foreground">
-            {selectedTags.length} tag{selectedTags.length !== 1 ? 's' : ''} selected
+            {selectedTags.length} tag{selectedTags.length !== 1 ? "s" : ""}{" "}
+            selected
           </div>
           <div className="flex space-x-2">
-            <Button size="sm" variant="outline" onClick={() => setSelectedTags([])}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setSelectedTags([])}
+            >
               Clear Selection
             </Button>
-            <Button size="sm">
-              Add Selected Tags
-            </Button>
+            <Button size="sm">Add Selected Tags</Button>
           </div>
         </div>
       )}

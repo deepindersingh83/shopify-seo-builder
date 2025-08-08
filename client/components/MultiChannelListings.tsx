@@ -36,7 +36,7 @@ import {
   Pause,
   Copy,
   Image,
-  MessageSquare
+  MessageSquare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -73,14 +73,22 @@ import { Textarea } from "@/components/ui/textarea";
 interface Channel {
   id: string;
   name: string;
-  type: 'amazon' | 'ebay' | 'facebook' | 'google_shopping' | 'shopify' | 'etsy' | 'walmart' | 'custom';
-  status: 'connected' | 'disconnected' | 'error' | 'pending';
+  type:
+    | "amazon"
+    | "ebay"
+    | "facebook"
+    | "google_shopping"
+    | "shopify"
+    | "etsy"
+    | "walmart"
+    | "custom";
+  status: "connected" | "disconnected" | "error" | "pending";
   credentials: any;
   settings: {
     autoSync: boolean;
     syncInterval: number;
     autoPublish: boolean;
-    pricingStrategy: 'same' | 'markup' | 'markdown' | 'custom';
+    pricingStrategy: "same" | "markup" | "markdown" | "custom";
     pricingValue: number;
     enableReviews: boolean;
     categoryMapping: boolean;
@@ -112,7 +120,7 @@ interface Listing {
   channels: {
     channelId: string;
     channelName: string;
-    status: 'active' | 'pending' | 'rejected' | 'paused';
+    status: "active" | "pending" | "rejected" | "paused";
     listingId?: string;
     listingUrl?: string;
     performance: {
@@ -154,10 +162,16 @@ interface ChannelTemplate {
 
 interface BulkOperation {
   id: string;
-  type: 'publish' | 'update' | 'pause' | 'delete' | 'sync_prices' | 'sync_inventory';
+  type:
+    | "publish"
+    | "update"
+    | "pause"
+    | "delete"
+    | "sync_prices"
+    | "sync_inventory";
   channels: string[];
   products: string[];
-  status: 'pending' | 'running' | 'completed' | 'failed';
+  status: "pending" | "running" | "completed" | "failed";
   progress: number;
   startedAt: string;
   completedAt?: string;
@@ -174,11 +188,13 @@ export function MultiChannelListings() {
   const [templates, setTemplates] = useState<ChannelTemplate[]>([]);
   const [bulkOperations, setBulkOperations] = useState<BulkOperation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedChannel, setSelectedChannel] = useState<string>('all');
+  const [selectedChannel, setSelectedChannel] = useState<string>("all");
   const [showConnectDialog, setShowConnectDialog] = useState(false);
   const [showBulkDialog, setShowBulkDialog] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set());
+  const [selectedProducts, setSelectedProducts] = useState<Set<string>>(
+    new Set(),
+  );
 
   useEffect(() => {
     loadData();
@@ -190,24 +206,24 @@ export function MultiChannelListings() {
       // Mock data for demonstration
       const mockChannels: Channel[] = [
         {
-          id: '1',
-          name: 'Amazon Marketplace',
-          type: 'amazon',
-          status: 'connected',
+          id: "1",
+          name: "Amazon Marketplace",
+          type: "amazon",
+          status: "connected",
           credentials: {
-            sellerId: 'A1XXXXXXXXXXXXX',
-            accessKey: 'AKIAXXXXXXXXXXXXX',
-            secretKey: 'xxxxxxxxxxxxxxxxxx',
-            marketplaceId: 'ATVPDKIKX0DER'
+            sellerId: "A1XXXXXXXXXXXXX",
+            accessKey: "AKIAXXXXXXXXXXXXX",
+            secretKey: "xxxxxxxxxxxxxxxxxx",
+            marketplaceId: "ATVPDKIKX0DER",
           },
           settings: {
             autoSync: true,
             syncInterval: 60,
             autoPublish: false,
-            pricingStrategy: 'markup',
+            pricingStrategy: "markup",
             pricingValue: 15,
             enableReviews: true,
-            categoryMapping: true
+            categoryMapping: true,
           },
           stats: {
             totalListings: 1247,
@@ -215,34 +231,34 @@ export function MultiChannelListings() {
             pendingListings: 49,
             totalSales: 45230,
             conversionRate: 3.8,
-            avgOrderValue: 127.50
+            avgOrderValue: 127.5,
           },
           lastSync: new Date(Date.now() - 1800000).toISOString(),
           fees: {
             listingFee: 0,
             sellingFee: 15.0,
-            paymentFee: 2.9
-          }
+            paymentFee: 2.9,
+          },
         },
         {
-          id: '2',
-          name: 'eBay Store',
-          type: 'ebay',
-          status: 'connected',
+          id: "2",
+          name: "eBay Store",
+          type: "ebay",
+          status: "connected",
           credentials: {
-            userId: 'testuser_ebay',
-            appId: 'YourAppId',
-            certId: 'YourCertId',
-            devId: 'YourDevId'
+            userId: "testuser_ebay",
+            appId: "YourAppId",
+            certId: "YourCertId",
+            devId: "YourDevId",
           },
           settings: {
             autoSync: true,
             syncInterval: 120,
             autoPublish: true,
-            pricingStrategy: 'same',
+            pricingStrategy: "same",
             pricingValue: 0,
             enableReviews: true,
-            categoryMapping: true
+            categoryMapping: true,
           },
           stats: {
             totalListings: 892,
@@ -250,33 +266,33 @@ export function MultiChannelListings() {
             pendingListings: 36,
             totalSales: 28940,
             conversionRate: 2.4,
-            avgOrderValue: 89.30
+            avgOrderValue: 89.3,
           },
           lastSync: new Date(Date.now() - 3600000).toISOString(),
           fees: {
             listingFee: 0.35,
             sellingFee: 10.0,
-            paymentFee: 2.9
-          }
+            paymentFee: 2.9,
+          },
         },
         {
-          id: '3',
-          name: 'Facebook Marketplace',
-          type: 'facebook',
-          status: 'connected',
+          id: "3",
+          name: "Facebook Marketplace",
+          type: "facebook",
+          status: "connected",
           credentials: {
-            pageId: '123456789012345',
-            accessToken: 'EAAXXXXxxxxxxx',
-            catalogId: '987654321098765'
+            pageId: "123456789012345",
+            accessToken: "EAAXXXXxxxxxxx",
+            catalogId: "987654321098765",
           },
           settings: {
             autoSync: false,
             syncInterval: 240,
             autoPublish: true,
-            pricingStrategy: 'markdown',
+            pricingStrategy: "markdown",
             pricingValue: 5,
             enableReviews: false,
-            categoryMapping: false
+            categoryMapping: false,
           },
           stats: {
             totalListings: 567,
@@ -284,32 +300,32 @@ export function MultiChannelListings() {
             pendingListings: 24,
             totalSales: 15680,
             conversionRate: 1.9,
-            avgOrderValue: 65.40
+            avgOrderValue: 65.4,
           },
           lastSync: new Date(Date.now() - 7200000).toISOString(),
           fees: {
             listingFee: 0,
             sellingFee: 5.0,
-            paymentFee: 2.9
-          }
+            paymentFee: 2.9,
+          },
         },
         {
-          id: '4',
-          name: 'Google Shopping',
-          type: 'google_shopping',
-          status: 'disconnected',
+          id: "4",
+          name: "Google Shopping",
+          type: "google_shopping",
+          status: "disconnected",
           credentials: {
-            merchantId: '123456789',
-            accountId: '987654321'
+            merchantId: "123456789",
+            accountId: "987654321",
           },
           settings: {
             autoSync: false,
             syncInterval: 120,
             autoPublish: false,
-            pricingStrategy: 'same',
+            pricingStrategy: "same",
             pricingValue: 0,
             enableReviews: false,
-            categoryMapping: true
+            categoryMapping: true,
           },
           stats: {
             totalListings: 0,
@@ -317,121 +333,126 @@ export function MultiChannelListings() {
             pendingListings: 0,
             totalSales: 0,
             conversionRate: 0,
-            avgOrderValue: 0
+            avgOrderValue: 0,
           },
           fees: {
             listingFee: 0,
             sellingFee: 0,
-            paymentFee: 0
-          }
-        }
+            paymentFee: 0,
+          },
+        },
       ];
 
       const mockListings: Listing[] = [
         {
-          id: '1',
-          productId: 'prod_123',
-          title: 'Premium Wireless Headphones - Noise Cancelling',
-          description: 'High-quality wireless headphones with active noise cancellation...',
+          id: "1",
+          productId: "prod_123",
+          title: "Premium Wireless Headphones - Noise Cancelling",
+          description:
+            "High-quality wireless headphones with active noise cancellation...",
           price: 199.99,
-          images: ['https://picsum.photos/400/400?random=1'],
-          category: 'Electronics > Audio > Headphones',
+          images: ["https://picsum.photos/400/400?random=1"],
+          category: "Electronics > Audio > Headphones",
           channels: [
             {
-              channelId: '1',
-              channelName: 'Amazon',
-              status: 'active',
-              listingId: 'B08XXXXXXXXXX',
-              listingUrl: 'https://amazon.com/dp/B08XXXXXXXXXX',
+              channelId: "1",
+              channelName: "Amazon",
+              status: "active",
+              listingId: "B08XXXXXXXXXX",
+              listingUrl: "https://amazon.com/dp/B08XXXXXXXXXX",
               performance: {
                 views: 15420,
                 clicks: 587,
                 sales: 23,
-                revenue: 4599.77
+                revenue: 4599.77,
               },
               seoData: {
-                keywords: ['wireless headphones', 'noise cancelling', 'bluetooth'],
+                keywords: [
+                  "wireless headphones",
+                  "noise cancelling",
+                  "bluetooth",
+                ],
                 ranking: 12,
-                visibility: 87
-              }
+                visibility: 87,
+              },
             },
             {
-              channelId: '2',
-              channelName: 'eBay',
-              status: 'active',
-              listingId: '174XXXXXXXXXX',
-              listingUrl: 'https://ebay.com/itm/174XXXXXXXXXX',
+              channelId: "2",
+              channelName: "eBay",
+              status: "active",
+              listingId: "174XXXXXXXXXX",
+              listingUrl: "https://ebay.com/itm/174XXXXXXXXXX",
               performance: {
                 views: 8940,
                 clicks: 234,
                 sales: 12,
-                revenue: 2399.88
+                revenue: 2399.88,
               },
               seoData: {
-                keywords: ['bluetooth headphones', 'wireless audio'],
+                keywords: ["bluetooth headphones", "wireless audio"],
                 ranking: 8,
-                visibility: 92
-              }
+                visibility: 92,
+              },
             },
             {
-              channelId: '3',
-              channelName: 'Facebook',
-              status: 'pending',
+              channelId: "3",
+              channelName: "Facebook",
+              status: "pending",
               performance: {
                 views: 0,
                 clicks: 0,
                 sales: 0,
-                revenue: 0
+                revenue: 0,
               },
               seoData: {
                 keywords: [],
                 ranking: 0,
-                visibility: 0
-              }
-            }
+                visibility: 0,
+              },
+            },
           ],
           createdAt: new Date(Date.now() - 86400000 * 7).toISOString(),
-          updatedAt: new Date(Date.now() - 86400000 * 2).toISOString()
-        }
+          updatedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+        },
       ];
 
       const mockBulkOperations: BulkOperation[] = [
         {
-          id: '1',
-          type: 'publish',
-          channels: ['1', '2'],
-          products: ['prod_123', 'prod_124', 'prod_125'],
-          status: 'completed',
+          id: "1",
+          type: "publish",
+          channels: ["1", "2"],
+          products: ["prod_123", "prod_124", "prod_125"],
+          status: "completed",
           progress: 100,
           startedAt: new Date(Date.now() - 3600000).toISOString(),
           completedAt: new Date(Date.now() - 3000000).toISOString(),
           results: {
             successful: 5,
             failed: 1,
-            errors: ['Product prod_125 rejected due to incomplete data']
-          }
+            errors: ["Product prod_125 rejected due to incomplete data"],
+          },
         },
         {
-          id: '2',
-          type: 'sync_prices',
-          channels: ['1', '2', '3'],
-          products: ['prod_126', 'prod_127'],
-          status: 'running',
+          id: "2",
+          type: "sync_prices",
+          channels: ["1", "2", "3"],
+          products: ["prod_126", "prod_127"],
+          status: "running",
           progress: 67,
           startedAt: new Date(Date.now() - 900000).toISOString(),
           results: {
             successful: 2,
             failed: 0,
-            errors: []
-          }
-        }
+            errors: [],
+          },
+        },
       ];
 
       setChannels(mockChannels);
       setListings(mockListings);
       setBulkOperations(mockBulkOperations);
     } catch (error) {
-      console.error('Failed to load data:', error);
+      console.error("Failed to load data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -439,19 +460,43 @@ export function MultiChannelListings() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'connected':
-        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100"><CheckCircle className="h-3 w-3 mr-1" />Connected</Badge>;
-      case 'disconnected':
-        return <Badge variant="outline"><XCircle className="h-3 w-3 mr-1" />Disconnected</Badge>;
-      case 'error':
-        return <Badge variant="destructive"><AlertTriangle className="h-3 w-3 mr-1" />Error</Badge>;
-      case 'pending':
-        return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100"><Clock className="h-3 w-3 mr-1" />Pending</Badge>;
-      case 'active':
-        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Active</Badge>;
-      case 'paused':
+      case "connected":
+        return (
+          <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+            <CheckCircle className="h-3 w-3 mr-1" />
+            Connected
+          </Badge>
+        );
+      case "disconnected":
+        return (
+          <Badge variant="outline">
+            <XCircle className="h-3 w-3 mr-1" />
+            Disconnected
+          </Badge>
+        );
+      case "error":
+        return (
+          <Badge variant="destructive">
+            <AlertTriangle className="h-3 w-3 mr-1" />
+            Error
+          </Badge>
+        );
+      case "pending":
+        return (
+          <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">
+            <Clock className="h-3 w-3 mr-1" />
+            Pending
+          </Badge>
+        );
+      case "active":
+        return (
+          <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+            Active
+          </Badge>
+        );
+      case "paused":
         return <Badge variant="secondary">Paused</Badge>;
-      case 'rejected':
+      case "rejected":
         return <Badge variant="destructive">Rejected</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
@@ -460,18 +505,42 @@ export function MultiChannelListings() {
 
   const getChannelIcon = (type: string) => {
     switch (type) {
-      case 'amazon':
-        return <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center"><span className="text-orange-600 font-bold text-sm">A</span></div>;
-      case 'ebay':
-        return <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center"><span className="text-blue-600 font-bold text-sm">E</span></div>;
-      case 'facebook':
-        return <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center"><span className="text-blue-600 font-bold text-sm">F</span></div>;
-      case 'google_shopping':
-        return <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center"><span className="text-green-600 font-bold text-sm">G</span></div>;
-      case 'etsy':
-        return <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center"><span className="text-orange-600 font-bold text-sm">Et</span></div>;
-      case 'walmart':
-        return <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center"><span className="text-blue-600 font-bold text-sm">W</span></div>;
+      case "amazon":
+        return (
+          <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+            <span className="text-orange-600 font-bold text-sm">A</span>
+          </div>
+        );
+      case "ebay":
+        return (
+          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+            <span className="text-blue-600 font-bold text-sm">E</span>
+          </div>
+        );
+      case "facebook":
+        return (
+          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+            <span className="text-blue-600 font-bold text-sm">F</span>
+          </div>
+        );
+      case "google_shopping":
+        return (
+          <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+            <span className="text-green-600 font-bold text-sm">G</span>
+          </div>
+        );
+      case "etsy":
+        return (
+          <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+            <span className="text-orange-600 font-bold text-sm">Et</span>
+          </div>
+        );
+      case "walmart":
+        return (
+          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+            <span className="text-blue-600 font-bold text-sm">W</span>
+          </div>
+        );
       default:
         return <ShoppingBag className="h-8 w-8 text-muted-foreground" />;
     }
@@ -479,19 +548,23 @@ export function MultiChannelListings() {
 
   const handleSync = async (channelId: string) => {
     try {
-      console.log('Syncing channel:', channelId);
+      console.log("Syncing channel:", channelId);
       // Implementation would go here
     } catch (error) {
-      console.error('Sync failed:', error);
+      console.error("Sync failed:", error);
     }
   };
 
-  const handleBulkOperation = async (operation: string, channelIds: string[], productIds: string[]) => {
+  const handleBulkOperation = async (
+    operation: string,
+    channelIds: string[],
+    productIds: string[],
+  ) => {
     try {
-      console.log('Bulk operation:', operation, channelIds, productIds);
+      console.log("Bulk operation:", operation, channelIds, productIds);
       // Implementation would go here
     } catch (error) {
-      console.error('Bulk operation failed:', error);
+      console.error("Bulk operation failed:", error);
     }
   };
 
@@ -500,8 +573,12 @@ export function MultiChannelListings() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Multi-Channel Listings</h2>
-          <p className="text-muted-foreground">Manage product listings across multiple sales channels</p>
+          <h2 className="text-2xl font-bold tracking-tight">
+            Multi-Channel Listings
+          </h2>
+          <p className="text-muted-foreground">
+            Manage product listings across multiple sales channels
+          </p>
         </div>
         <div className="flex items-center space-x-3">
           <Dialog open={showBulkDialog} onOpenChange={setShowBulkDialog}>
@@ -515,13 +592,14 @@ export function MultiChannelListings() {
               <DialogHeader>
                 <DialogTitle>Bulk Operations</DialogTitle>
                 <DialogDescription>
-                  Perform bulk actions on selected products across multiple channels.
+                  Perform bulk actions on selected products across multiple
+                  channels.
                 </DialogDescription>
               </DialogHeader>
               <BulkOperationForm onCancel={() => setShowBulkDialog(false)} />
             </DialogContent>
           </Dialog>
-          
+
           <Dialog open={showConnectDialog} onOpenChange={setShowConnectDialog}>
             <DialogTrigger asChild>
               <Button>
@@ -533,10 +611,13 @@ export function MultiChannelListings() {
               <DialogHeader>
                 <DialogTitle>Connect Sales Channel</DialogTitle>
                 <DialogDescription>
-                  Connect a new sales channel to expand your reach and boost sales.
+                  Connect a new sales channel to expand your reach and boost
+                  sales.
                 </DialogDescription>
               </DialogHeader>
-              <ConnectChannelForm onCancel={() => setShowConnectDialog(false)} />
+              <ConnectChannelForm
+                onCancel={() => setShowConnectDialog(false)}
+              />
             </DialogContent>
           </Dialog>
         </div>
@@ -546,32 +627,38 @@ export function MultiChannelListings() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Connected Channels</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Connected Channels
+            </CardTitle>
             <Globe className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{channels.filter(c => c.status === 'connected').length}</div>
+            <div className="text-2xl font-bold">
+              {channels.filter((c) => c.status === "connected").length}
+            </div>
             <p className="text-xs text-muted-foreground">
               {channels.length} total channels
             </p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Listings</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Active Listings
+            </CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {channels.reduce((sum, c) => sum + c.stats.activeListings, 0).toLocaleString()}
+              {channels
+                .reduce((sum, c) => sum + c.stats.activeListings, 0)
+                .toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Across all channels
-            </p>
+            <p className="text-xs text-muted-foreground">Across all channels</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
@@ -579,26 +666,32 @@ export function MultiChannelListings() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${Math.round(channels.reduce((sum, c) => sum + c.stats.totalSales, 0)).toLocaleString()}
+              $
+              {Math.round(
+                channels.reduce((sum, c) => sum + c.stats.totalSales, 0),
+              ).toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground">
-              This month
-            </p>
+            <p className="text-xs text-muted-foreground">This month</p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Conversion</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Avg Conversion
+            </CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {Math.round((channels.reduce((sum, c) => sum + c.stats.conversionRate, 0) / channels.length) * 10) / 10}%
+              {Math.round(
+                (channels.reduce((sum, c) => sum + c.stats.conversionRate, 0) /
+                  channels.length) *
+                  10,
+              ) / 10}
+              %
             </div>
-            <p className="text-xs text-muted-foreground">
-              Across all channels
-            </p>
+            <p className="text-xs text-muted-foreground">Across all channels</p>
           </CardContent>
         </Card>
       </div>
@@ -623,26 +716,27 @@ export function MultiChannelListings() {
                     <div>
                       <h3 className="font-semibold">{channel.name}</h3>
                       <p className="text-sm text-muted-foreground capitalize">
-                        {channel.type.replace('_', ' ')}
+                        {channel.type.replace("_", " ")}
                       </p>
                       {channel.lastSync && (
                         <p className="text-xs text-muted-foreground">
-                          Last synced: {new Date(channel.lastSync).toLocaleString()}
+                          Last synced:{" "}
+                          {new Date(channel.lastSync).toLocaleString()}
                         </p>
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-3">
                     {getStatusBadge(channel.status)}
-                    
+
                     {channel.settings.autoSync && (
                       <Badge variant="outline" className="text-xs">
                         <RefreshCw className="h-3 w-3 mr-1" />
                         Auto-sync
                       </Badge>
                     )}
-                    
+
                     {channel.settings.autoPublish && (
                       <Badge variant="outline" className="text-xs">
                         <Zap className="h-3 w-3 mr-1" />
@@ -651,40 +745,56 @@ export function MultiChannelListings() {
                     )}
                   </div>
                 </div>
-                
+
                 {/* Channel Stats */}
                 <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
-                    <span className="text-muted-foreground">Active Listings:</span>
-                    <p className="font-medium">{channel.stats.activeListings.toLocaleString()}</p>
+                    <span className="text-muted-foreground">
+                      Active Listings:
+                    </span>
+                    <p className="font-medium">
+                      {channel.stats.activeListings.toLocaleString()}
+                    </p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Monthly Sales:</span>
-                    <p className="font-medium">${channel.stats.totalSales.toLocaleString()}</p>
+                    <span className="text-muted-foreground">
+                      Monthly Sales:
+                    </span>
+                    <p className="font-medium">
+                      ${channel.stats.totalSales.toLocaleString()}
+                    </p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Conversion Rate:</span>
-                    <p className="font-medium">{channel.stats.conversionRate}%</p>
+                    <span className="text-muted-foreground">
+                      Conversion Rate:
+                    </span>
+                    <p className="font-medium">
+                      {channel.stats.conversionRate}%
+                    </p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Avg Order Value:</span>
-                    <p className="font-medium">${channel.stats.avgOrderValue}</p>
+                    <span className="text-muted-foreground">
+                      Avg Order Value:
+                    </span>
+                    <p className="font-medium">
+                      ${channel.stats.avgOrderValue}
+                    </p>
                   </div>
                 </div>
-                
+
                 {/* Pricing Strategy */}
                 <div className="mt-4 pt-4 border-t">
                   <div className="flex items-center justify-between">
                     <div className="text-sm">
-                      <span className="text-muted-foreground">Pricing Strategy:</span>
+                      <span className="text-muted-foreground">
+                        Pricing Strategy:
+                      </span>
                       <span className="ml-2 font-medium capitalize">
                         {channel.settings.pricingStrategy}
-                        {channel.settings.pricingValue > 0 && 
-                          ` (+${channel.settings.pricingValue}%)`
-                        }
-                        {channel.settings.pricingValue < 0 && 
-                          ` (${channel.settings.pricingValue}%)`
-                        }
+                        {channel.settings.pricingValue > 0 &&
+                          ` (+${channel.settings.pricingValue}%)`}
+                        {channel.settings.pricingValue < 0 &&
+                          ` (${channel.settings.pricingValue}%)`}
                       </span>
                     </div>
                     <div className="text-sm">
@@ -695,12 +805,12 @@ export function MultiChannelListings() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {channel.status === 'connected' && (
+                  {channel.status === "connected" && (
                     <>
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         variant="outline"
                         onClick={() => handleSync(channel.id)}
                       >
@@ -713,7 +823,7 @@ export function MultiChannelListings() {
                       </Button>
                     </>
                   )}
-                  
+
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button size="sm" variant="ghost">
@@ -737,7 +847,7 @@ export function MultiChannelListings() {
                         <Shield className="h-4 w-4 mr-2" />
                         Test Connection
                       </DropdownMenuItem>
-                      {channel.status === 'connected' ? (
+                      {channel.status === "connected" ? (
                         <DropdownMenuItem className="text-destructive">
                           <XCircle className="h-4 w-4 mr-2" />
                           Disconnect
@@ -754,14 +864,17 @@ export function MultiChannelListings() {
               </CardContent>
             </Card>
           ))}
-          
+
           {channels.length === 0 && !isLoading && (
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <ShoppingBag className="h-12 w-12 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No channels connected</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  No channels connected
+                </h3>
                 <p className="text-muted-foreground text-center mb-4">
-                  Connect to sales channels like Amazon, eBay, and Facebook to start selling your products.
+                  Connect to sales channels like Amazon, eBay, and Facebook to
+                  start selling your products.
                 </p>
                 <Button onClick={() => setShowConnectDialog(true)}>
                   <Plus className="h-4 w-4 mr-2" />
@@ -807,8 +920,8 @@ export function MultiChannelListings() {
             <Card key={listing.id}>
               <CardContent className="p-6">
                 <div className="flex items-start space-x-4">
-                  <img 
-                    src={listing.images[0]} 
+                  <img
+                    src={listing.images[0]}
                     alt={listing.title}
                     className="w-16 h-16 rounded-lg object-cover"
                   />
@@ -816,8 +929,12 @@ export function MultiChannelListings() {
                     <div className="flex items-start justify-between">
                       <div>
                         <h3 className="font-semibold mb-1">{listing.title}</h3>
-                        <p className="text-sm text-muted-foreground mb-2">{listing.category}</p>
-                        <div className="text-lg font-bold text-green-600">${listing.price}</div>
+                        <p className="text-sm text-muted-foreground mb-2">
+                          {listing.category}
+                        </p>
+                        <div className="text-lg font-bold text-green-600">
+                          ${listing.price}
+                        </div>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Button size="sm" variant="outline">
@@ -851,48 +968,69 @@ export function MultiChannelListings() {
                         </DropdownMenu>
                       </div>
                     </div>
-                    
+
                     {/* Channel Status */}
                     <div className="mt-4 space-y-2">
                       <h4 className="text-sm font-medium">Channel Status:</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                         {listing.channels.map((channelListing, index) => (
-                          <div key={index} className="border rounded p-3 text-sm">
+                          <div
+                            key={index}
+                            className="border rounded p-3 text-sm"
+                          >
                             <div className="flex items-center justify-between mb-2">
-                              <span className="font-medium">{channelListing.channelName}</span>
+                              <span className="font-medium">
+                                {channelListing.channelName}
+                              </span>
                               {getStatusBadge(channelListing.status)}
                             </div>
-                            
-                            {channelListing.status === 'active' && channelListing.listingUrl && (
-                              <div className="space-y-1">
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Views:</span>
-                                  <span>{channelListing.performance.views.toLocaleString()}</span>
+
+                            {channelListing.status === "active" &&
+                              channelListing.listingUrl && (
+                                <div className="space-y-1">
+                                  <div className="flex justify-between">
+                                    <span className="text-muted-foreground">
+                                      Views:
+                                    </span>
+                                    <span>
+                                      {channelListing.performance.views.toLocaleString()}
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-muted-foreground">
+                                      Sales:
+                                    </span>
+                                    <span>
+                                      {channelListing.performance.sales}
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-muted-foreground">
+                                      Revenue:
+                                    </span>
+                                    <span className="text-green-600 font-medium">
+                                      $
+                                      {channelListing.performance.revenue.toLocaleString()}
+                                    </span>
+                                  </div>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="mt-2 h-6 text-xs"
+                                  >
+                                    <ExternalLink className="h-3 w-3 mr-1" />
+                                    View Listing
+                                  </Button>
                                 </div>
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Sales:</span>
-                                  <span>{channelListing.performance.sales}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span className="text-muted-foreground">Revenue:</span>
-                                  <span className="text-green-600 font-medium">
-                                    ${channelListing.performance.revenue.toLocaleString()}
-                                  </span>
-                                </div>
-                                <Button size="sm" variant="ghost" className="mt-2 h-6 text-xs">
-                                  <ExternalLink className="h-3 w-3 mr-1" />
-                                  View Listing
-                                </Button>
-                              </div>
-                            )}
-                            
-                            {channelListing.status === 'pending' && (
+                              )}
+
+                            {channelListing.status === "pending" && (
                               <p className="text-xs text-muted-foreground">
                                 Awaiting approval...
                               </p>
                             )}
-                            
-                            {channelListing.status === 'rejected' && (
+
+                            {channelListing.status === "rejected" && (
                               <p className="text-xs text-red-600">
                                 Rejected - Review required
                               </p>
@@ -922,42 +1060,57 @@ export function MultiChannelListings() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {channels.filter(c => c.status === 'connected').map((channel) => (
-                  <div key={channel.id} className="border rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-3">
-                        {getChannelIcon(channel.type)}
+                {channels
+                  .filter((c) => c.status === "connected")
+                  .map((channel) => (
+                    <div key={channel.id} className="border rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-3">
+                          {getChannelIcon(channel.type)}
+                          <div>
+                            <h4 className="font-medium">
+                              {channel.name} Template
+                            </h4>
+                            <p className="text-sm text-muted-foreground">
+                              Optimized for {channel.type.replace("_", " ")}{" "}
+                              marketplace
+                            </p>
+                          </div>
+                        </div>
+                        <Button size="sm" variant="outline">
+                          <Edit className="h-4 w-4 mr-2" />
+                          Customize
+                        </Button>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                         <div>
-                          <h4 className="font-medium">{channel.name} Template</h4>
-                          <p className="text-sm text-muted-foreground">
-                            Optimized for {channel.type.replace('_', ' ')} marketplace
+                          <span className="text-muted-foreground">
+                            Title Template:
+                          </span>
+                          <p className="font-mono text-xs bg-muted p-2 rounded mt-1">
+                            {"{title}"} - {"{brand}"} | {"{primary_keyword}"}
                           </p>
                         </div>
-                      </div>
-                      <Button size="sm" variant="outline">
-                        <Edit className="h-4 w-4 mr-2" />
-                        Customize
-                      </Button>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="text-muted-foreground">Title Template:</span>
-                        <p className="font-mono text-xs bg-muted p-2 rounded mt-1">
-                          {"{title}"} - {"{brand}"} | {"{primary_keyword}"}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">SEO Keywords:</span>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          <Badge variant="secondary" className="text-xs">Primary</Badge>
-                          <Badge variant="outline" className="text-xs">Secondary</Badge>
-                          <Badge variant="outline" className="text-xs">Long-tail</Badge>
+                        <div>
+                          <span className="text-muted-foreground">
+                            SEO Keywords:
+                          </span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            <Badge variant="secondary" className="text-xs">
+                              Primary
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              Secondary
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              Long-tail
+                            </Badge>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </CardContent>
           </Card>
@@ -976,16 +1129,17 @@ export function MultiChannelListings() {
                     <div className="flex items-center justify-between mb-3">
                       <div>
                         <h4 className="font-medium capitalize">
-                          {operation.type.replace('_', ' ')} Operation
+                          {operation.type.replace("_", " ")} Operation
                         </h4>
                         <p className="text-sm text-muted-foreground">
-                          {operation.products.length} products • {operation.channels.length} channels
+                          {operation.products.length} products •{" "}
+                          {operation.channels.length} channels
                         </p>
                       </div>
                       {getStatusBadge(operation.status)}
                     </div>
-                    
-                    {operation.status === 'running' && (
+
+                    {operation.status === "running" && (
                       <div className="mb-3">
                         <div className="flex justify-between text-sm mb-1">
                           <span>Progress</span>
@@ -994,15 +1148,22 @@ export function MultiChannelListings() {
                         <Progress value={operation.progress} />
                       </div>
                     )}
-                    
+
                     <div className="flex justify-between text-sm">
-                      <span>Started: {new Date(operation.startedAt).toLocaleString()}</span>
+                      <span>
+                        Started:{" "}
+                        {new Date(operation.startedAt).toLocaleString()}
+                      </span>
                       {operation.completedAt && (
-                        <span>Completed: {new Date(operation.completedAt).toLocaleString()}</span>
+                        <span>
+                          Completed:{" "}
+                          {new Date(operation.completedAt).toLocaleString()}
+                        </span>
                       )}
                     </div>
-                    
-                    {operation.results.successful > 0 || operation.results.failed > 0 ? (
+
+                    {operation.results.successful > 0 ||
+                    operation.results.failed > 0 ? (
                       <div className="mt-3 pt-3 border-t text-sm">
                         <div className="flex space-x-4">
                           <span className="text-green-600">
@@ -1021,9 +1182,13 @@ export function MultiChannelListings() {
                                 View errors ({operation.results.errors.length})
                               </summary>
                               <div className="mt-1 space-y-1">
-                                {operation.results.errors.map((error, index) => (
-                                  <div key={index} className="text-red-600">{error}</div>
-                                ))}
+                                {operation.results.errors.map(
+                                  (error, index) => (
+                                    <div key={index} className="text-red-600">
+                                      {error}
+                                    </div>
+                                  ),
+                                )}
                               </div>
                             </details>
                           </div>
@@ -1046,22 +1211,31 @@ export function MultiChannelListings() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {channels.filter(c => c.status === 'connected').map((channel) => (
-                    <div key={channel.id} className="flex items-center justify-between p-3 border rounded">
-                      <div className="flex items-center space-x-3">
-                        {getChannelIcon(channel.type)}
-                        <span className="font-medium">{channel.name}</span>
+                  {channels
+                    .filter((c) => c.status === "connected")
+                    .map((channel) => (
+                      <div
+                        key={channel.id}
+                        className="flex items-center justify-between p-3 border rounded"
+                      >
+                        <div className="flex items-center space-x-3">
+                          {getChannelIcon(channel.type)}
+                          <span className="font-medium">{channel.name}</span>
+                        </div>
+                        <div className="text-right text-sm">
+                          <div className="font-medium">
+                            ${channel.stats.totalSales.toLocaleString()}
+                          </div>
+                          <div className="text-muted-foreground">
+                            {channel.stats.conversionRate}% CVR
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-right text-sm">
-                        <div className="font-medium">${channel.stats.totalSales.toLocaleString()}</div>
-                        <div className="text-muted-foreground">{channel.stats.conversionRate}% CVR</div>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader>
                 <CardTitle>SEO Performance</CardTitle>
@@ -1070,7 +1244,9 @@ export function MultiChannelListings() {
                 <div className="space-y-4">
                   <div className="text-center">
                     <div className="text-3xl font-bold text-blue-600">87%</div>
-                    <p className="text-sm text-muted-foreground">Avg SEO Optimization</p>
+                    <p className="text-sm text-muted-foreground">
+                      Avg SEO Optimization
+                    </p>
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
@@ -1097,7 +1273,7 @@ export function MultiChannelListings() {
 }
 
 function ConnectChannelForm({ onCancel }: { onCancel: () => void }) {
-  const [channelType, setChannelType] = useState('');
+  const [channelType, setChannelType] = useState("");
 
   return (
     <div className="space-y-6">
@@ -1118,7 +1294,7 @@ function ConnectChannelForm({ onCancel }: { onCancel: () => void }) {
         </Select>
       </div>
 
-      {channelType === 'amazon' && (
+      {channelType === "amazon" && (
         <div className="space-y-4">
           <div>
             <Label>Seller ID</Label>
@@ -1149,7 +1325,7 @@ function ConnectChannelForm({ onCancel }: { onCancel: () => void }) {
         </div>
       )}
 
-      {channelType === 'ebay' && (
+      {channelType === "ebay" && (
         <div className="space-y-4">
           <div>
             <Label>eBay User ID</Label>
@@ -1201,34 +1377,34 @@ function BulkOperationForm({ onCancel }: { onCancel: () => void }) {
           </SelectContent>
         </Select>
       </div>
-      
+
       <div>
         <Label>Select Channels</Label>
         <div className="space-y-2 mt-2">
-          {['Amazon', 'eBay', 'Facebook'].map((channel) => (
+          {["Amazon", "eBay", "Facebook"].map((channel) => (
             <div key={channel} className="flex items-center space-x-2">
               <input type="checkbox" id={channel} />
-              <label htmlFor={channel} className="text-sm">{channel}</label>
+              <label htmlFor={channel} className="text-sm">
+                {channel}
+              </label>
             </div>
           ))}
         </div>
       </div>
-      
+
       <div>
         <Label>Products</Label>
-        <Textarea 
+        <Textarea
           placeholder="Enter product IDs (one per line) or select from catalog..."
           rows={4}
         />
       </div>
-      
+
       <DialogFooter>
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit">
-          Start Operation
-        </Button>
+        <Button type="submit">Start Operation</Button>
       </DialogFooter>
     </div>
   );

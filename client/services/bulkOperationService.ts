@@ -1,7 +1,11 @@
-import { BulkOperation, BulkOperationResult, BulkOperationError } from '@shared/workflows';
+import {
+  BulkOperation,
+  BulkOperationResult,
+  BulkOperationError,
+} from "@shared/workflows";
 
 interface BulkOperationConfig {
-  type: 'edit' | 'export' | 'import' | 'audit' | 'optimize' | 'sync' | 'delete';
+  type: "edit" | "export" | "import" | "audit" | "optimize" | "sync" | "delete";
   name: string;
   productIds: string[];
   batchSize?: number;
@@ -15,7 +19,7 @@ interface BulkOperationConfig {
 
 interface ProgressUpdate {
   operationId: string;
-  status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
+  status: "pending" | "running" | "completed" | "failed" | "cancelled";
   progress: number;
   totalItems: number;
   processedItems: number;
@@ -32,48 +36,50 @@ interface ProgressUpdate {
 interface QueuedOperation {
   id: string;
   config: BulkOperationConfig;
-  priority: 'low' | 'normal' | 'high';
+  priority: "low" | "normal" | "high";
   queuedAt: string;
   estimatedDuration?: number;
 }
 
 class BulkOperationService {
-  private baseUrl = '/api/bulk';
+  private baseUrl = "/api/bulk";
   private activeOperations = new Map<string, EventSource>();
   private operationQueue: QueuedOperation[] = [];
 
   // Operation Management
-  async startBulkOperation(config: BulkOperationConfig): Promise<{ operationId: string; estimatedDuration?: number }> {
+  async startBulkOperation(
+    config: BulkOperationConfig,
+  ): Promise<{ operationId: string; estimatedDuration?: number }> {
     try {
       const response = await fetch(`${this.baseUrl}/operations`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(config)
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(config),
       });
       if (!response.ok) {
-        throw new Error('API not available');
+        throw new Error("API not available");
       }
       return response.json();
     } catch (error) {
       // Return mock data if API is not available
       return {
         operationId: `mock-${Date.now()}`,
-        estimatedDuration: 120 // 2 minutes
+        estimatedDuration: 120, // 2 minutes
       };
     }
   }
 
-  async getBulkOperations(filter?: { 
-    status?: string; 
-    type?: string; 
-    limit?: number; 
-    offset?: number 
+  async getBulkOperations(filter?: {
+    status?: string;
+    type?: string;
+    limit?: number;
+    offset?: number;
   }): Promise<{ operations: BulkOperation[]; total: number }> {
     const searchParams = new URLSearchParams();
-    if (filter?.status) searchParams.append('status', filter.status);
-    if (filter?.type) searchParams.append('type', filter.type);
-    if (filter?.limit) searchParams.append('limit', filter.limit.toString());
-    if (filter?.offset) searchParams.append('offset', filter.offset.toString());
+    if (filter?.status) searchParams.append("status", filter.status);
+    if (filter?.type) searchParams.append("type", filter.type);
+    if (filter?.limit) searchParams.append("limit", filter.limit.toString());
+    if (filter?.offset) searchParams.append("offset", filter.offset.toString());
 
     const response = await fetch(`${this.baseUrl}/operations?${searchParams}`);
     return response.json();
@@ -84,42 +90,62 @@ class BulkOperationService {
     return response.json();
   }
 
-  async cancelBulkOperation(operationId: string): Promise<{ success: boolean; message: string }> {
+  async cancelBulkOperation(
+    operationId: string,
+  ): Promise<{ success: boolean; message: string }> {
     try {
-      const response = await fetch(`${this.baseUrl}/operations/${operationId}/cancel`, {
-        method: 'POST'
-      });
+      const response = await fetch(
+        `${this.baseUrl}/operations/${operationId}/cancel`,
+        {
+          method: "POST",
+        },
+      );
       if (!response.ok) {
-        throw new Error('API not available');
+        throw new Error("API not available");
       }
       return response.json();
     } catch (error) {
       // Return mock success if API is not available
       return {
         success: true,
-        message: 'Operation cancelled (mock)'
+        message: "Operation cancelled (mock)",
       };
     }
   }
 
-  async pauseBulkOperation(operationId: string): Promise<{ success: boolean; message: string }> {
-    const response = await fetch(`${this.baseUrl}/operations/${operationId}/pause`, {
-      method: 'POST'
-    });
+  async pauseBulkOperation(
+    operationId: string,
+  ): Promise<{ success: boolean; message: string }> {
+    const response = await fetch(
+      `${this.baseUrl}/operations/${operationId}/pause`,
+      {
+        method: "POST",
+      },
+    );
     return response.json();
   }
 
-  async resumeBulkOperation(operationId: string): Promise<{ success: boolean; message: string }> {
-    const response = await fetch(`${this.baseUrl}/operations/${operationId}/resume`, {
-      method: 'POST'
-    });
+  async resumeBulkOperation(
+    operationId: string,
+  ): Promise<{ success: boolean; message: string }> {
+    const response = await fetch(
+      `${this.baseUrl}/operations/${operationId}/resume`,
+      {
+        method: "POST",
+      },
+    );
     return response.json();
   }
 
-  async retryFailedItems(operationId: string): Promise<{ newOperationId: string }> {
-    const response = await fetch(`${this.baseUrl}/operations/${operationId}/retry`, {
-      method: 'POST'
-    });
+  async retryFailedItems(
+    operationId: string,
+  ): Promise<{ newOperationId: string }> {
+    const response = await fetch(
+      `${this.baseUrl}/operations/${operationId}/retry`,
+      {
+        method: "POST",
+      },
+    );
     return response.json();
   }
 
@@ -128,30 +154,36 @@ class BulkOperationService {
     operationId: string,
     onUpdate: (progress: ProgressUpdate) => void,
     onComplete?: (operation: BulkOperation) => void,
-    onError?: (error: string) => void
+    onError?: (error: string) => void,
   ): () => void {
     try {
-      const eventSource = new EventSource(`${this.baseUrl}/operations/${operationId}/stream`);
+      const eventSource = new EventSource(
+        `${this.baseUrl}/operations/${operationId}/stream`,
+      );
 
       eventSource.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
           onUpdate(data);
 
-          if (data.status === 'completed' || data.status === 'failed' || data.status === 'cancelled') {
+          if (
+            data.status === "completed" ||
+            data.status === "failed" ||
+            data.status === "cancelled"
+          ) {
             onComplete?.(data);
             eventSource.close();
             this.activeOperations.delete(operationId);
           }
         } catch (error) {
-          console.error('Failed to parse progress update:', error);
-          onError?.('Failed to parse progress update');
+          console.error("Failed to parse progress update:", error);
+          onError?.("Failed to parse progress update");
         }
       };
 
       eventSource.onerror = (error) => {
-        console.error('EventSource error:', error);
-        onError?.('Connection to progress stream failed');
+        console.error("EventSource error:", error);
+        onError?.("Connection to progress stream failed");
         eventSource.close();
         this.activeOperations.delete(operationId);
       };
@@ -165,7 +197,7 @@ class BulkOperationService {
       };
     } catch (error) {
       // If EventSource fails, return a no-op cleanup function
-      console.warn('EventSource not available, using mock subscription');
+      console.warn("EventSource not available, using mock subscription");
       return () => {};
     }
   }
@@ -174,47 +206,53 @@ class BulkOperationService {
   async processBatch(
     operationId: string,
     batchItems: any[],
-    processor: (item: any) => Promise<BulkOperationResult>
+    processor: (item: any) => Promise<BulkOperationResult>,
   ): Promise<BulkOperationResult[]> {
     const results: BulkOperationResult[] = [];
-    
+
     for (const item of batchItems) {
       try {
         const result = await processor(item);
         results.push(result);
-        
+
         // Send progress update
         await this.updateProgress(operationId, {
           processedItems: results.length,
-          successfulItems: results.filter(r => r.status === 'success').length,
-          failedItems: results.filter(r => r.status === 'failed').length
+          successfulItems: results.filter((r) => r.status === "success").length,
+          failedItems: results.filter((r) => r.status === "failed").length,
         });
       } catch (error) {
         results.push({
           productId: item.id,
-          status: 'failed',
-          message: error instanceof Error ? error.message : 'Unknown error'
+          status: "failed",
+          message: error instanceof Error ? error.message : "Unknown error",
         });
       }
     }
-    
+
     return results;
   }
 
-  private async updateProgress(operationId: string, update: Partial<ProgressUpdate>): Promise<void> {
+  private async updateProgress(
+    operationId: string,
+    update: Partial<ProgressUpdate>,
+  ): Promise<void> {
     await fetch(`${this.baseUrl}/operations/${operationId}/progress`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(update)
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(update),
     });
   }
 
   // Operation Queue Management
-  async queueOperation(config: BulkOperationConfig, priority: 'low' | 'normal' | 'high' = 'normal'): Promise<{ queueId: string; position: number }> {
+  async queueOperation(
+    config: BulkOperationConfig,
+    priority: "low" | "normal" | "high" = "normal",
+  ): Promise<{ queueId: string; position: number }> {
     const response = await fetch(`${this.baseUrl}/queue`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ config, priority })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ config, priority }),
     });
     return response.json();
   }
@@ -226,15 +264,15 @@ class BulkOperationService {
 
   async removeFromQueue(queueId: string): Promise<void> {
     await fetch(`${this.baseUrl}/queue/${queueId}`, {
-      method: 'DELETE'
+      method: "DELETE",
     });
   }
 
   async reorderQueue(queueIds: string[]): Promise<void> {
     await fetch(`${this.baseUrl}/queue/reorder`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ queueIds })
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ queueIds }),
     });
   }
 
@@ -246,94 +284,116 @@ class BulkOperationService {
 
   async saveOperationTemplate(template: any): Promise<any> {
     const response = await fetch(`${this.baseUrl}/templates`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(template)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(template),
     });
     return response.json();
   }
 
   // Specific Bulk Operations
-  async bulkEdit(productIds: string[], updates: any, options?: {
-    batchSize?: number;
-    validateBefore?: boolean;
-    continueOnError?: boolean;
-  }): Promise<{ operationId: string }> {
+  async bulkEdit(
+    productIds: string[],
+    updates: any,
+    options?: {
+      batchSize?: number;
+      validateBefore?: boolean;
+      continueOnError?: boolean;
+    },
+  ): Promise<{ operationId: string }> {
     return this.startBulkOperation({
-      type: 'edit',
+      type: "edit",
       name: `Bulk Edit ${productIds.length} Products`,
       productIds,
       batchSize: options?.batchSize || 50,
       validateBefore: options?.validateBefore,
       continueOnError: options?.continueOnError,
-      options: { updates }
+      options: { updates },
     });
   }
 
-  async bulkExport(productIds: string[], format: 'csv' | 'xlsx' | 'json', options?: {
-    includeImages?: boolean;
-    includeSEO?: boolean;
-    customFields?: string[];
-  }): Promise<{ operationId: string }> {
+  async bulkExport(
+    productIds: string[],
+    format: "csv" | "xlsx" | "json",
+    options?: {
+      includeImages?: boolean;
+      includeSEO?: boolean;
+      customFields?: string[];
+    },
+  ): Promise<{ operationId: string }> {
     return this.startBulkOperation({
-      type: 'export',
+      type: "export",
       name: `Export ${productIds.length} Products to ${format.toUpperCase()}`,
       productIds,
-      options: { format, ...options }
+      options: { format, ...options },
     });
   }
 
-  async bulkImport(file: File, options?: {
-    updateExisting?: boolean;
-    skipDuplicates?: boolean;
-    validateData?: boolean;
-    mapping?: { [csvColumn: string]: string };
-  }): Promise<{ operationId: string }> {
+  async bulkImport(
+    file: File,
+    options?: {
+      updateExisting?: boolean;
+      skipDuplicates?: boolean;
+      validateData?: boolean;
+      mapping?: { [csvColumn: string]: string };
+    },
+  ): Promise<{ operationId: string }> {
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('options', JSON.stringify(options || {}));
+    formData.append("file", file);
+    formData.append("options", JSON.stringify(options || {}));
 
     const response = await fetch(`${this.baseUrl}/import`, {
-      method: 'POST',
-      body: formData
+      method: "POST",
+      body: formData,
     });
     return response.json();
   }
 
-  async bulkSEOOptimize(productIds: string[], optimizations: string[], options?: {
-    useAI?: boolean;
-    preserveExisting?: boolean;
-    generateSchema?: boolean;
-  }): Promise<{ operationId: string }> {
+  async bulkSEOOptimize(
+    productIds: string[],
+    optimizations: string[],
+    options?: {
+      useAI?: boolean;
+      preserveExisting?: boolean;
+      generateSchema?: boolean;
+    },
+  ): Promise<{ operationId: string }> {
     return this.startBulkOperation({
-      type: 'optimize',
+      type: "optimize",
       name: `SEO Optimize ${productIds.length} Products`,
       productIds,
       batchSize: 25, // Smaller batches for AI operations
-      options: { optimizations, ...options }
+      options: { optimizations, ...options },
     });
   }
 
-  async bulkSyncPlatform(productIds: string[], platformId: string, direction: 'import' | 'export'): Promise<{ operationId: string }> {
+  async bulkSyncPlatform(
+    productIds: string[],
+    platformId: string,
+    direction: "import" | "export",
+  ): Promise<{ operationId: string }> {
     return this.startBulkOperation({
-      type: 'sync',
-      name: `${direction === 'import' ? 'Import from' : 'Export to'} Platform`,
+      type: "sync",
+      name: `${direction === "import" ? "Import from" : "Export to"} Platform`,
       productIds,
       batchSize: 20, // API rate limiting considerations
-      options: { platformId, direction }
+      options: { platformId, direction },
     });
   }
 
-  async bulkDelete(productIds: string[], options?: {
-    softDelete?: boolean;
-    backupFirst?: boolean;
-  }): Promise<{ operationId: string }> {
+  async bulkDelete(
+    productIds: string[],
+    options?: {
+      softDelete?: boolean;
+      backupFirst?: boolean;
+    },
+  ): Promise<{ operationId: string }> {
     return this.startBulkOperation({
-      type: 'delete',
+      type: "delete",
       name: `Delete ${productIds.length} Products`,
       productIds,
       batchSize: 100,
-      options
+      options,
     });
   }
 
@@ -347,31 +407,37 @@ class BulkOperationService {
     timeDistribution: { hour: number; count: number }[];
   }> {
     const searchParams = new URLSearchParams();
-    if (timeRange?.from) searchParams.append('from', timeRange.from);
-    if (timeRange?.to) searchParams.append('to', timeRange.to);
+    if (timeRange?.from) searchParams.append("from", timeRange.from);
+    if (timeRange?.to) searchParams.append("to", timeRange.to);
 
-    const response = await fetch(`${this.baseUrl}/analytics/stats?${searchParams}`);
+    const response = await fetch(
+      `${this.baseUrl}/analytics/stats?${searchParams}`,
+    );
     return response.json();
   }
 
   async getOperationLogs(operationId: string): Promise<any[]> {
-    const response = await fetch(`${this.baseUrl}/operations/${operationId}/logs`);
+    const response = await fetch(
+      `${this.baseUrl}/operations/${operationId}/logs`,
+    );
     return response.json();
   }
 
   // Cleanup and Maintenance
-  async cleanupCompletedOperations(olderThan: string): Promise<{ cleaned: number }> {
+  async cleanupCompletedOperations(
+    olderThan: string,
+  ): Promise<{ cleaned: number }> {
     const response = await fetch(`${this.baseUrl}/cleanup`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ olderThan })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ olderThan }),
     });
     return response.json();
   }
 
   async archiveOperation(operationId: string): Promise<void> {
     await fetch(`${this.baseUrl}/operations/${operationId}/archive`, {
-      method: 'POST'
+      method: "POST",
     });
   }
 
@@ -398,10 +464,10 @@ class BulkOperationService {
   generateMockBulkOperations(): BulkOperation[] {
     return [
       {
-        id: '1',
-        type: 'optimize',
-        name: 'SEO Optimization Batch',
-        status: 'running',
+        id: "1",
+        type: "optimize",
+        name: "SEO Optimization Batch",
+        status: "running",
         progress: 65,
         totalItems: 500,
         processedItems: 325,
@@ -410,13 +476,13 @@ class BulkOperationService {
         startedAt: new Date(Date.now() - 900000).toISOString(), // 15 minutes ago
         canCancel: true,
         results: [],
-        errors: []
+        errors: [],
       },
       {
-        id: '2',
-        type: 'export',
-        name: 'Product Export to CSV',
-        status: 'completed',
+        id: "2",
+        type: "export",
+        name: "Product Export to CSV",
+        status: "completed",
         progress: 100,
         totalItems: 1000,
         processedItems: 1000,
@@ -426,13 +492,13 @@ class BulkOperationService {
         completedAt: new Date(Date.now() - 3300000).toISOString(), // 55 minutes ago
         canCancel: false,
         results: [],
-        errors: []
+        errors: [],
       },
       {
-        id: '3',
-        type: 'sync',
-        name: 'Shopify Sync',
-        status: 'failed',
+        id: "3",
+        type: "sync",
+        name: "Shopify Sync",
+        status: "failed",
         progress: 23,
         totalItems: 200,
         processedItems: 46,
@@ -444,12 +510,12 @@ class BulkOperationService {
         results: [],
         errors: [
           {
-            productId: 'prod-123',
-            error: 'API rate limit exceeded',
-            timestamp: new Date().toISOString()
-          }
-        ]
-      }
+            productId: "prod-123",
+            error: "API rate limit exceeded",
+            timestamp: new Date().toISOString(),
+          },
+        ],
+      },
     ];
   }
 
@@ -465,8 +531,8 @@ class BulkOperationService {
 export const bulkOperationService = new BulkOperationService();
 
 // Cleanup on page unload
-if (typeof window !== 'undefined') {
-  window.addEventListener('beforeunload', () => {
+if (typeof window !== "undefined") {
+  window.addEventListener("beforeunload", () => {
     bulkOperationService.cleanup();
   });
 }

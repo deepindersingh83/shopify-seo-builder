@@ -27,7 +27,7 @@ import {
   AlertTriangle,
   Info,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -68,7 +68,7 @@ import { cn } from "@/lib/utils";
 
 interface WorkflowNode {
   id: string;
-  type: 'trigger' | 'condition' | 'action' | 'delay';
+  type: "trigger" | "condition" | "action" | "delay";
   title: string;
   description: string;
   icon: any;
@@ -87,65 +87,155 @@ interface WorkflowTemplate {
 }
 
 const triggerTypes = [
-  { type: 'product_created', title: 'Product Created', icon: Plus, description: 'When a new product is added' },
-  { type: 'product_updated', title: 'Product Updated', icon: Edit, description: 'When a product is modified' },
-  { type: 'schedule', title: 'Schedule', icon: Clock, description: 'Run on a schedule' },
-  { type: 'seo_score_change', title: 'SEO Score Change', icon: Target, description: 'When SEO score changes' },
-  { type: 'inventory_low', title: 'Low Inventory', icon: AlertTriangle, description: 'When stock is low' },
-  { type: 'manual', title: 'Manual Trigger', icon: Play, description: 'Run manually' },
+  {
+    type: "product_created",
+    title: "Product Created",
+    icon: Plus,
+    description: "When a new product is added",
+  },
+  {
+    type: "product_updated",
+    title: "Product Updated",
+    icon: Edit,
+    description: "When a product is modified",
+  },
+  {
+    type: "schedule",
+    title: "Schedule",
+    icon: Clock,
+    description: "Run on a schedule",
+  },
+  {
+    type: "seo_score_change",
+    title: "SEO Score Change",
+    icon: Target,
+    description: "When SEO score changes",
+  },
+  {
+    type: "inventory_low",
+    title: "Low Inventory",
+    icon: AlertTriangle,
+    description: "When stock is low",
+  },
+  {
+    type: "manual",
+    title: "Manual Trigger",
+    icon: Play,
+    description: "Run manually",
+  },
 ];
 
 const actionTypes = [
-  { type: 'generate_meta', title: 'Generate Meta Tags', icon: Bot, description: 'AI-powered meta generation' },
-  { type: 'optimize_seo', title: 'Optimize SEO', icon: Target, description: 'Auto-optimize product SEO' },
-  { type: 'send_email', title: 'Send Email', icon: Mail, description: 'Send notification email' },
-  { type: 'update_fields', title: 'Update Fields', icon: Edit, description: 'Update product fields' },
-  { type: 'sync_channels', title: 'Sync Channels', icon: RefreshCw, description: 'Sync to sales channels' },
-  { type: 'generate_tags', title: 'Generate Tags', icon: Plus, description: 'AI-generated product tags' },
-  { type: 'translate_content', title: 'Translate Content', icon: Globe, description: 'Multi-language translation' },
-  { type: 'analytics_track', title: 'Track Analytics', icon: BarChart3, description: 'Custom analytics tracking' },
+  {
+    type: "generate_meta",
+    title: "Generate Meta Tags",
+    icon: Bot,
+    description: "AI-powered meta generation",
+  },
+  {
+    type: "optimize_seo",
+    title: "Optimize SEO",
+    icon: Target,
+    description: "Auto-optimize product SEO",
+  },
+  {
+    type: "send_email",
+    title: "Send Email",
+    icon: Mail,
+    description: "Send notification email",
+  },
+  {
+    type: "update_fields",
+    title: "Update Fields",
+    icon: Edit,
+    description: "Update product fields",
+  },
+  {
+    type: "sync_channels",
+    title: "Sync Channels",
+    icon: RefreshCw,
+    description: "Sync to sales channels",
+  },
+  {
+    type: "generate_tags",
+    title: "Generate Tags",
+    icon: Plus,
+    description: "AI-generated product tags",
+  },
+  {
+    type: "translate_content",
+    title: "Translate Content",
+    icon: Globe,
+    description: "Multi-language translation",
+  },
+  {
+    type: "analytics_track",
+    title: "Track Analytics",
+    icon: BarChart3,
+    description: "Custom analytics tracking",
+  },
 ];
 
 const conditionTypes = [
-  { type: 'field_check', title: 'Field Check', icon: Filter, description: 'Check field values' },
-  { type: 'category_match', title: 'Category Match', icon: Target, description: 'Product category condition' },
-  { type: 'price_range', title: 'Price Range', icon: ShoppingCart, description: 'Price-based condition' },
-  { type: 'inventory_level', title: 'Inventory Level', icon: Database, description: 'Stock level condition' },
+  {
+    type: "field_check",
+    title: "Field Check",
+    icon: Filter,
+    description: "Check field values",
+  },
+  {
+    type: "category_match",
+    title: "Category Match",
+    icon: Target,
+    description: "Product category condition",
+  },
+  {
+    type: "price_range",
+    title: "Price Range",
+    icon: ShoppingCart,
+    description: "Price-based condition",
+  },
+  {
+    type: "inventory_level",
+    title: "Inventory Level",
+    icon: Database,
+    description: "Stock level condition",
+  },
 ];
 
 const workflowTemplates: WorkflowTemplate[] = [
   {
-    id: '1',
-    name: 'Auto SEO Optimization',
-    description: 'Automatically optimize SEO for new products',
-    category: 'SEO',
+    id: "1",
+    name: "Auto SEO Optimization",
+    description: "Automatically optimize SEO for new products",
+    category: "SEO",
     isPopular: true,
     nodes: [
       {
-        id: 'trigger_1',
-        type: 'trigger',
-        title: 'Product Created',
-        description: 'When a new product is added',
+        id: "trigger_1",
+        type: "trigger",
+        title: "Product Created",
+        description: "When a new product is added",
         icon: Plus,
         position: { x: 50, y: 100 },
-        config: { event: 'product_created' },
-        connections: ['action_1'],
+        config: { event: "product_created" },
+        connections: ["action_1"],
       },
       {
-        id: 'action_1',
-        type: 'action',
-        title: 'Generate Meta Tags',
-        description: 'AI-powered meta generation',
+        id: "action_1",
+        type: "action",
+        title: "Generate Meta Tags",
+        description: "AI-powered meta generation",
         icon: Bot,
         position: { x: 300, y: 100 },
-        config: { metaType: 'both', useAI: true },
-        connections: ['action_2'],
+        config: { metaType: "both", useAI: true },
+        connections: ["action_2"],
       },
       {
-        id: 'action_2',
-        type: 'action',
-        title: 'Optimize SEO',
-        description: 'Auto-optimize product SEO',
+        id: "action_2",
+        type: "action",
+        title: "Optimize SEO",
+        description: "Auto-optimize product SEO",
         icon: Target,
         position: { x: 550, y: 100 },
         config: { optimizeImages: true, generateSchema: true },
@@ -154,69 +244,69 @@ const workflowTemplates: WorkflowTemplate[] = [
     ],
   },
   {
-    id: '2',
-    name: 'Multi-Channel Sync',
-    description: 'Sync products to all sales channels',
-    category: 'Channel Management',
+    id: "2",
+    name: "Multi-Channel Sync",
+    description: "Sync products to all sales channels",
+    category: "Channel Management",
     isPopular: true,
     nodes: [
       {
-        id: 'trigger_1',
-        type: 'trigger',
-        title: 'Product Updated',
-        description: 'When a product is modified',
+        id: "trigger_1",
+        type: "trigger",
+        title: "Product Updated",
+        description: "When a product is modified",
         icon: Edit,
         position: { x: 50, y: 100 },
-        config: { event: 'product_updated' },
-        connections: ['condition_1'],
+        config: { event: "product_updated" },
+        connections: ["condition_1"],
       },
       {
-        id: 'condition_1',
-        type: 'condition',
-        title: 'Price Changed',
-        description: 'Check if price was updated',
+        id: "condition_1",
+        type: "condition",
+        title: "Price Changed",
+        description: "Check if price was updated",
         icon: Filter,
         position: { x: 300, y: 100 },
-        config: { field: 'price', operator: 'changed' },
-        connections: ['action_1'],
+        config: { field: "price", operator: "changed" },
+        connections: ["action_1"],
       },
       {
-        id: 'action_1',
-        type: 'action',
-        title: 'Sync Channels',
-        description: 'Sync to all sales channels',
+        id: "action_1",
+        type: "action",
+        title: "Sync Channels",
+        description: "Sync to all sales channels",
         icon: RefreshCw,
         position: { x: 550, y: 100 },
-        config: { channels: ['amazon', 'ebay', 'facebook'] },
+        config: { channels: ["amazon", "ebay", "facebook"] },
         connections: [],
       },
     ],
   },
   {
-    id: '3',
-    name: 'Low Stock Alert',
-    description: 'Alert when inventory is low',
-    category: 'Inventory',
+    id: "3",
+    name: "Low Stock Alert",
+    description: "Alert when inventory is low",
+    category: "Inventory",
     isPopular: false,
     nodes: [
       {
-        id: 'trigger_1',
-        type: 'trigger',
-        title: 'Low Inventory',
-        description: 'When stock is low',
+        id: "trigger_1",
+        type: "trigger",
+        title: "Low Inventory",
+        description: "When stock is low",
         icon: AlertTriangle,
         position: { x: 50, y: 100 },
         config: { threshold: 10 },
-        connections: ['action_1'],
+        connections: ["action_1"],
       },
       {
-        id: 'action_1',
-        type: 'action',
-        title: 'Send Email',
-        description: 'Send notification email',
+        id: "action_1",
+        type: "action",
+        title: "Send Email",
+        description: "Send notification email",
         icon: Mail,
         position: { x: 300, y: 100 },
-        config: { recipients: ['admin@store.com'], template: 'low_stock' },
+        config: { recipients: ["admin@store.com"], template: "low_stock" },
         connections: [],
       },
     ],
@@ -224,11 +314,12 @@ const workflowTemplates: WorkflowTemplate[] = [
 ];
 
 export function WorkflowBuilder() {
-  const [selectedTemplate, setSelectedTemplate] = useState<WorkflowTemplate | null>(null);
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<WorkflowTemplate | null>(null);
   const [workflowNodes, setWorkflowNodes] = useState<WorkflowNode[]>([]);
   const [selectedNode, setSelectedNode] = useState<WorkflowNode | null>(null);
-  const [workflowName, setWorkflowName] = useState('');
-  const [workflowDescription, setWorkflowDescription] = useState('');
+  const [workflowName, setWorkflowName] = useState("");
+  const [workflowDescription, setWorkflowDescription] = useState("");
   const [isBuilderMode, setIsBuilderMode] = useState(false);
   const [showNodeConfig, setShowNodeConfig] = useState(false);
   const [draggedNodeType, setDraggedNodeType] = useState<string | null>(null);
@@ -245,8 +336,8 @@ export function WorkflowBuilder() {
   const handleCreateFromScratch = () => {
     setSelectedTemplate(null);
     setWorkflowNodes([]);
-    setWorkflowName('');
-    setWorkflowDescription('');
+    setWorkflowName("");
+    setWorkflowDescription("");
     setIsBuilderMode(true);
   };
 
@@ -254,36 +345,44 @@ export function WorkflowBuilder() {
     setDraggedNodeType(nodeType);
   };
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    if (!draggedNodeType || !canvasRef.current) return;
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      if (!draggedNodeType || !canvasRef.current) return;
 
-    const rect = canvasRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+      const rect = canvasRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
-    const nodeTypeInfo = [...triggerTypes, ...actionTypes, ...conditionTypes].find(
-      t => t.type === draggedNodeType
-    );
+      const nodeTypeInfo = [
+        ...triggerTypes,
+        ...actionTypes,
+        ...conditionTypes,
+      ].find((t) => t.type === draggedNodeType);
 
-    if (nodeTypeInfo) {
-      const newNode: WorkflowNode = {
-        id: `node_${Date.now()}`,
-        type: draggedNodeType.includes('trigger') ? 'trigger' : 
-              draggedNodeType.includes('condition') ? 'condition' : 'action',
-        title: nodeTypeInfo.title,
-        description: nodeTypeInfo.description,
-        icon: nodeTypeInfo.icon,
-        position: { x: x - 50, y: y - 25 },
-        config: {},
-        connections: [],
-      };
+      if (nodeTypeInfo) {
+        const newNode: WorkflowNode = {
+          id: `node_${Date.now()}`,
+          type: draggedNodeType.includes("trigger")
+            ? "trigger"
+            : draggedNodeType.includes("condition")
+              ? "condition"
+              : "action",
+          title: nodeTypeInfo.title,
+          description: nodeTypeInfo.description,
+          icon: nodeTypeInfo.icon,
+          position: { x: x - 50, y: y - 25 },
+          config: {},
+          connections: [],
+        };
 
-      setWorkflowNodes(prev => [...prev, newNode]);
-    }
+        setWorkflowNodes((prev) => [...prev, newNode]);
+      }
 
-    setDraggedNodeType(null);
-  }, [draggedNodeType]);
+      setDraggedNodeType(null);
+    },
+    [draggedNodeType],
+  );
 
   const handleNodeClick = (node: WorkflowNode) => {
     setSelectedNode(node);
@@ -291,13 +390,13 @@ export function WorkflowBuilder() {
   };
 
   const handleNodeDelete = (nodeId: string) => {
-    setWorkflowNodes(prev => prev.filter(node => node.id !== nodeId));
+    setWorkflowNodes((prev) => prev.filter((node) => node.id !== nodeId));
     setSelectedNode(null);
     setShowNodeConfig(false);
   };
 
   const handleSaveWorkflow = () => {
-    console.log('Saving workflow:', {
+    console.log("Saving workflow:", {
       name: workflowName,
       description: workflowDescription,
       nodes: workflowNodes,
@@ -325,7 +424,9 @@ export function WorkflowBuilder() {
               <trigger.icon className="h-5 w-5 text-blue-600" />
               <div className="flex-1">
                 <div className="font-medium text-sm">{trigger.title}</div>
-                <div className="text-xs text-muted-foreground">{trigger.description}</div>
+                <div className="text-xs text-muted-foreground">
+                  {trigger.description}
+                </div>
               </div>
             </div>
           ))}
@@ -350,7 +451,9 @@ export function WorkflowBuilder() {
               <condition.icon className="h-5 w-5 text-yellow-600" />
               <div className="flex-1">
                 <div className="font-medium text-sm">{condition.title}</div>
-                <div className="text-xs text-muted-foreground">{condition.description}</div>
+                <div className="text-xs text-muted-foreground">
+                  {condition.description}
+                </div>
               </div>
             </div>
           ))}
@@ -375,7 +478,9 @@ export function WorkflowBuilder() {
               <action.icon className="h-5 w-5 text-green-600" />
               <div className="flex-1">
                 <div className="font-medium text-sm">{action.title}</div>
-                <div className="text-xs text-muted-foreground">{action.description}</div>
+                <div className="text-xs text-muted-foreground">
+                  {action.description}
+                </div>
               </div>
             </div>
           ))}
@@ -407,10 +512,10 @@ export function WorkflowBuilder() {
               <div
                 className={cn(
                   "absolute w-32 h-20 border-2 rounded-lg bg-card cursor-pointer transition-all hover:shadow-md",
-                  node.type === 'trigger' && "border-blue-500 bg-blue-50",
-                  node.type === 'condition' && "border-yellow-500 bg-yellow-50",
-                  node.type === 'action' && "border-green-500 bg-green-50",
-                  selectedNode?.id === node.id && "ring-2 ring-primary"
+                  node.type === "trigger" && "border-blue-500 bg-blue-50",
+                  node.type === "condition" && "border-yellow-500 bg-yellow-50",
+                  node.type === "action" && "border-green-500 bg-green-50",
+                  selectedNode?.id === node.id && "ring-2 ring-primary",
                 )}
                 style={{
                   left: node.position.x,
@@ -424,7 +529,7 @@ export function WorkflowBuilder() {
                     {node.title}
                   </div>
                 </div>
-                
+
                 {/* Delete button */}
                 <Button
                   size="sm"
@@ -441,7 +546,9 @@ export function WorkflowBuilder() {
 
               {/* Connection lines */}
               {node.connections.map((connectionId) => {
-                const targetNode = workflowNodes.find(n => n.id === connectionId);
+                const targetNode = workflowNodes.find(
+                  (n) => n.id === connectionId,
+                );
                 if (!targetNode) return null;
 
                 const startX = node.position.x + 64; // center of node
@@ -469,10 +576,7 @@ export function WorkflowBuilder() {
                         refY="3.5"
                         orient="auto"
                       >
-                        <polygon
-                          points="0 0, 10 3.5, 0 7"
-                          fill="#666"
-                        />
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#666" />
                       </marker>
                     </defs>
                     <line
@@ -505,75 +609,80 @@ export function WorkflowBuilder() {
               <selectedNode.icon className="h-5 w-5" />
               <span>Configure {selectedNode.title}</span>
             </DialogTitle>
-            <DialogDescription>
-              {selectedNode.description}
-            </DialogDescription>
+            <DialogDescription>{selectedNode.description}</DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4">
-            {selectedNode.type === 'trigger' && selectedNode.title === 'Schedule' && (
-              <>
-                <div>
-                  <Label>Frequency</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select frequency" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="hourly">Every Hour</SelectItem>
-                      <SelectItem value="daily">Daily</SelectItem>
-                      <SelectItem value="weekly">Weekly</SelectItem>
-                      <SelectItem value="monthly">Monthly</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label>Time</Label>
-                  <Input type="time" defaultValue="09:00" />
-                </div>
-              </>
-            )}
+            {selectedNode.type === "trigger" &&
+              selectedNode.title === "Schedule" && (
+                <>
+                  <div>
+                    <Label>Frequency</Label>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select frequency" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="hourly">Every Hour</SelectItem>
+                        <SelectItem value="daily">Daily</SelectItem>
+                        <SelectItem value="weekly">Weekly</SelectItem>
+                        <SelectItem value="monthly">Monthly</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>Time</Label>
+                    <Input type="time" defaultValue="09:00" />
+                  </div>
+                </>
+              )}
 
-            {selectedNode.type === 'action' && selectedNode.title === 'Send Email' && (
-              <>
-                <div>
-                  <Label>Recipients</Label>
-                  <Input placeholder="admin@store.com" />
-                </div>
-                <div>
-                  <Label>Subject</Label>
-                  <Input placeholder="Workflow notification" />
-                </div>
-                <div>
-                  <Label>Message</Label>
-                  <Textarea placeholder="Your workflow message..." />
-                </div>
-              </>
-            )}
+            {selectedNode.type === "action" &&
+              selectedNode.title === "Send Email" && (
+                <>
+                  <div>
+                    <Label>Recipients</Label>
+                    <Input placeholder="admin@store.com" />
+                  </div>
+                  <div>
+                    <Label>Subject</Label>
+                    <Input placeholder="Workflow notification" />
+                  </div>
+                  <div>
+                    <Label>Message</Label>
+                    <Textarea placeholder="Your workflow message..." />
+                  </div>
+                </>
+              )}
 
-            {selectedNode.type === 'action' && selectedNode.title === 'Generate Meta Tags' && (
-              <>
-                <div className="flex items-center space-x-2">
-                  <Switch id="use-ai" defaultChecked />
-                  <Label htmlFor="use-ai">Use AI Generation</Label>
-                </div>
-                <div>
-                  <Label>Meta Type</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="title">Title Only</SelectItem>
-                      <SelectItem value="description">Description Only</SelectItem>
-                      <SelectItem value="both">Both Title & Description</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </>
-            )}
+            {selectedNode.type === "action" &&
+              selectedNode.title === "Generate Meta Tags" && (
+                <>
+                  <div className="flex items-center space-x-2">
+                    <Switch id="use-ai" defaultChecked />
+                    <Label htmlFor="use-ai">Use AI Generation</Label>
+                  </div>
+                  <div>
+                    <Label>Meta Type</Label>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="title">Title Only</SelectItem>
+                        <SelectItem value="description">
+                          Description Only
+                        </SelectItem>
+                        <SelectItem value="both">
+                          Both Title & Description
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </>
+              )}
 
-            {selectedNode.type === 'condition' && (
+            {selectedNode.type === "condition" && (
               <>
                 <div>
                   <Label>Field</Label>
@@ -630,8 +739,12 @@ export function WorkflowBuilder() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Workflow Builder</h2>
-            <p className="text-muted-foreground">Create automated workflows for your SEO tasks</p>
+            <h2 className="text-2xl font-bold tracking-tight">
+              Workflow Builder
+            </h2>
+            <p className="text-muted-foreground">
+              Create automated workflows for your SEO tasks
+            </p>
           </div>
           <Button onClick={handleCreateFromScratch}>
             <Plus className="h-4 w-4 mr-2" />
@@ -643,27 +756,37 @@ export function WorkflowBuilder() {
         <div>
           <h3 className="text-lg font-semibold mb-4">Popular Templates</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {workflowTemplates.filter(t => t.isPopular).map((template) => (
-              <Card key={template.id} className="hover:shadow-md transition-shadow cursor-pointer">
-                <CardContent className="p-6" onClick={() => handleTemplateSelect(template)}>
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h4 className="font-semibold mb-2">{template.name}</h4>
-                      <p className="text-sm text-muted-foreground mb-3">{template.description}</p>
-                      <Badge variant="secondary">{template.category}</Badge>
+            {workflowTemplates
+              .filter((t) => t.isPopular)
+              .map((template) => (
+                <Card
+                  key={template.id}
+                  className="hover:shadow-md transition-shadow cursor-pointer"
+                >
+                  <CardContent
+                    className="p-6"
+                    onClick={() => handleTemplateSelect(template)}
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div>
+                        <h4 className="font-semibold mb-2">{template.name}</h4>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {template.description}
+                        </p>
+                        <Badge variant="secondary">{template.category}</Badge>
+                      </div>
+                      <Zap className="h-8 w-8 text-primary" />
                     </div>
-                    <Zap className="h-8 w-8 text-primary" />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">
-                      {template.nodes.length} steps
-                    </span>
-                    <Button size="sm">Use Template</Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">
+                        {template.nodes.length} steps
+                      </span>
+                      <Button size="sm">Use Template</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
           </div>
         </div>
 
@@ -672,14 +795,19 @@ export function WorkflowBuilder() {
           <h3 className="text-lg font-semibold mb-4">All Templates</h3>
           <div className="space-y-3">
             {workflowTemplates.map((template) => (
-              <Card key={template.id} className="hover:shadow-sm transition-shadow">
+              <Card
+                key={template.id}
+                className="hover:shadow-sm transition-shadow"
+              >
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <Zap className="h-5 w-5 text-primary" />
                       <div>
                         <h4 className="font-medium">{template.name}</h4>
-                        <p className="text-sm text-muted-foreground">{template.description}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {template.description}
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
@@ -687,7 +815,10 @@ export function WorkflowBuilder() {
                       <span className="text-sm text-muted-foreground">
                         {template.nodes.length} steps
                       </span>
-                      <Button size="sm" onClick={() => handleTemplateSelect(template)}>
+                      <Button
+                        size="sm"
+                        onClick={() => handleTemplateSelect(template)}
+                      >
                         Use Template
                       </Button>
                     </div>
@@ -747,9 +878,7 @@ export function WorkflowBuilder() {
         </div>
 
         {/* Canvas */}
-        <div className="flex-1 p-4">
-          {renderWorkflowCanvas()}
-        </div>
+        <div className="flex-1 p-4">{renderWorkflowCanvas()}</div>
       </div>
 
       {/* Node Configuration Modal */}

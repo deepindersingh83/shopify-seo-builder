@@ -26,7 +26,10 @@ export function createServer() {
   app.post("/api/workflows/rules", workflowRoutes.createWorkflowRule);
   app.post("/api/workflows/execute", workflowRoutes.executeWorkflow);
   app.get("/api/workflows/executions", workflowRoutes.getWorkflowExecutions);
-  app.post("/api/workflows/executions/:id/cancel", workflowRoutes.cancelWorkflowExecution);
+  app.post(
+    "/api/workflows/executions/:id/cancel",
+    workflowRoutes.cancelWorkflowExecution,
+  );
 
   // Bulk operation routes
   app.post("/api/bulk/operations", bulkRoutes.startBulkOperation);

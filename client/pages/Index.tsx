@@ -412,506 +412,518 @@ export default function Index() {
   return (
     <Layout>
       <div className="flex-1 overflow-auto">
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Package className="h-8 w-8 text-primary" />
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">
-                  SEO Product Manager
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Complete SEO management for your Shopify store
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <Badge variant="outline" className="text-xs">
-                v2.1.0
-              </Badge>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-6 py-6">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Products
-              </CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {totalProducts.toLocaleString()}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                +12% from last month
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Active Products
-              </CardTitle>
-              <BarChart3 className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">89,432</div>
-              <p className="text-xs text-muted-foreground">
-                85% of total inventory
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Low Stock</CardTitle>
-              <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">2,847</div>
-              <p className="text-xs text-destructive">Needs attention</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Avg. Price</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">$127.50</div>
-              <p className="text-xs text-muted-foreground">
-                +5.2% vs last period
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Avg. SEO Score
-              </CardTitle>
-              <Target className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div
-                className={`text-2xl font-bold ${getSEOScoreColor(averageSEOScore)}`}
-              >
-                {averageSEOScore}/100
-              </div>
-              <p className="text-xs text-muted-foreground">
-                SEO optimization level
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Advanced Filters */}
-        <AdvancedFilters
-          onFiltersChange={(filters) => {
-            // Apply filters to products
-            console.log('Filters changed:', filters);
-          }}
-          currentFilters={[]}
-          resultCount={filteredProducts.length}
-        />
-
-        {/* Basic Filters */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-lg">Basic Search & Filters</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col space-y-4">
-              {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search products, handles, or vendors..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-
-              {/* Filter Row */}
-              <div className="flex flex-wrap gap-4">
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="archived">Archived</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <Select value={vendorFilter} onValueChange={setVendorFilter}>
-                  <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder="Vendor" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Vendors</SelectItem>
-                    {uniqueVendors.map((vendor) => (
-                      <SelectItem key={vendor} value={vendor}>
-                        {vendor}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <Select
-                  value={productTypeFilter}
-                  onValueChange={setProductTypeFilter}
-                >
-                  <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder="Product Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Types</SelectItem>
-                    {uniqueProductTypes.map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <div className="flex items-center space-x-2 ml-auto">
-                  {/* Column Visibility */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm">
-                        <Columns className="h-4 w-4 mr-2" />
-                        Columns
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuCheckboxItem
-                        checked={columnVisibility.product}
-                        onCheckedChange={() =>
-                          toggleColumnVisibility("product")
-                        }
-                      >
-                        Product
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem
-                        checked={columnVisibility.status}
-                        onCheckedChange={() => toggleColumnVisibility("status")}
-                      >
-                        Status
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem
-                        checked={columnVisibility.vendor}
-                        onCheckedChange={() => toggleColumnVisibility("vendor")}
-                      >
-                        Vendor
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem
-                        checked={columnVisibility.inventory}
-                        onCheckedChange={() =>
-                          toggleColumnVisibility("inventory")
-                        }
-                      >
-                        Inventory
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem
-                        checked={columnVisibility.price}
-                        onCheckedChange={() => toggleColumnVisibility("price")}
-                      >
-                        Price
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem
-                        checked={columnVisibility.seoScore}
-                        onCheckedChange={() =>
-                          toggleColumnVisibility("seoScore")
-                        }
-                      >
-                        SEO Score
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem
-                        checked={columnVisibility.actions}
-                        onCheckedChange={() =>
-                          toggleColumnVisibility("actions")
-                        }
-                      >
-                        Actions
-                      </DropdownMenuCheckboxItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  <Button
-                    variant={viewMode === "list" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setViewMode("list")}
-                  >
-                    <List className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant={viewMode === "grid" ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setViewMode("grid")}
-                  >
-                    <Grid className="h-4 w-4" />
-                  </Button>
+        {/* Header */}
+        <header className="border-b bg-card">
+          <div className="container mx-auto px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <Package className="h-8 w-8 text-primary" />
+                <div>
+                  <h1 className="text-2xl font-bold text-foreground">
+                    SEO Product Manager
+                  </h1>
+                  <p className="text-sm text-muted-foreground">
+                    Complete SEO management for your Shopify store
+                  </p>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Bulk Operations */}
-        <BulkOperations
-          selectedProducts={Array.from(selectedProducts)}
-          onClearSelection={() => setSelectedProducts(new Set())}
-        />
-
-        {/* Products List */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Products ({filteredProducts.length})</CardTitle>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-muted-foreground">
-                  Page {currentPage} of{" "}
-                  {Math.ceil(totalProducts / itemsPerPage)}
-                </span>
+              <div className="flex items-center space-x-3">
+                <Badge variant="outline" className="text-xs">
+                  v2.1.0
+                </Badge>
               </div>
             </div>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              </div>
-            ) : (
-              <>
-                {/* Table Header */}
-                <div className="border rounded-lg">
-                  <div className="flex items-center px-4 py-3 border-b bg-muted/50">
-                    <Checkbox
-                      checked={
-                        selectedProducts.size === filteredProducts.length &&
-                        filteredProducts.length > 0
-                      }
-                      onCheckedChange={toggleAllProducts}
-                      className="mr-4"
-                    />
-                    <div
-                      className="grid gap-4 flex-1 text-sm font-medium text-muted-foreground"
-                      style={{
-                        gridTemplateColumns:
-                          `${columnVisibility.product ? "4fr" : ""} ${columnVisibility.status ? "2fr" : ""} ${columnVisibility.vendor ? "2fr" : ""} ${columnVisibility.inventory ? "1fr" : ""} ${columnVisibility.price ? "2fr" : ""} ${columnVisibility.seoScore ? "2fr" : ""} ${columnVisibility.actions ? "1fr" : ""}`.trim(),
-                      }}
+          </div>
+        </header>
+
+        {/* Main Content */}
+        <div className="container mx-auto px-6 py-6">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Total Products
+                </CardTitle>
+                <Package className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {totalProducts.toLocaleString()}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  +12% from last month
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Active Products
+                </CardTitle>
+                <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">89,432</div>
+                <p className="text-xs text-muted-foreground">
+                  85% of total inventory
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Low Stock</CardTitle>
+                <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">2,847</div>
+                <p className="text-xs text-destructive">Needs attention</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Avg. Price
+                </CardTitle>
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">$127.50</div>
+                <p className="text-xs text-muted-foreground">
+                  +5.2% vs last period
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Avg. SEO Score
+                </CardTitle>
+                <Target className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div
+                  className={`text-2xl font-bold ${getSEOScoreColor(averageSEOScore)}`}
+                >
+                  {averageSEOScore}/100
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  SEO optimization level
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Advanced Filters */}
+          <AdvancedFilters
+            onFiltersChange={(filters) => {
+              // Apply filters to products
+              console.log("Filters changed:", filters);
+            }}
+            currentFilters={[]}
+            resultCount={filteredProducts.length}
+          />
+
+          {/* Basic Filters */}
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle className="text-lg">Basic Search & Filters</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col space-y-4">
+                {/* Search */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search products, handles, or vendors..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+
+                {/* Filter Row */}
+                <div className="flex flex-wrap gap-4">
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="w-[150px]">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Status</SelectItem>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="archived">Archived</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={vendorFilter} onValueChange={setVendorFilter}>
+                    <SelectTrigger className="w-[150px]">
+                      <SelectValue placeholder="Vendor" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Vendors</SelectItem>
+                      {uniqueVendors.map((vendor) => (
+                        <SelectItem key={vendor} value={vendor}>
+                          {vendor}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Select
+                    value={productTypeFilter}
+                    onValueChange={setProductTypeFilter}
+                  >
+                    <SelectTrigger className="w-[150px]">
+                      <SelectValue placeholder="Product Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Types</SelectItem>
+                      {uniqueProductTypes.map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <div className="flex items-center space-x-2 ml-auto">
+                    {/* Column Visibility */}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          <Columns className="h-4 w-4 mr-2" />
+                          Columns
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuCheckboxItem
+                          checked={columnVisibility.product}
+                          onCheckedChange={() =>
+                            toggleColumnVisibility("product")
+                          }
+                        >
+                          Product
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem
+                          checked={columnVisibility.status}
+                          onCheckedChange={() =>
+                            toggleColumnVisibility("status")
+                          }
+                        >
+                          Status
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem
+                          checked={columnVisibility.vendor}
+                          onCheckedChange={() =>
+                            toggleColumnVisibility("vendor")
+                          }
+                        >
+                          Vendor
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem
+                          checked={columnVisibility.inventory}
+                          onCheckedChange={() =>
+                            toggleColumnVisibility("inventory")
+                          }
+                        >
+                          Inventory
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem
+                          checked={columnVisibility.price}
+                          onCheckedChange={() =>
+                            toggleColumnVisibility("price")
+                          }
+                        >
+                          Price
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem
+                          checked={columnVisibility.seoScore}
+                          onCheckedChange={() =>
+                            toggleColumnVisibility("seoScore")
+                          }
+                        >
+                          SEO Score
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem
+                          checked={columnVisibility.actions}
+                          onCheckedChange={() =>
+                            toggleColumnVisibility("actions")
+                          }
+                        >
+                          Actions
+                        </DropdownMenuCheckboxItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    <Button
+                      variant={viewMode === "list" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setViewMode("list")}
                     >
-                      {columnVisibility.product && <div>Product</div>}
-                      {columnVisibility.status && <div>Status</div>}
-                      {columnVisibility.vendor && <div>Vendor</div>}
-                      {columnVisibility.inventory && <div>Inventory</div>}
-                      {columnVisibility.price && <div>Price</div>}
-                      {columnVisibility.seoScore && <div>SEO Score</div>}
-                      {columnVisibility.actions && <div>Actions</div>}
+                      <List className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant={viewMode === "grid" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setViewMode("grid")}
+                    >
+                      <Grid className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Bulk Operations */}
+          <BulkOperations
+            selectedProducts={Array.from(selectedProducts)}
+            onClearSelection={() => setSelectedProducts(new Set())}
+          />
+
+          {/* Products List */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>Products ({filteredProducts.length})</CardTitle>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-muted-foreground">
+                    Page {currentPage} of{" "}
+                    {Math.ceil(totalProducts / itemsPerPage)}
+                  </span>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {isLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                </div>
+              ) : (
+                <>
+                  {/* Table Header */}
+                  <div className="border rounded-lg">
+                    <div className="flex items-center px-4 py-3 border-b bg-muted/50">
+                      <Checkbox
+                        checked={
+                          selectedProducts.size === filteredProducts.length &&
+                          filteredProducts.length > 0
+                        }
+                        onCheckedChange={toggleAllProducts}
+                        className="mr-4"
+                      />
+                      <div
+                        className="grid gap-4 flex-1 text-sm font-medium text-muted-foreground"
+                        style={{
+                          gridTemplateColumns:
+                            `${columnVisibility.product ? "4fr" : ""} ${columnVisibility.status ? "2fr" : ""} ${columnVisibility.vendor ? "2fr" : ""} ${columnVisibility.inventory ? "1fr" : ""} ${columnVisibility.price ? "2fr" : ""} ${columnVisibility.seoScore ? "2fr" : ""} ${columnVisibility.actions ? "1fr" : ""}`.trim(),
+                        }}
+                      >
+                        {columnVisibility.product && <div>Product</div>}
+                        {columnVisibility.status && <div>Status</div>}
+                        {columnVisibility.vendor && <div>Vendor</div>}
+                        {columnVisibility.inventory && <div>Inventory</div>}
+                        {columnVisibility.price && <div>Price</div>}
+                        {columnVisibility.seoScore && <div>SEO Score</div>}
+                        {columnVisibility.actions && <div>Actions</div>}
+                      </div>
+                    </div>
+
+                    {/* Product Rows */}
+                    <div className="divide-y">
+                      {filteredProducts.map((product) => (
+                        <div
+                          key={product.id}
+                          className="flex items-center px-4 py-4 hover:bg-muted/30"
+                        >
+                          <Checkbox
+                            checked={selectedProducts.has(product.id)}
+                            onCheckedChange={() =>
+                              toggleProductSelection(product.id)
+                            }
+                            className="mr-4"
+                          />
+                          <div
+                            className="grid gap-4 flex-1"
+                            style={{
+                              gridTemplateColumns:
+                                `${columnVisibility.product ? "4fr" : ""} ${columnVisibility.status ? "2fr" : ""} ${columnVisibility.vendor ? "2fr" : ""} ${columnVisibility.inventory ? "1fr" : ""} ${columnVisibility.price ? "2fr" : ""} ${columnVisibility.seoScore ? "2fr" : ""} ${columnVisibility.actions ? "1fr" : ""}`.trim(),
+                            }}
+                          >
+                            {/* Product Info */}
+                            {columnVisibility.product && (
+                              <div className="flex items-center space-x-3">
+                                <img
+                                  src={product.image}
+                                  alt={product.title}
+                                  className="w-12 h-12 rounded-lg object-cover"
+                                />
+                                <div>
+                                  <p className="font-medium text-foreground">
+                                    {product.title}
+                                  </p>
+                                  <p className="text-sm text-muted-foreground">
+                                    {product.handle}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Status */}
+                            {columnVisibility.status && (
+                              <div className="flex items-center">
+                                <Badge
+                                  variant={getStatusBadgeVariant(
+                                    product.status,
+                                  )}
+                                >
+                                  {product.status}
+                                </Badge>
+                              </div>
+                            )}
+
+                            {/* Vendor */}
+                            {columnVisibility.vendor && (
+                              <div className="flex items-center">
+                                <span className="text-sm">
+                                  {product.vendor}
+                                </span>
+                              </div>
+                            )}
+
+                            {/* Inventory */}
+                            {columnVisibility.inventory && (
+                              <div className="flex items-center">
+                                <span
+                                  className={`text-sm ${product.inventory < 10 ? "text-destructive" : "text-foreground"}`}
+                                >
+                                  {product.inventory}
+                                </span>
+                              </div>
+                            )}
+
+                            {/* Price */}
+                            {columnVisibility.price && (
+                              <div className="flex items-center">
+                                <div>
+                                  <span className="text-sm font-medium">
+                                    ${product.price}
+                                  </span>
+                                  {product.compareAtPrice && (
+                                    <span className="text-xs text-muted-foreground line-through ml-2">
+                                      ${product.compareAtPrice}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* SEO Score */}
+                            {columnVisibility.seoScore && (
+                              <div className="flex items-center space-x-2">
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between text-xs mb-1">
+                                    <span
+                                      className={getSEOScoreColor(
+                                        product.seoScore,
+                                      )}
+                                    >
+                                      {product.seoScore}/100
+                                    </span>
+                                    {product.seoScore >= 80 ? (
+                                      <CheckCircle className="h-3 w-3 text-green-600" />
+                                    ) : (
+                                      <AlertCircle className="h-3 w-3 text-yellow-600" />
+                                    )}
+                                  </div>
+                                  <Progress
+                                    value={product.seoScore}
+                                    className="h-2"
+                                  />
+                                  <Badge
+                                    variant={
+                                      getSEOScoreBadge(product.seoScore).variant
+                                    }
+                                    className="text-xs mt-1"
+                                  >
+                                    {getSEOScoreBadge(product.seoScore).label}
+                                  </Badge>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Actions */}
+                            {columnVisibility.actions && (
+                              <div className="flex items-center">
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                      <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem asChild>
+                                      <Link to={`/product/${product.id}/edit`}>
+                                        <Edit3 className="h-4 w-4 mr-2" />
+                                        Edit
+                                      </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                      <Eye className="h-4 w-4 mr-2" />
+                                      View
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                      <Target className="h-4 w-4 mr-2" />
+                                      SEO Analysis
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="text-destructive">
+                                      <Trash2 className="h-4 w-4 mr-2" />
+                                      Delete
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
-                  {/* Product Rows */}
-                  <div className="divide-y">
-                    {filteredProducts.map((product) => (
-                      <div
-                        key={product.id}
-                        className="flex items-center px-4 py-4 hover:bg-muted/30"
+                  {/* Pagination */}
+                  <div className="flex items-center justify-between mt-6">
+                    <div className="text-sm text-muted-foreground">
+                      Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+                      {Math.min(currentPage * itemsPerPage, totalProducts)} of{" "}
+                      {totalProducts.toLocaleString()} products
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => loadProducts(currentPage - 1)}
+                        disabled={currentPage === 1 || isLoading}
                       >
-                        <Checkbox
-                          checked={selectedProducts.has(product.id)}
-                          onCheckedChange={() =>
-                            toggleProductSelection(product.id)
-                          }
-                          className="mr-4"
-                        />
-                        <div
-                          className="grid gap-4 flex-1"
-                          style={{
-                            gridTemplateColumns:
-                              `${columnVisibility.product ? "4fr" : ""} ${columnVisibility.status ? "2fr" : ""} ${columnVisibility.vendor ? "2fr" : ""} ${columnVisibility.inventory ? "1fr" : ""} ${columnVisibility.price ? "2fr" : ""} ${columnVisibility.seoScore ? "2fr" : ""} ${columnVisibility.actions ? "1fr" : ""}`.trim(),
-                          }}
-                        >
-                          {/* Product Info */}
-                          {columnVisibility.product && (
-                            <div className="flex items-center space-x-3">
-                              <img
-                                src={product.image}
-                                alt={product.title}
-                                className="w-12 h-12 rounded-lg object-cover"
-                              />
-                              <div>
-                                <p className="font-medium text-foreground">
-                                  {product.title}
-                                </p>
-                                <p className="text-sm text-muted-foreground">
-                                  {product.handle}
-                                </p>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Status */}
-                          {columnVisibility.status && (
-                            <div className="flex items-center">
-                              <Badge
-                                variant={getStatusBadgeVariant(product.status)}
-                              >
-                                {product.status}
-                              </Badge>
-                            </div>
-                          )}
-
-                          {/* Vendor */}
-                          {columnVisibility.vendor && (
-                            <div className="flex items-center">
-                              <span className="text-sm">{product.vendor}</span>
-                            </div>
-                          )}
-
-                          {/* Inventory */}
-                          {columnVisibility.inventory && (
-                            <div className="flex items-center">
-                              <span
-                                className={`text-sm ${product.inventory < 10 ? "text-destructive" : "text-foreground"}`}
-                              >
-                                {product.inventory}
-                              </span>
-                            </div>
-                          )}
-
-                          {/* Price */}
-                          {columnVisibility.price && (
-                            <div className="flex items-center">
-                              <div>
-                                <span className="text-sm font-medium">
-                                  ${product.price}
-                                </span>
-                                {product.compareAtPrice && (
-                                  <span className="text-xs text-muted-foreground line-through ml-2">
-                                    ${product.compareAtPrice}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* SEO Score */}
-                          {columnVisibility.seoScore && (
-                            <div className="flex items-center space-x-2">
-                              <div className="flex-1">
-                                <div className="flex items-center justify-between text-xs mb-1">
-                                  <span
-                                    className={getSEOScoreColor(
-                                      product.seoScore,
-                                    )}
-                                  >
-                                    {product.seoScore}/100
-                                  </span>
-                                  {product.seoScore >= 80 ? (
-                                    <CheckCircle className="h-3 w-3 text-green-600" />
-                                  ) : (
-                                    <AlertCircle className="h-3 w-3 text-yellow-600" />
-                                  )}
-                                </div>
-                                <Progress
-                                  value={product.seoScore}
-                                  className="h-2"
-                                />
-                                <Badge
-                                  variant={
-                                    getSEOScoreBadge(product.seoScore).variant
-                                  }
-                                  className="text-xs mt-1"
-                                >
-                                  {getSEOScoreBadge(product.seoScore).label}
-                                </Badge>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Actions */}
-                          {columnVisibility.actions && (
-                            <div className="flex items-center">
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="sm">
-                                    <MoreHorizontal className="h-4 w-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuItem asChild>
-                                    <Link to={`/product/${product.id}/edit`}>
-                                      <Edit3 className="h-4 w-4 mr-2" />
-                                      Edit
-                                    </Link>
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem>
-                                    <Eye className="h-4 w-4 mr-2" />
-                                    View
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem>
-                                    <Target className="h-4 w-4 mr-2" />
-                                    SEO Analysis
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem className="text-destructive">
-                                    <Trash2 className="h-4 w-4 mr-2" />
-                                    Delete
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+                        Previous
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => loadProducts(currentPage + 1)}
+                        disabled={
+                          currentPage >=
+                            Math.ceil(totalProducts / itemsPerPage) || isLoading
+                        }
+                      >
+                        Next
+                      </Button>
+                    </div>
                   </div>
-                </div>
-
-                {/* Pagination */}
-                <div className="flex items-center justify-between mt-6">
-                  <div className="text-sm text-muted-foreground">
-                    Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-                    {Math.min(currentPage * itemsPerPage, totalProducts)} of{" "}
-                    {totalProducts.toLocaleString()} products
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => loadProducts(currentPage - 1)}
-                      disabled={currentPage === 1 || isLoading}
-                    >
-                      Previous
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => loadProducts(currentPage + 1)}
-                      disabled={
-                        currentPage >=
-                          Math.ceil(totalProducts / itemsPerPage) || isLoading
-                      }
-                    >
-                      Next
-                    </Button>
-                  </div>
-                </div>
-              </>
-            )}
-          </CardContent>
-        </Card>
+                </>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </Layout>

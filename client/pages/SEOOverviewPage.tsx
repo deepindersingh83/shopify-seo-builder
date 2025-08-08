@@ -16,7 +16,7 @@ import {
   Clock,
   Users,
   Eye,
-  Zap
+  Zap,
 } from "lucide-react";
 
 export default function SEOOverviewPage() {
@@ -27,7 +27,9 @@ export default function SEOOverviewPage() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-3xl font-bold">SEO Overview</h1>
-              <p className="text-muted-foreground">Monitor your SEO performance and identify opportunities</p>
+              <p className="text-muted-foreground">
+                Monitor your SEO performance and identify opportunities
+              </p>
             </div>
             <div className="flex space-x-3">
               <Button variant="outline">
@@ -47,12 +49,18 @@ export default function SEOOverviewPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold mb-2">Overall SEO Score</h2>
-                  <p className="text-muted-foreground">Based on 152,847 products analyzed</p>
+                  <p className="text-muted-foreground">
+                    Based on 152,847 products analyzed
+                  </p>
                 </div>
                 <div className="text-center">
-                  <div className="text-6xl font-bold text-green-600 mb-2">85</div>
+                  <div className="text-6xl font-bold text-green-600 mb-2">
+                    85
+                  </div>
                   <div className="text-xl text-muted-foreground">/ 100</div>
-                  <Badge className="mt-2 bg-green-100 text-green-800">Excellent</Badge>
+                  <Badge className="mt-2 bg-green-100 text-green-800">
+                    Excellent
+                  </Badge>
                 </div>
               </div>
               <div className="mt-6">
@@ -65,7 +73,9 @@ export default function SEOOverviewPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Search Visibility</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Search Visibility
+                </CardTitle>
                 <Eye className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -79,7 +89,9 @@ export default function SEOOverviewPage() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Organic Traffic</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Organic Traffic
+                </CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -93,7 +105,9 @@ export default function SEOOverviewPage() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Keywords Ranking</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Keywords Ranking
+                </CardTitle>
                 <Search className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -107,7 +121,9 @@ export default function SEOOverviewPage() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Issues Found</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Issues Found
+                </CardTitle>
                 <AlertTriangle className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -163,17 +179,44 @@ export default function SEOOverviewPage() {
               <CardContent>
                 <div className="space-y-3">
                   {[
-                    { type: 'warning', message: '45 products missing meta descriptions', count: 45 },
-                    { type: 'error', message: '12 products with duplicate titles', count: 12 },
-                    { type: 'info', message: '156 products with long titles', count: 156 },
-                    { type: 'success', message: '890 products fully optimized', count: 890 },
+                    {
+                      type: "warning",
+                      message: "45 products missing meta descriptions",
+                      count: 45,
+                    },
+                    {
+                      type: "error",
+                      message: "12 products with duplicate titles",
+                      count: 12,
+                    },
+                    {
+                      type: "info",
+                      message: "156 products with long titles",
+                      count: 156,
+                    },
+                    {
+                      type: "success",
+                      message: "890 products fully optimized",
+                      count: 890,
+                    },
                   ].map((issue, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 border rounded">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 border rounded"
+                    >
                       <div className="flex items-center space-x-3">
-                        {issue.type === 'error' && <AlertTriangle className="h-4 w-4 text-red-500" />}
-                        {issue.type === 'warning' && <Clock className="h-4 w-4 text-yellow-500" />}
-                        {issue.type === 'info' && <Eye className="h-4 w-4 text-blue-500" />}
-                        {issue.type === 'success' && <CheckCircle className="h-4 w-4 text-green-500" />}
+                        {issue.type === "error" && (
+                          <AlertTriangle className="h-4 w-4 text-red-500" />
+                        )}
+                        {issue.type === "warning" && (
+                          <Clock className="h-4 w-4 text-yellow-500" />
+                        )}
+                        {issue.type === "info" && (
+                          <Eye className="h-4 w-4 text-blue-500" />
+                        )}
+                        {issue.type === "success" && (
+                          <CheckCircle className="h-4 w-4 text-green-500" />
+                        )}
                         <span className="text-sm">{issue.message}</span>
                       </div>
                       <Badge variant="outline">{issue.count}</Badge>
@@ -195,32 +238,41 @@ export default function SEOOverviewPage() {
                   <Globe className="h-12 w-12 mx-auto mb-4 text-blue-600" />
                   <h3 className="font-semibold mb-2">Multi-Language SEO</h3>
                   <p className="text-sm text-muted-foreground mb-3">
-                    Optimize for international markets with automatic translation and localization.
+                    Optimize for international markets with automatic
+                    translation and localization.
                   </p>
                   <Link to="/multi-language-seo">
-                    <Button variant="outline" size="sm">Explore</Button>
+                    <Button variant="outline" size="sm">
+                      Explore
+                    </Button>
                   </Link>
                 </div>
-                
+
                 <div className="text-center">
                   <BarChart3 className="h-12 w-12 mx-auto mb-4 text-green-600" />
                   <h3 className="font-semibold mb-2">Market Analysis</h3>
                   <p className="text-sm text-muted-foreground mb-3">
-                    Discover new opportunities and analyze market trends for better SEO strategy.
+                    Discover new opportunities and analyze market trends for
+                    better SEO strategy.
                   </p>
                   <Link to="/market-opportunities">
-                    <Button variant="outline" size="sm">Explore</Button>
+                    <Button variant="outline" size="sm">
+                      Explore
+                    </Button>
                   </Link>
                 </div>
-                
+
                 <div className="text-center">
                   <Target className="h-12 w-12 mx-auto mb-4 text-purple-600" />
                   <h3 className="font-semibold mb-2">Workflow Automation</h3>
                   <p className="text-sm text-muted-foreground mb-3">
-                    Automate your SEO tasks with intelligent workflows and AI-powered optimization.
+                    Automate your SEO tasks with intelligent workflows and
+                    AI-powered optimization.
                   </p>
                   <Link to="/workflows">
-                    <Button variant="outline" size="sm">Explore</Button>
+                    <Button variant="outline" size="sm">
+                      Explore
+                    </Button>
                   </Link>
                 </div>
               </div>

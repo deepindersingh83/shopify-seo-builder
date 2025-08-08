@@ -70,7 +70,11 @@ const navigationItems: NavItem[] = [
     children: [
       { title: "SEO Overview", href: "/seo/overview", icon: BarChart3 },
       { title: "Data Sources", href: "/data-sources", icon: RefreshCw },
-      { title: "Market Analysis", href: "/market-opportunities", icon: TrendingUp },
+      {
+        title: "Market Analysis",
+        href: "/market-opportunities",
+        icon: TrendingUp,
+      },
       {
         title: "Keyword Research",
         href: "/seo/keywords",
@@ -152,7 +156,11 @@ const navigationItems: NavItem[] = [
     icon: RefreshCw,
     children: [
       { title: "Workflows", href: "/workflows", icon: Zap },
-      { title: "Multi-Channel Listings", href: "/multi-channel-listings", icon: Package },
+      {
+        title: "Multi-Channel Listings",
+        href: "/multi-channel-listings",
+        icon: Package,
+      },
       { title: "SEO Rules", href: "/automation/rules", icon: Settings },
       {
         title: "Scheduled Audits",

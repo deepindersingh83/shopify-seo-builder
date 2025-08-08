@@ -1,43 +1,47 @@
-import { 
-  WorkflowRule, 
-  WorkflowExecution, 
-  BulkOperation, 
-  SEOAudit, 
+import {
+  WorkflowRule,
+  WorkflowExecution,
+  BulkOperation,
+  SEOAudit,
   AuditResult,
   FilterPreset,
   PlatformIntegration,
-  ThirdPartyIntegration
-} from '@shared/workflows';
+  ThirdPartyIntegration,
+} from "@shared/workflows";
 
 class WorkflowService {
-  private baseUrl = '/api';
+  private baseUrl = "/api";
 
   // Workflow Rules Management
   async getWorkflowRules(): Promise<WorkflowRule[]> {
     try {
       const response = await fetch(`${this.baseUrl}/workflows/rules`);
       if (!response.ok) {
-        throw new Error('API not available');
+        throw new Error("API not available");
       }
       return response.json();
     } catch (error) {
       // Return mock data if API is not available
       return [
         {
-          id: '1',
-          name: 'Auto SEO Optimization',
-          description: 'Automatically optimize SEO fields for new products',
+          id: "1",
+          name: "Auto SEO Optimization",
+          description: "Automatically optimize SEO fields for new products",
           enabled: true,
-          trigger: { type: 'event', event: 'product_created' },
+          trigger: { type: "event", event: "product_created" },
           conditions: [],
           actions: [
-            { id: '1', type: 'generate_meta', config: { metaType: 'both', useAI: true } },
-            { id: '2', type: 'generate_schema', config: {} }
+            {
+              id: "1",
+              type: "generate_meta",
+              config: { metaType: "both", useAI: true },
+            },
+            { id: "2", type: "generate_schema", config: {} },
           ],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          executionCount: 156
-        }
+          executionCount: 156,
+        },
       ];
     }
   }
@@ -47,35 +51,46 @@ class WorkflowService {
     return response.json();
   }
 
-  async createWorkflowRule(rule: Omit<WorkflowRule, 'id' | 'createdAt' | 'updatedAt' | 'executionCount'>): Promise<WorkflowRule> {
+  async createWorkflowRule(
+    rule: Omit<
+      WorkflowRule,
+      "id" | "createdAt" | "updatedAt" | "executionCount"
+    >,
+  ): Promise<WorkflowRule> {
     const response = await fetch(`${this.baseUrl}/workflows/rules`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(rule)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(rule),
     });
     return response.json();
   }
 
-  async updateWorkflowRule(id: string, rule: Partial<WorkflowRule>): Promise<WorkflowRule> {
+  async updateWorkflowRule(
+    id: string,
+    rule: Partial<WorkflowRule>,
+  ): Promise<WorkflowRule> {
     const response = await fetch(`${this.baseUrl}/workflows/rules/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(rule)
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(rule),
     });
     return response.json();
   }
 
   async deleteWorkflowRule(id: string): Promise<void> {
     await fetch(`${this.baseUrl}/workflows/rules/${id}`, {
-      method: 'DELETE'
+      method: "DELETE",
     });
   }
 
-  async executeWorkflow(ruleId: string, productIds?: string[]): Promise<WorkflowExecution> {
+  async executeWorkflow(
+    ruleId: string,
+    productIds?: string[],
+  ): Promise<WorkflowExecution> {
     const response = await fetch(`${this.baseUrl}/workflows/execute`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ruleId, productIds })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ruleId, productIds }),
     });
     return response.json();
   }
@@ -88,16 +103,16 @@ class WorkflowService {
         : `${this.baseUrl}/workflows/executions`;
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error('API not available');
+        throw new Error("API not available");
       }
       return response.json();
     } catch (error) {
       // Return mock data if API is not available
       return [
         {
-          id: '1',
-          workflowId: '1',
-          status: 'completed',
+          id: "1",
+          workflowId: "1",
+          status: "completed",
           startedAt: new Date(Date.now() - 3600000).toISOString(),
           completedAt: new Date(Date.now() - 3000000).toISOString(),
           progress: 100,
@@ -105,8 +120,8 @@ class WorkflowService {
           processedItems: 25,
           errors: [],
           results: [],
-          canCancel: false
-        }
+          canCancel: false,
+        },
       ];
     }
   }
@@ -118,7 +133,7 @@ class WorkflowService {
 
   async cancelWorkflowExecution(id: string): Promise<void> {
     await fetch(`${this.baseUrl}/workflows/executions/${id}/cancel`, {
-      method: 'POST'
+      method: "POST",
     });
   }
 
@@ -127,44 +142,49 @@ class WorkflowService {
     try {
       const response = await fetch(`${this.baseUrl}/seo/audits`);
       if (!response.ok) {
-        throw new Error('API not available');
+        throw new Error("API not available");
       }
       return response.json();
     } catch (error) {
       // Return mock data if API is not available
       return [
         {
-          id: '1',
-          name: 'Daily SEO Health Check',
-          description: 'Comprehensive daily SEO audit',
+          id: "1",
+          name: "Daily SEO Health Check",
+          description: "Comprehensive daily SEO audit",
           enabled: true,
           rules: [],
-          notifications: []
-        }
+          notifications: [],
+        },
       ];
     }
   }
 
-  async createSEOAudit(audit: Omit<SEOAudit, 'id'>): Promise<SEOAudit> {
+  async createSEOAudit(audit: Omit<SEOAudit, "id">): Promise<SEOAudit> {
     const response = await fetch(`${this.baseUrl}/seo/audits`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(audit)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(audit),
     });
     return response.json();
   }
 
-  async runSEOAudit(auditId: string, productIds?: string[]): Promise<AuditResult> {
+  async runSEOAudit(
+    auditId: string,
+    productIds?: string[],
+  ): Promise<AuditResult> {
     const response = await fetch(`${this.baseUrl}/seo/audits/${auditId}/run`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ productIds })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ productIds }),
     });
     return response.json();
   }
 
   async getAuditResults(auditId: string): Promise<AuditResult[]> {
-    const response = await fetch(`${this.baseUrl}/seo/audits/${auditId}/results`);
+    const response = await fetch(
+      `${this.baseUrl}/seo/audits/${auditId}/results`,
+    );
     return response.json();
   }
 
@@ -173,17 +193,17 @@ class WorkflowService {
     try {
       const response = await fetch(`${this.baseUrl}/bulk/operations`);
       if (!response.ok) {
-        throw new Error('API not available');
+        throw new Error("API not available");
       }
       return response.json();
     } catch (error) {
       // Return mock data if API is not available
       return [
         {
-          id: '1',
-          type: 'optimize',
-          name: 'SEO Optimization Batch',
-          status: 'completed',
+          id: "1",
+          type: "optimize",
+          name: "SEO Optimization Batch",
+          status: "completed",
           progress: 100,
           totalItems: 500,
           processedItems: 500,
@@ -193,8 +213,8 @@ class WorkflowService {
           completedAt: new Date(Date.now() - 3300000).toISOString(),
           canCancel: false,
           results: [],
-          errors: []
-        }
+          errors: [],
+        },
       ];
     }
   }
@@ -206,7 +226,7 @@ class WorkflowService {
 
   async cancelBulkOperation(id: string): Promise<void> {
     await fetch(`${this.baseUrl}/bulk/operations/${id}/cancel`, {
-      method: 'POST'
+      method: "POST",
     });
   }
 
@@ -216,25 +236,30 @@ class WorkflowService {
     return response.json();
   }
 
-  async saveFilterPreset(preset: Omit<FilterPreset, 'id' | 'createdAt' | 'usageCount'>): Promise<FilterPreset> {
+  async saveFilterPreset(
+    preset: Omit<FilterPreset, "id" | "createdAt" | "usageCount">,
+  ): Promise<FilterPreset> {
     const response = await fetch(`${this.baseUrl}/filters/presets`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(preset)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(preset),
     });
     return response.json();
   }
 
   async deleteFilterPreset(id: string): Promise<void> {
     await fetch(`${this.baseUrl}/filters/presets/${id}`, {
-      method: 'DELETE'
+      method: "DELETE",
     });
   }
 
   async applyFilterPreset(id: string): Promise<FilterPreset> {
-    const response = await fetch(`${this.baseUrl}/filters/presets/${id}/apply`, {
-      method: 'POST'
-    });
+    const response = await fetch(
+      `${this.baseUrl}/filters/presets/${id}/apply`,
+      {
+        method: "POST",
+      },
+    );
     return response.json();
   }
 
@@ -243,53 +268,66 @@ class WorkflowService {
     try {
       const response = await fetch(`${this.baseUrl}/integrations/platforms`);
       if (!response.ok) {
-        throw new Error('API not available');
+        throw new Error("API not available");
       }
       return response.json();
     } catch (error) {
       // Return mock data if API is not available
       return [
         {
-          id: '1',
-          name: 'Main Shopify Store',
-          type: 'shopify',
-          status: 'connected',
-          credentials: { shopifyDomain: 'mystore.myshopify.com' },
+          id: "1",
+          name: "Main Shopify Store",
+          type: "shopify",
+          status: "connected",
+          credentials: { shopifyDomain: "mystore.myshopify.com" },
           syncSettings: {
             autoSync: true,
             syncInterval: 60,
-            syncFields: ['title', 'description', 'price', 'inventory'],
-            conflictResolution: 'newest_wins',
-            enableWebhooks: true
+            syncFields: ["title", "description", "price", "inventory"],
+            conflictResolution: "newest_wins",
+            enableWebhooks: true,
           },
           lastSync: new Date(Date.now() - 1800000).toISOString(),
-          syncHistory: []
-        }
+          syncHistory: [],
+        },
       ];
     }
   }
 
-  async connectPlatform(integration: Omit<PlatformIntegration, 'id' | 'status' | 'lastSync' | 'syncHistory'>): Promise<PlatformIntegration> {
+  async connectPlatform(
+    integration: Omit<
+      PlatformIntegration,
+      "id" | "status" | "lastSync" | "syncHistory"
+    >,
+  ): Promise<PlatformIntegration> {
     const response = await fetch(`${this.baseUrl}/integrations/platforms`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(integration)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(integration),
     });
     return response.json();
   }
 
-  async testPlatformConnection(id: string): Promise<{ success: boolean; message: string }> {
-    const response = await fetch(`${this.baseUrl}/integrations/platforms/${id}/test`, {
-      method: 'POST'
-    });
+  async testPlatformConnection(
+    id: string,
+  ): Promise<{ success: boolean; message: string }> {
+    const response = await fetch(
+      `${this.baseUrl}/integrations/platforms/${id}/test`,
+      {
+        method: "POST",
+      },
+    );
     return response.json();
   }
 
-  async syncPlatform(id: string, direction: 'import' | 'export' | 'bidirectional'): Promise<void> {
+  async syncPlatform(
+    id: string,
+    direction: "import" | "export" | "bidirectional",
+  ): Promise<void> {
     await fetch(`${this.baseUrl}/integrations/platforms/${id}/sync`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ direction })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ direction }),
     });
   }
 
@@ -298,71 +336,87 @@ class WorkflowService {
     try {
       const response = await fetch(`${this.baseUrl}/integrations/third-party`);
       if (!response.ok) {
-        throw new Error('API not available');
+        throw new Error("API not available");
       }
       return response.json();
     } catch (error) {
       // Return mock data if API is not available
       return [
         {
-          id: '1',
-          name: 'Google Search Console',
-          type: 'google_search_console',
-          status: 'connected',
+          id: "1",
+          name: "Google Search Console",
+          type: "google_search_console",
+          status: "connected",
           credentials: {},
           settings: { autoSync: true },
-          lastSync: new Date(Date.now() - 3600000).toISOString()
+          lastSync: new Date(Date.now() - 3600000).toISOString(),
         },
         {
-          id: '2',
-          name: 'Google Analytics 4',
-          type: 'google_analytics',
-          status: 'connected',
+          id: "2",
+          name: "Google Analytics 4",
+          type: "google_analytics",
+          status: "connected",
           credentials: {},
           settings: { autoSync: true },
-          lastSync: new Date(Date.now() - 7200000).toISOString()
-        }
+          lastSync: new Date(Date.now() - 7200000).toISOString(),
+        },
       ];
     }
   }
 
-  async connectThirdParty(integration: Omit<ThirdPartyIntegration, 'id' | 'status' | 'lastSync'>): Promise<ThirdPartyIntegration> {
+  async connectThirdParty(
+    integration: Omit<ThirdPartyIntegration, "id" | "status" | "lastSync">,
+  ): Promise<ThirdPartyIntegration> {
     const response = await fetch(`${this.baseUrl}/integrations/third-party`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(integration)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(integration),
     });
     return response.json();
   }
 
   // AI-powered optimization
   async generateSEOSuggestions(productId: string): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/ai/seo-suggestions/${productId}`);
+    const response = await fetch(
+      `${this.baseUrl}/ai/seo-suggestions/${productId}`,
+    );
     return response.json();
   }
 
-  async generateMetaData(productId: string, type: 'title' | 'description' | 'both'): Promise<any> {
+  async generateMetaData(
+    productId: string,
+    type: "title" | "description" | "both",
+  ): Promise<any> {
     const response = await fetch(`${this.baseUrl}/ai/generate-meta`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ productId, type })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ productId, type }),
     });
     return response.json();
   }
 
   async generateSchemaMarkup(productId: string): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/ai/generate-schema/${productId}`);
+    const response = await fetch(
+      `${this.baseUrl}/ai/generate-schema/${productId}`,
+    );
     return response.json();
   }
 
   async getTagSuggestions(productId: string): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/ai/tag-suggestions/${productId}`);
+    const response = await fetch(
+      `${this.baseUrl}/ai/tag-suggestions/${productId}`,
+    );
     return response.json();
   }
 
   // Real-time monitoring
-  subscribeToExecution(executionId: string, callback: (data: WorkflowExecution) => void): EventSource {
-    const eventSource = new EventSource(`${this.baseUrl}/workflows/executions/${executionId}/stream`);
+  subscribeToExecution(
+    executionId: string,
+    callback: (data: WorkflowExecution) => void,
+  ): EventSource {
+    const eventSource = new EventSource(
+      `${this.baseUrl}/workflows/executions/${executionId}/stream`,
+    );
     eventSource.onmessage = (event) => {
       const data = JSON.parse(event.data);
       callback(data);
@@ -370,8 +424,13 @@ class WorkflowService {
     return eventSource;
   }
 
-  subscribeToBulkOperation(operationId: string, callback: (data: BulkOperation) => void): EventSource {
-    const eventSource = new EventSource(`${this.baseUrl}/bulk/operations/${operationId}/stream`);
+  subscribeToBulkOperation(
+    operationId: string,
+    callback: (data: BulkOperation) => void,
+  ): EventSource {
+    const eventSource = new EventSource(
+      `${this.baseUrl}/bulk/operations/${operationId}/stream`,
+    );
     eventSource.onmessage = (event) => {
       const data = JSON.parse(event.data);
       callback(data);

@@ -11,11 +11,11 @@ interface PlaceholderPageProps {
   relatedPages?: { title: string; href: string; description: string }[];
 }
 
-export default function PlaceholderPage({ 
-  title, 
-  description, 
+export default function PlaceholderPage({
+  title,
+  description,
   icon = <Construction className="h-12 w-12" />,
-  relatedPages = []
+  relatedPages = [],
 }: PlaceholderPageProps) {
   return (
     <Layout>
@@ -33,17 +33,16 @@ export default function PlaceholderPage({
           <div className="max-w-2xl mx-auto">
             <Card>
               <CardContent className="p-12 text-center">
-                <div className="text-muted-foreground mb-6">
-                  {icon}
-                </div>
+                <div className="text-muted-foreground mb-6">{icon}</div>
                 <h1 className="text-3xl font-bold mb-4">{title}</h1>
                 <p className="text-lg text-muted-foreground mb-8">
                   {description}
                 </p>
                 <p className="text-sm text-muted-foreground mb-6">
-                  This feature is coming soon! In the meantime, check out our other SEO tools.
+                  This feature is coming soon! In the meantime, check out our
+                  other SEO tools.
                 </p>
-                
+
                 {relatedPages.length > 0 && (
                   <div className="space-y-4">
                     <h3 className="font-semibold">Related Features</h3>
@@ -53,7 +52,9 @@ export default function PlaceholderPage({
                           <Card className="hover:shadow-md transition-shadow cursor-pointer">
                             <CardContent className="p-4">
                               <h4 className="font-medium mb-2">{page.title}</h4>
-                              <p className="text-sm text-muted-foreground">{page.description}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {page.description}
+                              </p>
                             </CardContent>
                           </Card>
                         </Link>

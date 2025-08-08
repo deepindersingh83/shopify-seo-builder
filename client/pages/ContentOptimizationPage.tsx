@@ -11,13 +11,13 @@ export default function ContentOptimizationPage() {
         {
           title: "SEO Overview",
           href: "/seo/overview",
-          description: "Monitor your content SEO performance"
+          description: "Monitor your content SEO performance",
         },
         {
           title: "Multi-Language SEO",
           href: "/multi-language-seo",
-          description: "Optimize content for global markets"
-        }
+          description: "Optimize content for global markets",
+        },
       ]}
     />
   );

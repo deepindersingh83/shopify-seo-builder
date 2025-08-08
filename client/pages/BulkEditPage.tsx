@@ -59,7 +59,13 @@ interface Product {
 
 interface BulkOperation {
   id: string;
-  type: "meta_title" | "meta_description" | "tags" | "status" | "price" | "description";
+  type:
+    | "meta_title"
+    | "meta_description"
+    | "tags"
+    | "status"
+    | "price"
+    | "description";
   productCount: number;
   status: "pending" | "running" | "completed" | "failed";
   progress: number;
@@ -74,20 +80,29 @@ const mockProducts: Product[] = Array.from({ length: 50 }, (_, i) => ({
   handle: `product-${i + 1}`,
   status: ["active", "draft", "archived"][Math.floor(Math.random() * 3)] as any,
   vendor: ["Nike", "Adidas", "Apple", "Samsung"][Math.floor(Math.random() * 4)],
-  productType: ["Electronics", "Clothing", "Sports", "Accessories"][Math.floor(Math.random() * 4)],
+  productType: ["Electronics", "Clothing", "Sports", "Accessories"][
+    Math.floor(Math.random() * 4)
+  ],
   tags: [`tag-${i}`, `category-${Math.floor(i / 10)}`],
   price: Math.floor(Math.random() * 500) + 20,
-  compareAtPrice: Math.random() > 0.7 ? Math.floor(Math.random() * 100) + 100 : undefined,
+  compareAtPrice:
+    Math.random() > 0.7 ? Math.floor(Math.random() * 100) + 100 : undefined,
   inventory: Math.floor(Math.random() * 1000),
   image: `https://picsum.photos/100/100?random=${i}`,
   description: `High-quality product ${i + 1} with excellent features and durability.`,
-  metaTitle: Math.random() > 0.5 ? `Product ${i + 1} | Best Quality` : undefined,
-  metaDescription: Math.random() > 0.3 ? `Premium product ${i + 1} with excellent features.` : undefined,
+  metaTitle:
+    Math.random() > 0.5 ? `Product ${i + 1} | Best Quality` : undefined,
+  metaDescription:
+    Math.random() > 0.3
+      ? `Premium product ${i + 1} with excellent features.`
+      : undefined,
   seoScore: Math.floor(Math.random() * 100),
 }));
 
 export default function BulkEditPage() {
-  const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set());
+  const [selectedProducts, setSelectedProducts] = useState<Set<string>>(
+    new Set(),
+  );
   const [bulkOperations, setBulkOperations] = useState<BulkOperation[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -108,10 +123,13 @@ export default function BulkEditPage() {
   });
 
   const filteredProducts = mockProducts.filter((product) => {
-    const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    const matchesSearch =
+      product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.handle.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === "all" || product.status === statusFilter;
-    const matchesVendor = vendorFilter === "all" || product.vendor === vendorFilter;
+    const matchesStatus =
+      statusFilter === "all" || product.status === statusFilter;
+    const matchesVendor =
+      vendorFilter === "all" || product.vendor === vendorFilter;
     return matchesSearch && matchesStatus && matchesVendor;
   });
 
@@ -143,29 +161,42 @@ export default function BulkEditPage() {
       startedAt: new Date().toISOString(),
     };
 
-    setBulkOperations(prev => [operation, ...prev]);
+    setBulkOperations((prev) => [operation, ...prev]);
 
     // Simulate bulk operation
     setTimeout(() => {
-      setBulkOperations(prev => prev.map(op => 
-        op.id === operation.id ? { ...op, status: "running" as const } : op
-      ));
+      setBulkOperations((prev) =>
+        prev.map((op) =>
+          op.id === operation.id ? { ...op, status: "running" as const } : op,
+        ),
+      );
 
       // Simulate progress
       let progress = 0;
       const interval = setInterval(() => {
         progress += Math.random() * 20;
-        setBulkOperations(prev => prev.map(op => 
-          op.id === operation.id ? { ...op, progress: Math.min(progress, 100) } : op
-        ));
+        setBulkOperations((prev) =>
+          prev.map((op) =>
+            op.id === operation.id
+              ? { ...op, progress: Math.min(progress, 100) }
+              : op,
+          ),
+        );
 
         if (progress >= 100) {
           clearInterval(interval);
-          setBulkOperations(prev => prev.map(op => 
-            op.id === operation.id 
-              ? { ...op, status: "completed" as const, progress: 100, completedAt: new Date().toISOString() } 
-              : op
-          ));
+          setBulkOperations((prev) =>
+            prev.map((op) =>
+              op.id === operation.id
+                ? {
+                    ...op,
+                    status: "completed" as const,
+                    progress: 100,
+                    completedAt: new Date().toISOString(),
+                  }
+                : op,
+            ),
+          );
         }
       }, 500);
     }, 1000);
@@ -173,20 +204,29 @@ export default function BulkEditPage() {
 
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
-      case "active": return "default";
-      case "draft": return "secondary";
-      case "archived": return "outline";
-      default: return "secondary";
+      case "active":
+        return "default";
+      case "draft":
+        return "secondary";
+      case "archived":
+        return "outline";
+      default:
+        return "secondary";
     }
   };
 
   const getOperationStatusColor = (status: BulkOperation["status"]) => {
     switch (status) {
-      case "pending": return "text-yellow-600";
-      case "running": return "text-blue-600";
-      case "completed": return "text-green-600";
-      case "failed": return "text-red-600";
-      default: return "text-gray-600";
+      case "pending":
+        return "text-yellow-600";
+      case "running":
+        return "text-blue-600";
+      case "completed":
+        return "text-green-600";
+      case "failed":
+        return "text-red-600";
+      default:
+        return "text-gray-600";
     }
   };
 
@@ -197,7 +237,9 @@ export default function BulkEditPage() {
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Bulk Edit Products</h1>
+              <h1 className="text-3xl font-bold text-foreground">
+                Bulk Edit Products
+              </h1>
               <p className="text-muted-foreground">
                 Efficiently manage and update multiple products simultaneously
               </p>
@@ -217,7 +259,11 @@ export default function BulkEditPage() {
             </div>
           </div>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="space-y-6"
+          >
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="products">Product Selection</TabsTrigger>
               <TabsTrigger value="bulk-edit">Bulk Edit</TabsTrigger>
@@ -246,7 +292,10 @@ export default function BulkEditPage() {
                       />
                     </div>
                     <div className="flex gap-4">
-                      <Select value={statusFilter} onValueChange={setStatusFilter}>
+                      <Select
+                        value={statusFilter}
+                        onValueChange={setStatusFilter}
+                      >
                         <SelectTrigger className="w-40">
                           <SelectValue placeholder="Status" />
                         </SelectTrigger>
@@ -257,7 +306,10 @@ export default function BulkEditPage() {
                           <SelectItem value="archived">Archived</SelectItem>
                         </SelectContent>
                       </Select>
-                      <Select value={vendorFilter} onValueChange={setVendorFilter}>
+                      <Select
+                        value={vendorFilter}
+                        onValueChange={setVendorFilter}
+                      >
                         <SelectTrigger className="w-40">
                           <SelectValue placeholder="Vendor" />
                         </SelectTrigger>
@@ -284,7 +336,9 @@ export default function BulkEditPage() {
                       size="sm"
                       onClick={toggleAllProducts}
                     >
-                      {selectedProducts.size === filteredProducts.length ? "Deselect All" : "Select All"}
+                      {selectedProducts.size === filteredProducts.length
+                        ? "Deselect All"
+                        : "Select All"}
                     </Button>
                   </div>
                 </CardHeader>
@@ -297,7 +351,9 @@ export default function BulkEditPage() {
                       >
                         <Checkbox
                           checked={selectedProducts.has(product.id)}
-                          onCheckedChange={() => toggleProductSelection(product.id)}
+                          onCheckedChange={() =>
+                            toggleProductSelection(product.id)
+                          }
                         />
                         <img
                           src={product.image}
@@ -305,14 +361,22 @@ export default function BulkEditPage() {
                           className="w-12 h-12 rounded object-cover"
                         />
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium truncate">{product.title}</p>
-                          <p className="text-sm text-muted-foreground">{product.handle}</p>
+                          <p className="font-medium truncate">
+                            {product.title}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {product.handle}
+                          </p>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Badge variant={getStatusBadgeVariant(product.status)}>
+                          <Badge
+                            variant={getStatusBadgeVariant(product.status)}
+                          >
                             {product.status}
                           </Badge>
-                          <span className="text-sm font-medium">${product.price}</span>
+                          <span className="text-sm font-medium">
+                            ${product.price}
+                          </span>
                         </div>
                       </div>
                     ))}
@@ -340,7 +404,15 @@ export default function BulkEditPage() {
                       <h3 className="font-semibold">Basic Information</h3>
                       <div>
                         <Label htmlFor="bulk-status">Status</Label>
-                        <Select value={bulkEditData.status} onValueChange={(value) => setBulkEditData(prev => ({ ...prev, status: value }))}>
+                        <Select
+                          value={bulkEditData.status}
+                          onValueChange={(value) =>
+                            setBulkEditData((prev) => ({
+                              ...prev,
+                              status: value,
+                            }))
+                          }
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select status" />
                           </SelectTrigger>
@@ -356,7 +428,12 @@ export default function BulkEditPage() {
                         <Input
                           id="bulk-vendor"
                           value={bulkEditData.vendor}
-                          onChange={(e) => setBulkEditData(prev => ({ ...prev, vendor: e.target.value }))}
+                          onChange={(e) =>
+                            setBulkEditData((prev) => ({
+                              ...prev,
+                              vendor: e.target.value,
+                            }))
+                          }
                           placeholder="Enter vendor name"
                         />
                       </div>
@@ -365,16 +442,28 @@ export default function BulkEditPage() {
                         <Input
                           id="bulk-product-type"
                           value={bulkEditData.productType}
-                          onChange={(e) => setBulkEditData(prev => ({ ...prev, productType: e.target.value }))}
+                          onChange={(e) =>
+                            setBulkEditData((prev) => ({
+                              ...prev,
+                              productType: e.target.value,
+                            }))
+                          }
                           placeholder="Enter product type"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="bulk-tags">Tags (comma-separated)</Label>
+                        <Label htmlFor="bulk-tags">
+                          Tags (comma-separated)
+                        </Label>
                         <Input
                           id="bulk-tags"
                           value={bulkEditData.tags}
-                          onChange={(e) => setBulkEditData(prev => ({ ...prev, tags: e.target.value }))}
+                          onChange={(e) =>
+                            setBulkEditData((prev) => ({
+                              ...prev,
+                              tags: e.target.value,
+                            }))
+                          }
                           placeholder="tag1, tag2, tag3"
                         />
                       </div>
@@ -388,26 +477,45 @@ export default function BulkEditPage() {
                         <Input
                           id="bulk-meta-title"
                           value={bulkEditData.metaTitle}
-                          onChange={(e) => setBulkEditData(prev => ({ ...prev, metaTitle: e.target.value }))}
+                          onChange={(e) =>
+                            setBulkEditData((prev) => ({
+                              ...prev,
+                              metaTitle: e.target.value,
+                            }))
+                          }
                           placeholder="Enter meta title"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="bulk-meta-description">Meta Description</Label>
+                        <Label htmlFor="bulk-meta-description">
+                          Meta Description
+                        </Label>
                         <Textarea
                           id="bulk-meta-description"
                           value={bulkEditData.metaDescription}
-                          onChange={(e) => setBulkEditData(prev => ({ ...prev, metaDescription: e.target.value }))}
+                          onChange={(e) =>
+                            setBulkEditData((prev) => ({
+                              ...prev,
+                              metaDescription: e.target.value,
+                            }))
+                          }
                           placeholder="Enter meta description"
                           rows={3}
                         />
                       </div>
                       <div>
-                        <Label htmlFor="bulk-description">Product Description</Label>
+                        <Label htmlFor="bulk-description">
+                          Product Description
+                        </Label>
                         <Textarea
                           id="bulk-description"
                           value={bulkEditData.description}
-                          onChange={(e) => setBulkEditData(prev => ({ ...prev, description: e.target.value }))}
+                          onChange={(e) =>
+                            setBulkEditData((prev) => ({
+                              ...prev,
+                              description: e.target.value,
+                            }))
+                          }
                           placeholder="Enter product description"
                           rows={4}
                         />
@@ -461,7 +569,7 @@ export default function BulkEditPage() {
                   </div>
 
                   <div className="flex items-center space-x-4">
-                    <Button 
+                    <Button
                       onClick={() => startBulkOperation("description")}
                       disabled={selectedProducts.size === 0}
                       className="flex-1"
@@ -469,19 +577,21 @@ export default function BulkEditPage() {
                       <Save className="h-4 w-4 mr-2" />
                       Apply Bulk Changes ({selectedProducts.size} products)
                     </Button>
-                    <Button 
+                    <Button
                       variant="outline"
-                      onClick={() => setBulkEditData({
-                        status: "",
-                        vendor: "",
-                        productType: "",
-                        tags: "",
-                        metaTitle: "",
-                        metaDescription: "",
-                        description: "",
-                        price: "",
-                        compareAtPrice: "",
-                      })}
+                      onClick={() =>
+                        setBulkEditData({
+                          status: "",
+                          vendor: "",
+                          productType: "",
+                          tags: "",
+                          metaTitle: "",
+                          metaDescription: "",
+                          description: "",
+                          price: "",
+                          compareAtPrice: "",
+                        })
+                      }
                     >
                       <X className="h-4 w-4 mr-2" />
                       Clear Form
@@ -504,7 +614,8 @@ export default function BulkEditPage() {
                   <div className="space-y-4 max-h-96 overflow-y-auto">
                     {bulkOperations.length === 0 ? (
                       <div className="text-center py-8 text-muted-foreground">
-                        No bulk operations yet. Start by selecting products and applying bulk changes.
+                        No bulk operations yet. Start by selecting products and
+                        applying bulk changes.
                       </div>
                     ) : (
                       bulkOperations.map((operation) => (
@@ -513,7 +624,9 @@ export default function BulkEditPage() {
                           className="flex items-center justify-between p-4 border rounded-lg"
                         >
                           <div className="flex items-center space-x-3">
-                            <div className={`p-2 rounded-full ${operation.status === "completed" ? "bg-green-100 text-green-600" : operation.status === "running" ? "bg-blue-100 text-blue-600" : operation.status === "failed" ? "bg-red-100 text-red-600" : "bg-yellow-100 text-yellow-600"}`}>
+                            <div
+                              className={`p-2 rounded-full ${operation.status === "completed" ? "bg-green-100 text-green-600" : operation.status === "running" ? "bg-blue-100 text-blue-600" : operation.status === "failed" ? "bg-red-100 text-red-600" : "bg-yellow-100 text-yellow-600"}`}
+                            >
                               {operation.status === "running" ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />
                               ) : operation.status === "completed" ? (
@@ -526,23 +639,42 @@ export default function BulkEditPage() {
                             </div>
                             <div>
                               <p className="font-medium capitalize">
-                                {operation.type.replace("_", " ")} - {operation.productCount} products
+                                {operation.type.replace("_", " ")} -{" "}
+                                {operation.productCount} products
                               </p>
                               <p className="text-sm text-muted-foreground">
-                                Started {operation.startedAt ? new Date(operation.startedAt).toLocaleString() : "Unknown"}
+                                Started{" "}
+                                {operation.startedAt
+                                  ? new Date(
+                                      operation.startedAt,
+                                    ).toLocaleString()
+                                  : "Unknown"}
                               </p>
                             </div>
                           </div>
                           <div className="flex items-center space-x-3">
                             {operation.status === "running" && (
                               <div className="w-32">
-                                <Progress value={operation.progress} className="h-2" />
-                                <p className="text-xs text-center mt-1">{Math.round(operation.progress)}%</p>
+                                <Progress
+                                  value={operation.progress}
+                                  className="h-2"
+                                />
+                                <p className="text-xs text-center mt-1">
+                                  {Math.round(operation.progress)}%
+                                </p>
                               </div>
                             )}
-                            <Badge 
-                              variant={operation.status === "completed" ? "default" : operation.status === "running" ? "secondary" : "destructive"}
-                              className={getOperationStatusColor(operation.status)}
+                            <Badge
+                              variant={
+                                operation.status === "completed"
+                                  ? "default"
+                                  : operation.status === "running"
+                                    ? "secondary"
+                                    : "destructive"
+                              }
+                              className={getOperationStatusColor(
+                                operation.status,
+                              )}
                             >
                               {operation.status}
                             </Badge>

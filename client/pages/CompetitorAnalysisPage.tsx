@@ -11,13 +11,13 @@ export default function CompetitorAnalysisPage() {
         {
           title: "Market Analysis",
           href: "/market-opportunities",
-          description: "Discover market opportunities and gaps"
+          description: "Discover market opportunities and gaps",
         },
         {
           title: "Keyword Research",
           href: "/seo/keywords",
-          description: "Research competitor keywords"
-        }
+          description: "Research competitor keywords",
+        },
       ]}
     />
   );

@@ -11,13 +11,13 @@ export default function SERPPreviewPage() {
         {
           title: "SEO Overview",
           href: "/seo/overview",
-          description: "Monitor your overall SEO performance"
+          description: "Monitor your overall SEO performance",
         },
         {
           title: "Keyword Research",
           href: "/seo/keywords",
-          description: "Discover high-value keywords"
-        }
+          description: "Discover high-value keywords",
+        },
       ]}
     />
   );

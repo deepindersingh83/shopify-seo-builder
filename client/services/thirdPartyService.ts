@@ -1,11 +1,11 @@
-import { 
-  ThirdPartyIntegration, 
-  GoogleSearchConsoleData, 
-  GoogleAnalyticsData, 
-  SEOToolData, 
+import {
+  ThirdPartyIntegration,
+  GoogleSearchConsoleData,
+  GoogleAnalyticsData,
+  SEOToolData,
   PageSpeedData,
-  PageSpeedOpportunity 
-} from '@shared/workflows';
+  PageSpeedOpportunity,
+} from "@shared/workflows";
 
 interface GoogleSearchConsoleQuery {
   keys: string[];
@@ -61,7 +61,7 @@ interface AhrefsData {
     domainRating: number;
     urlRating: number;
     anchor: string;
-    type: 'dofollow' | 'nofollow';
+    type: "dofollow" | "nofollow";
   }[];
   competitorAnalysis: {
     domain: string;
@@ -72,205 +72,318 @@ interface AhrefsData {
 }
 
 class ThirdPartyService {
-  private baseUrl = '/api/third-party';
+  private baseUrl = "/api/third-party";
 
   // Google Search Console Integration
-  async connectGoogleSearchConsole(authCode: string): Promise<ThirdPartyIntegration> {
-    const response = await fetch(`${this.baseUrl}/google-search-console/connect`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ authCode })
-    });
+  async connectGoogleSearchConsole(
+    authCode: string,
+  ): Promise<ThirdPartyIntegration> {
+    const response = await fetch(
+      `${this.baseUrl}/google-search-console/connect`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ authCode }),
+      },
+    );
     return response.json();
   }
 
   async getSearchConsoleProperties(integrationId: string): Promise<string[]> {
-    const response = await fetch(`${this.baseUrl}/google-search-console/${integrationId}/properties`);
+    const response = await fetch(
+      `${this.baseUrl}/google-search-console/${integrationId}/properties`,
+    );
     return response.json();
   }
 
-  async getSearchConsoleData(integrationId: string, url: string, params?: {
-    startDate?: string;
-    endDate?: string;
-    dimensions?: string[];
-    filters?: any[];
-  }): Promise<GoogleSearchConsoleData> {
-    const response = await fetch(`${this.baseUrl}/google-search-console/${integrationId}/data`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url, ...params })
-    });
+  async getSearchConsoleData(
+    integrationId: string,
+    url: string,
+    params?: {
+      startDate?: string;
+      endDate?: string;
+      dimensions?: string[];
+      filters?: any[];
+    },
+  ): Promise<GoogleSearchConsoleData> {
+    const response = await fetch(
+      `${this.baseUrl}/google-search-console/${integrationId}/data`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url, ...params }),
+      },
+    );
     return response.json();
   }
 
-  async getSearchConsoleQueries(integrationId: string, url: string, startDate: string, endDate: string): Promise<GoogleSearchConsoleQuery[]> {
-    const response = await fetch(`${this.baseUrl}/google-search-console/${integrationId}/queries`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url, startDate, endDate, dimensions: ['query'] })
-    });
+  async getSearchConsoleQueries(
+    integrationId: string,
+    url: string,
+    startDate: string,
+    endDate: string,
+  ): Promise<GoogleSearchConsoleQuery[]> {
+    const response = await fetch(
+      `${this.baseUrl}/google-search-console/${integrationId}/queries`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url,
+          startDate,
+          endDate,
+          dimensions: ["query"],
+        }),
+      },
+    );
     return response.json();
   }
 
-  async getSearchConsolePages(integrationId: string, startDate: string, endDate: string): Promise<GoogleSearchConsolePage[]> {
-    const response = await fetch(`${this.baseUrl}/google-search-console/${integrationId}/pages`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ startDate, endDate, dimensions: ['page'] })
-    });
+  async getSearchConsolePages(
+    integrationId: string,
+    startDate: string,
+    endDate: string,
+  ): Promise<GoogleSearchConsolePage[]> {
+    const response = await fetch(
+      `${this.baseUrl}/google-search-console/${integrationId}/pages`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ startDate, endDate, dimensions: ["page"] }),
+      },
+    );
     return response.json();
   }
 
   // Google Analytics Integration
-  async connectGoogleAnalytics(authCode: string): Promise<ThirdPartyIntegration> {
+  async connectGoogleAnalytics(
+    authCode: string,
+  ): Promise<ThirdPartyIntegration> {
     const response = await fetch(`${this.baseUrl}/google-analytics/connect`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ authCode })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ authCode }),
     });
     return response.json();
   }
 
   async getAnalyticsProperties(integrationId: string): Promise<any[]> {
-    const response = await fetch(`${this.baseUrl}/google-analytics/${integrationId}/properties`);
+    const response = await fetch(
+      `${this.baseUrl}/google-analytics/${integrationId}/properties`,
+    );
     return response.json();
   }
 
-  async getAnalyticsData(integrationId: string, propertyId: string, params: {
-    startDate: string;
-    endDate: string;
-    metrics: string[];
-    dimensions?: string[];
-    filters?: any[];
-  }): Promise<GoogleAnalyticsData> {
-    const response = await fetch(`${this.baseUrl}/google-analytics/${integrationId}/data`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ propertyId, ...params })
-    });
+  async getAnalyticsData(
+    integrationId: string,
+    propertyId: string,
+    params: {
+      startDate: string;
+      endDate: string;
+      metrics: string[];
+      dimensions?: string[];
+      filters?: any[];
+    },
+  ): Promise<GoogleAnalyticsData> {
+    const response = await fetch(
+      `${this.baseUrl}/google-analytics/${integrationId}/data`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ propertyId, ...params }),
+      },
+    );
     return response.json();
   }
 
-  async getProductPerformance(integrationId: string, propertyId: string, productId: string, dateRange: string): Promise<GoogleAnalyticsMetric> {
-    const response = await fetch(`${this.baseUrl}/google-analytics/${integrationId}/product-performance`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ propertyId, productId, dateRange })
-    });
+  async getProductPerformance(
+    integrationId: string,
+    propertyId: string,
+    productId: string,
+    dateRange: string,
+  ): Promise<GoogleAnalyticsMetric> {
+    const response = await fetch(
+      `${this.baseUrl}/google-analytics/${integrationId}/product-performance`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ propertyId, productId, dateRange }),
+      },
+    );
     return response.json();
   }
 
-  async getEcommerceData(integrationId: string, propertyId: string, startDate: string, endDate: string): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/google-analytics/${integrationId}/ecommerce`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ propertyId, startDate, endDate })
-    });
+  async getEcommerceData(
+    integrationId: string,
+    propertyId: string,
+    startDate: string,
+    endDate: string,
+  ): Promise<any> {
+    const response = await fetch(
+      `${this.baseUrl}/google-analytics/${integrationId}/ecommerce`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ propertyId, startDate, endDate }),
+      },
+    );
     return response.json();
   }
 
   // SEMrush Integration
   async connectSEMrush(apiKey: string): Promise<ThirdPartyIntegration> {
     const response = await fetch(`${this.baseUrl}/semrush/connect`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ apiKey })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ apiKey }),
     });
     return response.json();
   }
 
-  async getSEMrushKeywordData(integrationId: string, domain: string, params?: {
-    database?: string;
-    limit?: number;
-    export_columns?: string[];
-  }): Promise<SEMrushKeywordData[]> {
-    const response = await fetch(`${this.baseUrl}/semrush/${integrationId}/keywords`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ domain, ...params })
-    });
+  async getSEMrushKeywordData(
+    integrationId: string,
+    domain: string,
+    params?: {
+      database?: string;
+      limit?: number;
+      export_columns?: string[];
+    },
+  ): Promise<SEMrushKeywordData[]> {
+    const response = await fetch(
+      `${this.baseUrl}/semrush/${integrationId}/keywords`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ domain, ...params }),
+      },
+    );
     return response.json();
   }
 
-  async getSEMrushCompetitorAnalysis(integrationId: string, domain: string, competitors: string[]): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/semrush/${integrationId}/competitors`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ domain, competitors })
-    });
+  async getSEMrushCompetitorAnalysis(
+    integrationId: string,
+    domain: string,
+    competitors: string[],
+  ): Promise<any> {
+    const response = await fetch(
+      `${this.baseUrl}/semrush/${integrationId}/competitors`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ domain, competitors }),
+      },
+    );
     return response.json();
   }
 
-  async getSEMrushKeywordDifficulty(integrationId: string, keywords: string[], database: string = 'us'): Promise<{ [keyword: string]: SEOToolData }> {
-    const response = await fetch(`${this.baseUrl}/semrush/${integrationId}/keyword-difficulty`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ keywords, database })
-    });
+  async getSEMrushKeywordDifficulty(
+    integrationId: string,
+    keywords: string[],
+    database: string = "us",
+  ): Promise<{ [keyword: string]: SEOToolData }> {
+    const response = await fetch(
+      `${this.baseUrl}/semrush/${integrationId}/keyword-difficulty`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ keywords, database }),
+      },
+    );
     return response.json();
   }
 
-  async getSEMrushBacklinks(integrationId: string, domain: string): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/semrush/${integrationId}/backlinks`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ domain })
-    });
+  async getSEMrushBacklinks(
+    integrationId: string,
+    domain: string,
+  ): Promise<any> {
+    const response = await fetch(
+      `${this.baseUrl}/semrush/${integrationId}/backlinks`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ domain }),
+      },
+    );
     return response.json();
   }
 
   // Ahrefs Integration
   async connectAhrefs(apiKey: string): Promise<ThirdPartyIntegration> {
     const response = await fetch(`${this.baseUrl}/ahrefs/connect`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ apiKey })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ apiKey }),
     });
     return response.json();
   }
 
-  async getAhrefsData(integrationId: string, domain: string): Promise<AhrefsData> {
-    const response = await fetch(`${this.baseUrl}/ahrefs/${integrationId}/overview`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ domain })
-    });
+  async getAhrefsData(
+    integrationId: string,
+    domain: string,
+  ): Promise<AhrefsData> {
+    const response = await fetch(
+      `${this.baseUrl}/ahrefs/${integrationId}/overview`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ domain }),
+      },
+    );
     return response.json();
   }
 
-  async getAhrefsKeywords(integrationId: string, domain: string, limit: number = 100): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/ahrefs/${integrationId}/keywords`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ domain, limit })
-    });
+  async getAhrefsKeywords(
+    integrationId: string,
+    domain: string,
+    limit: number = 100,
+  ): Promise<any> {
+    const response = await fetch(
+      `${this.baseUrl}/ahrefs/${integrationId}/keywords`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ domain, limit }),
+      },
+    );
     return response.json();
   }
 
-  async getAhrefsBacklinks(integrationId: string, domain: string, limit: number = 100): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/ahrefs/${integrationId}/backlinks`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ domain, limit })
-    });
+  async getAhrefsBacklinks(
+    integrationId: string,
+    domain: string,
+    limit: number = 100,
+  ): Promise<any> {
+    const response = await fetch(
+      `${this.baseUrl}/ahrefs/${integrationId}/backlinks`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ domain, limit }),
+      },
+    );
     return response.json();
   }
 
   // Google PageSpeed Insights Integration
-  async getPageSpeedInsights(url: string, strategy: 'mobile' | 'desktop' = 'mobile'): Promise<PageSpeedData> {
+  async getPageSpeedInsights(
+    url: string,
+    strategy: "mobile" | "desktop" = "mobile",
+  ): Promise<PageSpeedData> {
     const response = await fetch(`${this.baseUrl}/pagespeed/analyze`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url, strategy })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url, strategy }),
     });
     return response.json();
   }
 
-  async getBulkPageSpeedInsights(urls: string[]): Promise<{ [url: string]: PageSpeedData }> {
+  async getBulkPageSpeedInsights(
+    urls: string[],
+  ): Promise<{ [url: string]: PageSpeedData }> {
     const response = await fetch(`${this.baseUrl}/pagespeed/bulk`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ urls })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ urls }),
     });
     return response.json();
   }
@@ -278,29 +391,42 @@ class ThirdPartyService {
   // Social Media Integrations
   async connectFacebook(accessToken: string): Promise<ThirdPartyIntegration> {
     const response = await fetch(`${this.baseUrl}/facebook/connect`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ accessToken })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ accessToken }),
     });
     return response.json();
   }
 
-  async getFacebookInsights(integrationId: string, postId: string): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/facebook/${integrationId}/insights/${postId}`);
+  async getFacebookInsights(
+    integrationId: string,
+    postId: string,
+  ): Promise<any> {
+    const response = await fetch(
+      `${this.baseUrl}/facebook/${integrationId}/insights/${postId}`,
+    );
     return response.json();
   }
 
-  async connectTwitter(accessToken: string, accessTokenSecret: string): Promise<ThirdPartyIntegration> {
+  async connectTwitter(
+    accessToken: string,
+    accessTokenSecret: string,
+  ): Promise<ThirdPartyIntegration> {
     const response = await fetch(`${this.baseUrl}/twitter/connect`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ accessToken, accessTokenSecret })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ accessToken, accessTokenSecret }),
     });
     return response.json();
   }
 
-  async getTwitterAnalytics(integrationId: string, tweetId: string): Promise<any> {
-    const response = await fetch(`${this.baseUrl}/twitter/${integrationId}/analytics/${tweetId}`);
+  async getTwitterAnalytics(
+    integrationId: string,
+    tweetId: string,
+  ): Promise<any> {
+    const response = await fetch(
+      `${this.baseUrl}/twitter/${integrationId}/analytics/${tweetId}`,
+    );
     return response.json();
   }
 
@@ -310,30 +436,38 @@ class ThirdPartyService {
     return response.json();
   }
 
-  async updateIntegration(id: string, updates: Partial<ThirdPartyIntegration>): Promise<ThirdPartyIntegration> {
+  async updateIntegration(
+    id: string,
+    updates: Partial<ThirdPartyIntegration>,
+  ): Promise<ThirdPartyIntegration> {
     const response = await fetch(`${this.baseUrl}/integrations/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates)
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates),
     });
     return response.json();
   }
 
   async deleteIntegration(id: string): Promise<void> {
     await fetch(`${this.baseUrl}/integrations/${id}`, {
-      method: 'DELETE'
+      method: "DELETE",
     });
   }
 
-  async testIntegration(id: string): Promise<{ success: boolean; message: string; data?: any }> {
+  async testIntegration(
+    id: string,
+  ): Promise<{ success: boolean; message: string; data?: any }> {
     const response = await fetch(`${this.baseUrl}/integrations/${id}/test`, {
-      method: 'POST'
+      method: "POST",
     });
     return response.json();
   }
 
   // Comprehensive SEO Analysis
-  async getComprehensiveSEOAnalysis(productId: string, url: string): Promise<{
+  async getComprehensiveSEOAnalysis(
+    productId: string,
+    url: string,
+  ): Promise<{
     searchConsole: GoogleSearchConsoleData;
     analytics: GoogleAnalyticsData;
     pageSpeed: PageSpeedData;
@@ -342,43 +476,48 @@ class ThirdPartyService {
     recommendations: string[];
   }> {
     const response = await fetch(`${this.baseUrl}/comprehensive-analysis`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ productId, url })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ productId, url }),
     });
     return response.json();
   }
 
   // Data Syncing and Automation
-  async syncAllIntegrations(): Promise<{ [integrationId: string]: { status: string; lastSync: string } }> {
+  async syncAllIntegrations(): Promise<{
+    [integrationId: string]: { status: string; lastSync: string };
+  }> {
     const response = await fetch(`${this.baseUrl}/sync-all`, {
-      method: 'POST'
+      method: "POST",
     });
     return response.json();
   }
 
-  async scheduledDataSync(integrationId: string, schedule: { interval: number; enabled: boolean }): Promise<void> {
+  async scheduledDataSync(
+    integrationId: string,
+    schedule: { interval: number; enabled: boolean },
+  ): Promise<void> {
     await fetch(`${this.baseUrl}/integrations/${integrationId}/schedule`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(schedule)
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(schedule),
     });
   }
 
   // Mock data generators
   generateMockSearchConsoleData(): GoogleSearchConsoleData {
     return {
-      url: 'https://example.com/product/123',
+      url: "https://example.com/product/123",
       clicks: 1250,
       impressions: 15000,
       ctr: 8.33,
       position: 3.2,
       queries: [
-        'premium electronics device',
-        'best wireless headphones',
-        'noise cancelling headphones',
-        'bluetooth headphones review'
-      ]
+        "premium electronics device",
+        "best wireless headphones",
+        "noise cancelling headphones",
+        "bluetooth headphones review",
+      ],
     };
   }
 
@@ -389,7 +528,7 @@ class ThirdPartyService {
       bounceRate: 35.5,
       avgTimeOnPage: 145.8,
       conversions: 89,
-      conversionRate: 2.05
+      conversionRate: 2.05,
     };
   }
 
@@ -400,22 +539,24 @@ class ThirdPartyService {
       coreWebVitals: {
         lcp: 2.1,
         fid: 85,
-        cls: 0.08
+        cls: 0.08,
       },
       opportunities: [
         {
-          title: 'Optimize images',
-          description: 'Properly size images to save cellular data and improve load time',
-          impact: 'medium',
-          savings: 0.8
+          title: "Optimize images",
+          description:
+            "Properly size images to save cellular data and improve load time",
+          impact: "medium",
+          savings: 0.8,
         },
         {
-          title: 'Enable text compression',
-          description: 'Text-based resources should be served with compression to minimize network bytes',
-          impact: 'low',
-          savings: 0.3
-        }
-      ]
+          title: "Enable text compression",
+          description:
+            "Text-based resources should be served with compression to minimize network bytes",
+          impact: "low",
+          savings: 0.3,
+        },
+      ],
     };
   }
 
@@ -425,13 +566,13 @@ class ThirdPartyService {
       searchVolume: 12000,
       competitorCount: 45,
       suggestions: [
-        'wireless bluetooth headphones',
-        'noise cancelling earbuds',
-        'premium audio devices',
-        'professional headphones'
+        "wireless bluetooth headphones",
+        "noise cancelling earbuds",
+        "premium audio devices",
+        "professional headphones",
       ],
       backlinks: 156,
-      domainAuthority: 72
+      domainAuthority: 72,
     };
   }
 }

@@ -75,7 +75,11 @@ const mockKeywords: Keyword[] = [
     competition: "medium",
     trend: "up",
     intent: "commercial",
-    relatedKeywords: ["high-end electronics", "luxury gadgets", "premium devices"],
+    relatedKeywords: [
+      "high-end electronics",
+      "luxury gadgets",
+      "premium devices",
+    ],
     currentPosition: 15,
   },
   {
@@ -83,11 +87,15 @@ const mockKeywords: Keyword[] = [
     keyword: "wireless headphones",
     searchVolume: 89000,
     difficulty: 62,
-    cpc: 3.20,
+    cpc: 3.2,
     competition: "high",
     trend: "stable",
     intent: "commercial",
-    relatedKeywords: ["bluetooth headphones", "wireless earbuds", "noise cancelling headphones"],
+    relatedKeywords: [
+      "bluetooth headphones",
+      "wireless earbuds",
+      "noise cancelling headphones",
+    ],
   },
   {
     id: "3",
@@ -105,11 +113,15 @@ const mockKeywords: Keyword[] = [
     keyword: "gaming laptop",
     searchVolume: 67000,
     difficulty: 70,
-    cpc: 4.50,
+    cpc: 4.5,
     competition: "high",
     trend: "up",
     intent: "commercial",
-    relatedKeywords: ["gaming computer", "high performance laptop", "gaming notebook"],
+    relatedKeywords: [
+      "gaming computer",
+      "high performance laptop",
+      "gaming notebook",
+    ],
     currentPosition: 8,
   },
   {
@@ -117,11 +129,15 @@ const mockKeywords: Keyword[] = [
     keyword: "affordable smartphones",
     searchVolume: 35000,
     difficulty: 38,
-    cpc: 2.10,
+    cpc: 2.1,
     competition: "medium",
     trend: "stable",
     intent: "commercial",
-    relatedKeywords: ["budget phones", "cheap smartphones", "value smartphones"],
+    relatedKeywords: [
+      "budget phones",
+      "cheap smartphones",
+      "value smartphones",
+    ],
   },
 ];
 
@@ -156,9 +172,12 @@ export default function KeywordResearchPage() {
   const [activeTab, setActiveTab] = useState("research");
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [selectedKeywords, setSelectedKeywords] = useState<Set<string>>(new Set());
+  const [selectedKeywords, setSelectedKeywords] = useState<Set<string>>(
+    new Set(),
+  );
   const [keywords, setKeywords] = useState<Keyword[]>(mockKeywords);
-  const [keywordGroups, setKeywordGroups] = useState<KeywordGroup[]>(mockKeywordGroups);
+  const [keywordGroups, setKeywordGroups] =
+    useState<KeywordGroup[]>(mockKeywordGroups);
   const [filters, setFilters] = useState({
     minVolume: "",
     maxDifficulty: "",
@@ -168,11 +187,11 @@ export default function KeywordResearchPage() {
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
-    
+
     setIsSearching(true);
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     // Add some mock results
     const newKeywords: Keyword[] = [
       {
@@ -181,14 +200,25 @@ export default function KeywordResearchPage() {
         searchVolume: Math.floor(Math.random() * 50000) + 1000,
         difficulty: Math.floor(Math.random() * 100),
         cpc: Math.random() * 5 + 0.5,
-        competition: ["low", "medium", "high"][Math.floor(Math.random() * 3)] as any,
+        competition: ["low", "medium", "high"][
+          Math.floor(Math.random() * 3)
+        ] as any,
         trend: ["up", "down", "stable"][Math.floor(Math.random() * 3)] as any,
-        intent: ["informational", "commercial", "transactional", "navigational"][Math.floor(Math.random() * 4)] as any,
-        relatedKeywords: [`${searchQuery} related`, `best ${searchQuery}`, `${searchQuery} review`],
+        intent: [
+          "informational",
+          "commercial",
+          "transactional",
+          "navigational",
+        ][Math.floor(Math.random() * 4)] as any,
+        relatedKeywords: [
+          `${searchQuery} related`,
+          `best ${searchQuery}`,
+          `${searchQuery} review`,
+        ],
       },
     ];
-    
-    setKeywords(prev => [...newKeywords, ...prev]);
+
+    setKeywords((prev) => [...newKeywords, ...prev]);
     setIsSearching(false);
   };
 
@@ -210,28 +240,52 @@ export default function KeywordResearchPage() {
 
   const getCompetitionBadge = (competition: string) => {
     switch (competition) {
-      case "low": return { variant: "default" as const, className: "bg-green-100 text-green-800" };
-      case "medium": return { variant: "secondary" as const, className: "bg-yellow-100 text-yellow-800" };
-      case "high": return { variant: "destructive" as const, className: "bg-red-100 text-red-800" };
-      default: return { variant: "outline" as const, className: "" };
+      case "low":
+        return {
+          variant: "default" as const,
+          className: "bg-green-100 text-green-800",
+        };
+      case "medium":
+        return {
+          variant: "secondary" as const,
+          className: "bg-yellow-100 text-yellow-800",
+        };
+      case "high":
+        return {
+          variant: "destructive" as const,
+          className: "bg-red-100 text-red-800",
+        };
+      default:
+        return { variant: "outline" as const, className: "" };
     }
   };
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
-      case "up": return <TrendingUp className="h-3 w-3 text-green-600" />;
-      case "down": return <TrendingUp className="h-3 w-3 text-red-600 rotate-180" />;
-      default: return <BarChart3 className="h-3 w-3 text-gray-600" />;
+      case "up":
+        return <TrendingUp className="h-3 w-3 text-green-600" />;
+      case "down":
+        return <TrendingUp className="h-3 w-3 text-red-600 rotate-180" />;
+      default:
+        return <BarChart3 className="h-3 w-3 text-gray-600" />;
     }
   };
 
-  const filteredKeywords = keywords.filter(keyword => {
-    const matchesVolume = !filters.minVolume || keyword.searchVolume >= parseInt(filters.minVolume);
-    const matchesDifficulty = !filters.maxDifficulty || keyword.difficulty <= parseInt(filters.maxDifficulty);
-    const matchesCompetition = filters.competition === "all" || keyword.competition === filters.competition;
-    const matchesIntent = filters.intent === "all" || keyword.intent === filters.intent;
-    
-    return matchesVolume && matchesDifficulty && matchesCompetition && matchesIntent;
+  const filteredKeywords = keywords.filter((keyword) => {
+    const matchesVolume =
+      !filters.minVolume || keyword.searchVolume >= parseInt(filters.minVolume);
+    const matchesDifficulty =
+      !filters.maxDifficulty ||
+      keyword.difficulty <= parseInt(filters.maxDifficulty);
+    const matchesCompetition =
+      filters.competition === "all" ||
+      keyword.competition === filters.competition;
+    const matchesIntent =
+      filters.intent === "all" || keyword.intent === filters.intent;
+
+    return (
+      matchesVolume && matchesDifficulty && matchesCompetition && matchesIntent
+    );
   });
 
   return (
@@ -241,7 +295,9 @@ export default function KeywordResearchPage() {
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Keyword Research</h1>
+              <h1 className="text-3xl font-bold text-foreground">
+                Keyword Research
+              </h1>
               <p className="text-muted-foreground">
                 Discover high-value keywords to boost your SEO performance
               </p>
@@ -261,7 +317,9 @@ export default function KeywordResearchPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Keywords</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Total Keywords
+                </CardTitle>
                 <Search className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -273,12 +331,17 @@ export default function KeywordResearchPage() {
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Avg Search Volume</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Avg Search Volume
+                </CardTitle>
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {Math.round(keywords.reduce((sum, k) => sum + k.searchVolume, 0) / keywords.length).toLocaleString()}
+                  {Math.round(
+                    keywords.reduce((sum, k) => sum + k.searchVolume, 0) /
+                      keywords.length,
+                  ).toLocaleString()}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Monthly searches
@@ -287,12 +350,18 @@ export default function KeywordResearchPage() {
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Avg Difficulty</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Avg Difficulty
+                </CardTitle>
                 <Target className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {Math.round(keywords.reduce((sum, k) => sum + k.difficulty, 0) / keywords.length)}/100
+                  {Math.round(
+                    keywords.reduce((sum, k) => sum + k.difficulty, 0) /
+                      keywords.length,
+                  )}
+                  /100
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Ranking difficulty
@@ -301,12 +370,14 @@ export default function KeywordResearchPage() {
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Tracked Keywords</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Tracked Keywords
+                </CardTitle>
                 <Eye className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {keywords.filter(k => k.currentPosition).length}
+                  {keywords.filter((k) => k.currentPosition).length}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Currently ranking
@@ -315,7 +386,11 @@ export default function KeywordResearchPage() {
             </Card>
           </div>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="space-y-6"
+          >
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="research">Keyword Research</TabsTrigger>
               <TabsTrigger value="tracking">Rank Tracking</TabsTrigger>
@@ -343,7 +418,10 @@ export default function KeywordResearchPage() {
                         onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                       />
                     </div>
-                    <Button onClick={handleSearch} disabled={isSearching || !searchQuery.trim()}>
+                    <Button
+                      onClick={handleSearch}
+                      disabled={isSearching || !searchQuery.trim()}
+                    >
                       {isSearching ? (
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                       ) : (
@@ -366,26 +444,48 @@ export default function KeywordResearchPage() {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
-                      <label className="text-sm font-medium">Min Search Volume</label>
+                      <label className="text-sm font-medium">
+                        Min Search Volume
+                      </label>
                       <Input
                         type="number"
                         placeholder="1000"
                         value={filters.minVolume}
-                        onChange={(e) => setFilters(prev => ({ ...prev, minVolume: e.target.value }))}
+                        onChange={(e) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            minVolume: e.target.value,
+                          }))
+                        }
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium">Max Difficulty</label>
+                      <label className="text-sm font-medium">
+                        Max Difficulty
+                      </label>
                       <Input
                         type="number"
                         placeholder="50"
                         value={filters.maxDifficulty}
-                        onChange={(e) => setFilters(prev => ({ ...prev, maxDifficulty: e.target.value }))}
+                        onChange={(e) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            maxDifficulty: e.target.value,
+                          }))
+                        }
                       />
                     </div>
                     <div>
                       <label className="text-sm font-medium">Competition</label>
-                      <Select value={filters.competition} onValueChange={(value) => setFilters(prev => ({ ...prev, competition: value }))}>
+                      <Select
+                        value={filters.competition}
+                        onValueChange={(value) =>
+                          setFilters((prev) => ({
+                            ...prev,
+                            competition: value,
+                          }))
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
@@ -398,17 +498,30 @@ export default function KeywordResearchPage() {
                       </Select>
                     </div>
                     <div>
-                      <label className="text-sm font-medium">Search Intent</label>
-                      <Select value={filters.intent} onValueChange={(value) => setFilters(prev => ({ ...prev, intent: value }))}>
+                      <label className="text-sm font-medium">
+                        Search Intent
+                      </label>
+                      <Select
+                        value={filters.intent}
+                        onValueChange={(value) =>
+                          setFilters((prev) => ({ ...prev, intent: value }))
+                        }
+                      >
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="all">All Intents</SelectItem>
                           <SelectItem value="commercial">Commercial</SelectItem>
-                          <SelectItem value="informational">Informational</SelectItem>
-                          <SelectItem value="transactional">Transactional</SelectItem>
-                          <SelectItem value="navigational">Navigational</SelectItem>
+                          <SelectItem value="informational">
+                            Informational
+                          </SelectItem>
+                          <SelectItem value="transactional">
+                            Transactional
+                          </SelectItem>
+                          <SelectItem value="navigational">
+                            Navigational
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -438,7 +551,9 @@ export default function KeywordResearchPage() {
                       <div
                         key={keyword.id}
                         className={`flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 cursor-pointer ${
-                          selectedKeywords.has(keyword.id) ? "bg-accent border-accent-foreground" : ""
+                          selectedKeywords.has(keyword.id)
+                            ? "bg-accent border-accent-foreground"
+                            : ""
                         }`}
                         onClick={() => toggleKeywordSelection(keyword.id)}
                       >
@@ -446,9 +561,14 @@ export default function KeywordResearchPage() {
                           <div className="flex items-center space-x-3">
                             <h3 className="font-medium">{keyword.keyword}</h3>
                             {getTrendIcon(keyword.trend)}
-                            <Badge 
-                              variant={getCompetitionBadge(keyword.competition).variant}
-                              className={getCompetitionBadge(keyword.competition).className}
+                            <Badge
+                              variant={
+                                getCompetitionBadge(keyword.competition).variant
+                              }
+                              className={
+                                getCompetitionBadge(keyword.competition)
+                                  .className
+                              }
                             >
                               {keyword.competition}
                             </Badge>
@@ -458,34 +578,58 @@ export default function KeywordResearchPage() {
                           </div>
                           {keyword.relatedKeywords.length > 0 && (
                             <div className="flex items-center space-x-2 mt-2">
-                              <span className="text-xs text-muted-foreground">Related:</span>
-                              {keyword.relatedKeywords.slice(0, 3).map((related, index) => (
-                                <Badge key={index} variant="secondary" className="text-xs">
-                                  {related}
-                                </Badge>
-                              ))}
+                              <span className="text-xs text-muted-foreground">
+                                Related:
+                              </span>
+                              {keyword.relatedKeywords
+                                .slice(0, 3)
+                                .map((related, index) => (
+                                  <Badge
+                                    key={index}
+                                    variant="secondary"
+                                    className="text-xs"
+                                  >
+                                    {related}
+                                  </Badge>
+                                ))}
                             </div>
                           )}
                         </div>
                         <div className="flex items-center space-x-6 text-sm">
                           <div className="text-center">
-                            <div className="font-medium">{keyword.searchVolume.toLocaleString()}</div>
-                            <div className="text-xs text-muted-foreground">Volume</div>
+                            <div className="font-medium">
+                              {keyword.searchVolume.toLocaleString()}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              Volume
+                            </div>
                           </div>
                           <div className="text-center">
-                            <div className={`font-medium ${getDifficultyColor(keyword.difficulty)}`}>
+                            <div
+                              className={`font-medium ${getDifficultyColor(keyword.difficulty)}`}
+                            >
                               {keyword.difficulty}/100
                             </div>
-                            <div className="text-xs text-muted-foreground">Difficulty</div>
+                            <div className="text-xs text-muted-foreground">
+                              Difficulty
+                            </div>
                           </div>
                           <div className="text-center">
-                            <div className="font-medium">${keyword.cpc.toFixed(2)}</div>
-                            <div className="text-xs text-muted-foreground">CPC</div>
+                            <div className="font-medium">
+                              ${keyword.cpc.toFixed(2)}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              CPC
+                            </div>
                           </div>
                           {keyword.currentPosition && (
                             <div className="text-center">
-                              <div className="font-medium text-blue-600">#{keyword.currentPosition}</div>
-                              <div className="text-xs text-muted-foreground">Position</div>
+                              <div className="font-medium text-blue-600">
+                                #{keyword.currentPosition}
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                Position
+                              </div>
                             </div>
                           )}
                         </div>
@@ -510,25 +654,40 @@ export default function KeywordResearchPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {keywords.filter(k => k.currentPosition).map((keyword) => (
-                      <div key={keyword.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div>
-                          <h3 className="font-medium">{keyword.keyword}</h3>
-                          <p className="text-sm text-muted-foreground">{keyword.rankingUrl}</p>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                          <div className="text-center">
-                            <div className="text-2xl font-bold text-blue-600">#{keyword.currentPosition}</div>
-                            <div className="text-xs text-muted-foreground">Current Position</div>
+                    {keywords
+                      .filter((k) => k.currentPosition)
+                      .map((keyword) => (
+                        <div
+                          key={keyword.id}
+                          className="flex items-center justify-between p-4 border rounded-lg"
+                        >
+                          <div>
+                            <h3 className="font-medium">{keyword.keyword}</h3>
+                            <p className="text-sm text-muted-foreground">
+                              {keyword.rankingUrl}
+                            </p>
                           </div>
-                          <div className="text-center">
-                            <div className="text-lg font-medium">{keyword.searchVolume.toLocaleString()}</div>
-                            <div className="text-xs text-muted-foreground">Monthly Volume</div>
+                          <div className="flex items-center space-x-4">
+                            <div className="text-center">
+                              <div className="text-2xl font-bold text-blue-600">
+                                #{keyword.currentPosition}
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                Current Position
+                              </div>
+                            </div>
+                            <div className="text-center">
+                              <div className="text-lg font-medium">
+                                {keyword.searchVolume.toLocaleString()}
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                Monthly Volume
+                              </div>
+                            </div>
+                            {getTrendIcon(keyword.trend)}
                           </div>
-                          {getTrendIcon(keyword.trend)}
                         </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 </CardContent>
               </Card>
@@ -543,36 +702,56 @@ export default function KeywordResearchPage() {
                     Keyword Groups
                   </CardTitle>
                   <p className="text-sm text-muted-foreground">
-                    Organize keywords into themed groups for better campaign management
+                    Organize keywords into themed groups for better campaign
+                    management
                   </p>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {keywordGroups.map((group) => (
                       <Card key={group.id} className="relative overflow-hidden">
-                        <div className={`absolute top-0 left-0 w-1 h-full ${group.color}`}></div>
+                        <div
+                          className={`absolute top-0 left-0 w-1 h-full ${group.color}`}
+                        ></div>
                         <CardHeader className="pb-3">
-                          <CardTitle className="text-lg">{group.name}</CardTitle>
+                          <CardTitle className="text-lg">
+                            {group.name}
+                          </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-3">
                           <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
-                              <div className="font-medium">{group.keywords.length}</div>
-                              <div className="text-muted-foreground">Keywords</div>
+                              <div className="font-medium">
+                                {group.keywords.length}
+                              </div>
+                              <div className="text-muted-foreground">
+                                Keywords
+                              </div>
                             </div>
                             <div>
-                              <div className="font-medium">{group.totalVolume.toLocaleString()}</div>
-                              <div className="text-muted-foreground">Total Volume</div>
+                              <div className="font-medium">
+                                {group.totalVolume.toLocaleString()}
+                              </div>
+                              <div className="text-muted-foreground">
+                                Total Volume
+                              </div>
                             </div>
                           </div>
                           <div className="space-y-1">
                             <div className="flex justify-between text-sm">
                               <span>Avg Difficulty</span>
-                              <span className={getDifficultyColor(group.avgDifficulty)}>
+                              <span
+                                className={getDifficultyColor(
+                                  group.avgDifficulty,
+                                )}
+                              >
                                 {group.avgDifficulty}/100
                               </span>
                             </div>
-                            <Progress value={group.avgDifficulty} className="h-2" />
+                            <Progress
+                              value={group.avgDifficulty}
+                              className="h-2"
+                            />
                           </div>
                         </CardContent>
                       </Card>
@@ -597,9 +776,12 @@ export default function KeywordResearchPage() {
                 <CardContent>
                   <div className="text-center py-12">
                     <Info className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-medium mb-2">Competitor Analysis Coming Soon</h3>
+                    <h3 className="text-lg font-medium mb-2">
+                      Competitor Analysis Coming Soon
+                    </h3>
                     <p className="text-muted-foreground">
-                      Advanced competitor keyword analysis features will be available in the next update.
+                      Advanced competitor keyword analysis features will be
+                      available in the next update.
                     </p>
                   </div>
                 </CardContent>

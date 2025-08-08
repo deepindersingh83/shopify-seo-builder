@@ -39,20 +39,38 @@ const App = () => (
           <Route path="/workflows" element={<WorkflowAutomation />} />
           <Route path="/workflow-builder" element={<WorkflowBuilderPage />} />
           <Route path="/data-sources" element={<DataSourcesPage />} />
-          <Route path="/multi-language-seo" element={<MultiLanguageSEOPage />} />
-          <Route path="/market-opportunities" element={<MarketOpportunityPage />} />
-          <Route path="/multi-channel-listings" element={<MultiChannelListingsPage />} />
+          <Route
+            path="/multi-language-seo"
+            element={<MultiLanguageSEOPage />}
+          />
+          <Route
+            path="/market-opportunities"
+            element={<MarketOpportunityPage />}
+          />
+          <Route
+            path="/multi-channel-listings"
+            element={<MultiChannelListingsPage />}
+          />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/seo/overview" element={<SEOOverviewPage />} />
           <Route path="/seo/keywords" element={<KeywordResearchPage />} />
           <Route path="/seo/serp-preview" element={<SERPPreviewPage />} />
           <Route path="/seo/competitors" element={<CompetitorAnalysisPage />} />
           <Route path="/seo/content" element={<ContentOptimizationPage />} />
-          <Route path="/integrations" element={<ThirdPartyIntegrationsPage />} />
+          <Route
+            path="/integrations"
+            element={<ThirdPartyIntegrationsPage />}
+          />
           <Route path="/bulk-edit" element={<BulkEditPage />} />
-          <Route path="/performance/vitals" element={<PerformanceVitalsPage />} />
+          <Route
+            path="/performance/vitals"
+            element={<PerformanceVitalsPage />}
+          />
           <Route path="/product/new" element={<EditProduct />} />
-          <Route path="/import-export" element={<ThirdPartyIntegrationsPage />} />
+          <Route
+            path="/import-export"
+            element={<ThirdPartyIntegrationsPage />}
+          />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

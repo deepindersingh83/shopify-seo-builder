@@ -24,7 +24,7 @@ import {
   Edit,
   X,
   Save,
-  ExternalLink
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,18 +50,14 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 
 interface APIIntegration {
   id: string;
   name: string;
   description: string;
-  status: 'connected' | 'disconnected' | 'error';
+  status: "connected" | "disconnected" | "error";
   icon: any;
   config: any;
   lastSync?: string;
@@ -72,7 +68,7 @@ export default function SettingsPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showAPIDialog, setShowAPIDialog] = useState(false);
   const [selectedAPI, setSelectedAPI] = useState<APIIntegration | null>(null);
-  
+
   const [generalSettings, setGeneralSettings] = useState({
     siteName: "My Shopify Store",
     siteUrl: "https://mystore.myshopify.com",
@@ -91,7 +87,8 @@ export default function SettingsPage() {
     enableSitemap: true,
     enableRobotsTxt: true,
     defaultMetaTitle: "{{product_name}} | {{store_name}}",
-    defaultMetaDescription: "{{product_description}} - Buy now at {{store_name}}",
+    defaultMetaDescription:
+      "{{product_description}} - Buy now at {{store_name}}",
     focusKeywordDensity: 2.5,
     maxTitleLength: 60,
     maxDescriptionLength: 160,
@@ -110,38 +107,38 @@ export default function SettingsPage() {
 
   const [apiIntegrations, setApiIntegrations] = useState<APIIntegration[]>([
     {
-      id: '1',
-      name: 'Google Search Console',
-      description: 'Monitor search performance and indexing',
-      status: 'connected',
+      id: "1",
+      name: "Google Search Console",
+      description: "Monitor search performance and indexing",
+      status: "connected",
       icon: Globe,
-      config: { siteUrl: 'https://mystore.com', verified: true },
+      config: { siteUrl: "https://mystore.com", verified: true },
       lastSync: new Date(Date.now() - 3600000).toISOString(),
     },
     {
-      id: '2',
-      name: 'Google Analytics 4',
-      description: 'Track website traffic and user behavior',
-      status: 'connected',
+      id: "2",
+      name: "Google Analytics 4",
+      description: "Track website traffic and user behavior",
+      status: "connected",
       icon: Database,
-      config: { propertyId: 'GA4-XXXXXXXXX', trackingId: 'G-XXXXXXXXX' },
+      config: { propertyId: "GA4-XXXXXXXXX", trackingId: "G-XXXXXXXXX" },
       lastSync: new Date(Date.now() - 1800000).toISOString(),
     },
     {
-      id: '3',
-      name: 'Semrush',
-      description: 'Keyword research and competitor analysis',
-      status: 'disconnected',
+      id: "3",
+      name: "Semrush",
+      description: "Keyword research and competitor analysis",
+      status: "disconnected",
       icon: Zap,
       config: {},
     },
     {
-      id: '4',
-      name: 'Ahrefs',
-      description: 'Backlink analysis and keyword tracking',
-      status: 'error',
+      id: "4",
+      name: "Ahrefs",
+      description: "Backlink analysis and keyword tracking",
+      status: "error",
       icon: Shield,
-      config: { apiKey: 'invalid_key' },
+      config: { apiKey: "invalid_key" },
     },
   ]);
 
@@ -156,12 +153,12 @@ export default function SettingsPage() {
   };
 
   const handleAPIDisconnect = (apiId: string) => {
-    setApiIntegrations(prev => 
-      prev.map(api => 
-        api.id === apiId 
-          ? { ...api, status: 'disconnected' as const, config: {} }
-          : api
-      )
+    setApiIntegrations((prev) =>
+      prev.map((api) =>
+        api.id === apiId
+          ? { ...api, status: "disconnected" as const, config: {} }
+          : api,
+      ),
     );
   };
 
@@ -177,7 +174,12 @@ export default function SettingsPage() {
             <Input
               id="siteName"
               value={generalSettings.siteName}
-              onChange={(e) => setGeneralSettings(prev => ({ ...prev, siteName: e.target.value }))}
+              onChange={(e) =>
+                setGeneralSettings((prev) => ({
+                  ...prev,
+                  siteName: e.target.value,
+                }))
+              }
             />
           </div>
           <div>
@@ -185,12 +187,25 @@ export default function SettingsPage() {
             <Input
               id="siteUrl"
               value={generalSettings.siteUrl}
-              onChange={(e) => setGeneralSettings(prev => ({ ...prev, siteUrl: e.target.value }))}
+              onChange={(e) =>
+                setGeneralSettings((prev) => ({
+                  ...prev,
+                  siteUrl: e.target.value,
+                }))
+              }
             />
           </div>
           <div>
             <Label htmlFor="defaultLanguage">Default Language</Label>
-            <Select value={generalSettings.defaultLanguage} onValueChange={(value) => setGeneralSettings(prev => ({ ...prev, defaultLanguage: value }))}>
+            <Select
+              value={generalSettings.defaultLanguage}
+              onValueChange={(value) =>
+                setGeneralSettings((prev) => ({
+                  ...prev,
+                  defaultLanguage: value,
+                }))
+              }
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -205,7 +220,12 @@ export default function SettingsPage() {
           </div>
           <div>
             <Label htmlFor="timezone">Timezone</Label>
-            <Select value={generalSettings.timezone} onValueChange={(value) => setGeneralSettings(prev => ({ ...prev, timezone: value }))}>
+            <Select
+              value={generalSettings.timezone}
+              onValueChange={(value) =>
+                setGeneralSettings((prev) => ({ ...prev, timezone: value }))
+              }
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -219,7 +239,12 @@ export default function SettingsPage() {
           </div>
           <div>
             <Label htmlFor="currency">Currency</Label>
-            <Select value={generalSettings.currency} onValueChange={(value) => setGeneralSettings(prev => ({ ...prev, currency: value }))}>
+            <Select
+              value={generalSettings.currency}
+              onValueChange={(value) =>
+                setGeneralSettings((prev) => ({ ...prev, currency: value }))
+              }
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -241,28 +266,42 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <Label>Auto Backup</Label>
-                <p className="text-sm text-muted-foreground">Automatically backup settings daily</p>
+                <p className="text-sm text-muted-foreground">
+                  Automatically backup settings daily
+                </p>
               </div>
               <Switch
                 checked={generalSettings.autoBackup}
-                onCheckedChange={(checked) => setGeneralSettings(prev => ({ ...prev, autoBackup: checked }))}
+                onCheckedChange={(checked) =>
+                  setGeneralSettings((prev) => ({
+                    ...prev,
+                    autoBackup: checked,
+                  }))
+                }
               />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <Label>Enable Analytics</Label>
-                <p className="text-sm text-muted-foreground">Allow anonymous usage analytics</p>
+                <p className="text-sm text-muted-foreground">
+                  Allow anonymous usage analytics
+                </p>
               </div>
               <Switch
                 checked={generalSettings.enableAnalytics}
-                onCheckedChange={(checked) => setGeneralSettings(prev => ({ ...prev, enableAnalytics: checked }))}
+                onCheckedChange={(checked) =>
+                  setGeneralSettings((prev) => ({
+                    ...prev,
+                    enableAnalytics: checked,
+                  }))
+                }
               />
             </div>
           </div>
         </div>
 
         <div className="flex justify-end">
-          <Button onClick={() => handleSaveSettings('general')}>
+          <Button onClick={() => handleSaveSettings("general")}>
             <Save className="h-4 w-4 mr-2" />
             Save General Settings
           </Button>
@@ -283,41 +322,66 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <Label>Auto SEO Optimization</Label>
-                <p className="text-sm text-muted-foreground">Automatically optimize new products</p>
+                <p className="text-sm text-muted-foreground">
+                  Automatically optimize new products
+                </p>
               </div>
               <Switch
                 checked={seoSettings.autoOptimize}
-                onCheckedChange={(checked) => setSeoSettings(prev => ({ ...prev, autoOptimize: checked }))}
+                onCheckedChange={(checked) =>
+                  setSeoSettings((prev) => ({ ...prev, autoOptimize: checked }))
+                }
               />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <Label>Generate Meta Tags</Label>
-                <p className="text-sm text-muted-foreground">Auto-generate missing meta tags</p>
+                <p className="text-sm text-muted-foreground">
+                  Auto-generate missing meta tags
+                </p>
               </div>
               <Switch
                 checked={seoSettings.generateMetaTags}
-                onCheckedChange={(checked) => setSeoSettings(prev => ({ ...prev, generateMetaTags: checked }))}
+                onCheckedChange={(checked) =>
+                  setSeoSettings((prev) => ({
+                    ...prev,
+                    generateMetaTags: checked,
+                  }))
+                }
               />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <Label>Schema Markup</Label>
-                <p className="text-sm text-muted-foreground">Enable structured data generation</p>
+                <p className="text-sm text-muted-foreground">
+                  Enable structured data generation
+                </p>
               </div>
               <Switch
                 checked={seoSettings.enableSchemaMarkup}
-                onCheckedChange={(checked) => setSeoSettings(prev => ({ ...prev, enableSchemaMarkup: checked }))}
+                onCheckedChange={(checked) =>
+                  setSeoSettings((prev) => ({
+                    ...prev,
+                    enableSchemaMarkup: checked,
+                  }))
+                }
               />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <Label>Image Optimization</Label>
-                <p className="text-sm text-muted-foreground">Optimize alt tags and file names</p>
+                <p className="text-sm text-muted-foreground">
+                  Optimize alt tags and file names
+                </p>
               </div>
               <Switch
                 checked={seoSettings.optimizeImages}
-                onCheckedChange={(checked) => setSeoSettings(prev => ({ ...prev, optimizeImages: checked }))}
+                onCheckedChange={(checked) =>
+                  setSeoSettings((prev) => ({
+                    ...prev,
+                    optimizeImages: checked,
+                  }))
+                }
               />
             </div>
           </div>
@@ -329,23 +393,38 @@ export default function SettingsPage() {
           <h4 className="font-medium">Default Templates</h4>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="defaultMetaTitle">Default Meta Title Template</Label>
+              <Label htmlFor="defaultMetaTitle">
+                Default Meta Title Template
+              </Label>
               <Input
                 id="defaultMetaTitle"
                 value={seoSettings.defaultMetaTitle}
-                onChange={(e) => setSeoSettings(prev => ({ ...prev, defaultMetaTitle: e.target.value }))}
+                onChange={(e) =>
+                  setSeoSettings((prev) => ({
+                    ...prev,
+                    defaultMetaTitle: e.target.value,
+                  }))
+                }
                 placeholder="{{product_name}} | {{store_name}}"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Available variables: {{product_name}}, {{store_name}}, {{category}}, {{brand}}
+                Available variables: {{ product_name }}, {{ store_name }},{" "}
+                {{ category }}, {{ brand }}
               </p>
             </div>
             <div>
-              <Label htmlFor="defaultMetaDescription">Default Meta Description Template</Label>
+              <Label htmlFor="defaultMetaDescription">
+                Default Meta Description Template
+              </Label>
               <Textarea
                 id="defaultMetaDescription"
                 value={seoSettings.defaultMetaDescription}
-                onChange={(e) => setSeoSettings(prev => ({ ...prev, defaultMetaDescription: e.target.value }))}
+                onChange={(e) =>
+                  setSeoSettings((prev) => ({
+                    ...prev,
+                    defaultMetaDescription: e.target.value,
+                  }))
+                }
                 placeholder="{{product_description}} - Buy now at {{store_name}}"
                 rows={3}
               />
@@ -364,7 +443,12 @@ export default function SettingsPage() {
                 id="keywordDensity"
                 type="number"
                 value={seoSettings.focusKeywordDensity}
-                onChange={(e) => setSeoSettings(prev => ({ ...prev, focusKeywordDensity: parseFloat(e.target.value) }))}
+                onChange={(e) =>
+                  setSeoSettings((prev) => ({
+                    ...prev,
+                    focusKeywordDensity: parseFloat(e.target.value),
+                  }))
+                }
                 min="0.5"
                 max="5"
                 step="0.1"
@@ -376,18 +460,30 @@ export default function SettingsPage() {
                 id="maxTitleLength"
                 type="number"
                 value={seoSettings.maxTitleLength}
-                onChange={(e) => setSeoSettings(prev => ({ ...prev, maxTitleLength: parseInt(e.target.value) }))}
+                onChange={(e) =>
+                  setSeoSettings((prev) => ({
+                    ...prev,
+                    maxTitleLength: parseInt(e.target.value),
+                  }))
+                }
                 min="30"
                 max="70"
               />
             </div>
             <div>
-              <Label htmlFor="maxDescriptionLength">Max Description Length</Label>
+              <Label htmlFor="maxDescriptionLength">
+                Max Description Length
+              </Label>
               <Input
                 id="maxDescriptionLength"
                 type="number"
                 value={seoSettings.maxDescriptionLength}
-                onChange={(e) => setSeoSettings(prev => ({ ...prev, maxDescriptionLength: parseInt(e.target.value) }))}
+                onChange={(e) =>
+                  setSeoSettings((prev) => ({
+                    ...prev,
+                    maxDescriptionLength: parseInt(e.target.value),
+                  }))
+                }
                 min="120"
                 max="200"
               />
@@ -396,7 +492,7 @@ export default function SettingsPage() {
         </div>
 
         <div className="flex justify-end">
-          <Button onClick={() => handleSaveSettings('seo')}>
+          <Button onClick={() => handleSaveSettings("seo")}>
             <Save className="h-4 w-4 mr-2" />
             Save SEO Settings
           </Button>
@@ -417,41 +513,69 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <Label>Enable Email Notifications</Label>
-                <p className="text-sm text-muted-foreground">Receive email alerts and updates</p>
+                <p className="text-sm text-muted-foreground">
+                  Receive email alerts and updates
+                </p>
               </div>
               <Switch
                 checked={notificationSettings.emailNotifications}
-                onCheckedChange={(checked) => setNotificationSettings(prev => ({ ...prev, emailNotifications: checked }))}
+                onCheckedChange={(checked) =>
+                  setNotificationSettings((prev) => ({
+                    ...prev,
+                    emailNotifications: checked,
+                  }))
+                }
               />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <Label>SEO Alerts</Label>
-                <p className="text-sm text-muted-foreground">Alerts for SEO issues and improvements</p>
+                <p className="text-sm text-muted-foreground">
+                  Alerts for SEO issues and improvements
+                </p>
               </div>
               <Switch
                 checked={notificationSettings.seoAlerts}
-                onCheckedChange={(checked) => setNotificationSettings(prev => ({ ...prev, seoAlerts: checked }))}
+                onCheckedChange={(checked) =>
+                  setNotificationSettings((prev) => ({
+                    ...prev,
+                    seoAlerts: checked,
+                  }))
+                }
               />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <Label>Workflow Notifications</Label>
-                <p className="text-sm text-muted-foreground">Updates on workflow executions</p>
+                <p className="text-sm text-muted-foreground">
+                  Updates on workflow executions
+                </p>
               </div>
               <Switch
                 checked={notificationSettings.workflowNotifications}
-                onCheckedChange={(checked) => setNotificationSettings(prev => ({ ...prev, workflowNotifications: checked }))}
+                onCheckedChange={(checked) =>
+                  setNotificationSettings((prev) => ({
+                    ...prev,
+                    workflowNotifications: checked,
+                  }))
+                }
               />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <Label>Weekly Reports</Label>
-                <p className="text-sm text-muted-foreground">Weekly SEO performance summaries</p>
+                <p className="text-sm text-muted-foreground">
+                  Weekly SEO performance summaries
+                </p>
               </div>
               <Switch
                 checked={notificationSettings.weeklyReports}
-                onCheckedChange={(checked) => setNotificationSettings(prev => ({ ...prev, weeklyReports: checked }))}
+                onCheckedChange={(checked) =>
+                  setNotificationSettings((prev) => ({
+                    ...prev,
+                    weeklyReports: checked,
+                  }))
+                }
               />
             </div>
           </div>
@@ -465,48 +589,76 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <Label>Error Alerts</Label>
-                <p className="text-sm text-muted-foreground">Critical system errors and failures</p>
+                <p className="text-sm text-muted-foreground">
+                  Critical system errors and failures
+                </p>
               </div>
               <Switch
                 checked={notificationSettings.errorAlerts}
-                onCheckedChange={(checked) => setNotificationSettings(prev => ({ ...prev, errorAlerts: checked }))}
+                onCheckedChange={(checked) =>
+                  setNotificationSettings((prev) => ({
+                    ...prev,
+                    errorAlerts: checked,
+                  }))
+                }
               />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <Label>Performance Alerts</Label>
-                <p className="text-sm text-muted-foreground">Website performance degradation</p>
+                <p className="text-sm text-muted-foreground">
+                  Website performance degradation
+                </p>
               </div>
               <Switch
                 checked={notificationSettings.performanceAlerts}
-                onCheckedChange={(checked) => setNotificationSettings(prev => ({ ...prev, performanceAlerts: checked }))}
+                onCheckedChange={(checked) =>
+                  setNotificationSettings((prev) => ({
+                    ...prev,
+                    performanceAlerts: checked,
+                  }))
+                }
               />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <Label>Inventory Alerts</Label>
-                <p className="text-sm text-muted-foreground">Low stock and inventory warnings</p>
+                <p className="text-sm text-muted-foreground">
+                  Low stock and inventory warnings
+                </p>
               </div>
               <Switch
                 checked={notificationSettings.inventoryAlerts}
-                onCheckedChange={(checked) => setNotificationSettings(prev => ({ ...prev, inventoryAlerts: checked }))}
+                onCheckedChange={(checked) =>
+                  setNotificationSettings((prev) => ({
+                    ...prev,
+                    inventoryAlerts: checked,
+                  }))
+                }
               />
             </div>
             <div className="flex items-center justify-between">
               <div>
                 <Label>Competitor Alerts</Label>
-                <p className="text-sm text-muted-foreground">Competitor analysis updates</p>
+                <p className="text-sm text-muted-foreground">
+                  Competitor analysis updates
+                </p>
               </div>
               <Switch
                 checked={notificationSettings.competitorAlerts}
-                onCheckedChange={(checked) => setNotificationSettings(prev => ({ ...prev, competitorAlerts: checked }))}
+                onCheckedChange={(checked) =>
+                  setNotificationSettings((prev) => ({
+                    ...prev,
+                    competitorAlerts: checked,
+                  }))
+                }
               />
             </div>
           </div>
         </div>
 
         <div className="flex justify-end">
-          <Button onClick={() => handleSaveSettings('notifications')}>
+          <Button onClick={() => handleSaveSettings("notifications")}>
             <Save className="h-4 w-4 mr-2" />
             Save Notification Settings
           </Button>
@@ -529,14 +681,19 @@ export default function SettingsPage() {
       <CardContent>
         <div className="space-y-4">
           {apiIntegrations.map((api) => (
-            <div key={api.id} className="flex items-center justify-between p-4 border rounded-lg">
+            <div
+              key={api.id}
+              className="flex items-center justify-between p-4 border rounded-lg"
+            >
               <div className="flex items-center space-x-4">
                 <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
                   <api.icon className="h-5 w-5" />
                 </div>
                 <div>
                   <h4 className="font-medium">{api.name}</h4>
-                  <p className="text-sm text-muted-foreground">{api.description}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {api.description}
+                  </p>
                   {api.lastSync && (
                     <p className="text-xs text-muted-foreground">
                       Last sync: {new Date(api.lastSync).toLocaleString()}
@@ -547,19 +704,26 @@ export default function SettingsPage() {
               <div className="flex items-center space-x-3">
                 <Badge
                   variant={
-                    api.status === 'connected' ? 'default' :
-                    api.status === 'error' ? 'destructive' : 'outline'
+                    api.status === "connected"
+                      ? "default"
+                      : api.status === "error"
+                        ? "destructive"
+                        : "outline"
                   }
                 >
                   {api.status}
                 </Badge>
-                {api.status === 'connected' ? (
-                  <Button size="sm" variant="outline" onClick={() => handleAPIDisconnect(api.id)}>
+                {api.status === "connected" ? (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleAPIDisconnect(api.id)}
+                  >
                     Disconnect
                   </Button>
                 ) : (
                   <Button size="sm" onClick={() => handleAPIConnect(api)}>
-                    {api.status === 'error' ? 'Reconnect' : 'Connect'}
+                    {api.status === "error" ? "Reconnect" : "Connect"}
                   </Button>
                 )}
               </div>
@@ -594,7 +758,11 @@ export default function SettingsPage() {
                   className="absolute right-0 top-0 h-full px-3"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                 </Button>
               </div>
             </div>
@@ -629,14 +797,17 @@ export default function SettingsPage() {
             <Key className="h-4 w-4" />
             <AlertTitle>API Key Management</AlertTitle>
             <AlertDescription>
-              Your API keys are encrypted and stored securely. Never share your API keys publicly.
+              Your API keys are encrypted and stored securely. Never share your
+              API keys publicly.
             </AlertDescription>
           </Alert>
           <div className="space-y-3">
             <div className="flex items-center justify-between p-3 border rounded">
               <div>
                 <p className="font-medium">Primary API Key</p>
-                <p className="text-sm text-muted-foreground">sk_live_••••••••••••1234</p>
+                <p className="text-sm text-muted-foreground">
+                  sk_live_••••••••••••1234
+                </p>
               </div>
               <div className="flex space-x-2">
                 <Button size="sm" variant="outline">
@@ -658,7 +829,9 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">Export Data</p>
-                <p className="text-sm text-muted-foreground">Download all your SEO data</p>
+                <p className="text-sm text-muted-foreground">
+                  Download all your SEO data
+                </p>
               </div>
               <Button variant="outline">
                 <Download className="h-4 w-4 mr-2" />
@@ -668,7 +841,9 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium">Import Data</p>
-                <p className="text-sm text-muted-foreground">Upload data from another platform</p>
+                <p className="text-sm text-muted-foreground">
+                  Upload data from another platform
+                </p>
               </div>
               <Button variant="outline">
                 <Upload className="h-4 w-4 mr-2" />
@@ -685,7 +860,10 @@ export default function SettingsPage() {
           <AlertTitle className="text-red-600">Danger Zone</AlertTitle>
           <AlertDescription>
             <div className="space-y-3">
-              <p>The following actions are irreversible and will permanently delete your data.</p>
+              <p>
+                The following actions are irreversible and will permanently
+                delete your data.
+              </p>
               <Button variant="destructive" size="sm">
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete Account
@@ -705,13 +883,22 @@ export default function SettingsPage() {
             <Settings className="h-8 w-8 text-primary" />
             <div>
               <h1 className="text-3xl font-bold">Settings</h1>
-              <p className="text-muted-foreground">Manage your SEO Manager configuration</p>
+              <p className="text-muted-foreground">
+                Manage your SEO Manager configuration
+              </p>
             </div>
           </div>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="space-y-6"
+          >
             <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="general" className="flex items-center space-x-2">
+              <TabsTrigger
+                value="general"
+                className="flex items-center space-x-2"
+              >
                 <Settings className="h-4 w-4" />
                 <span>General</span>
               </TabsTrigger>
@@ -719,15 +906,24 @@ export default function SettingsPage() {
                 <Zap className="h-4 w-4" />
                 <span>SEO</span>
               </TabsTrigger>
-              <TabsTrigger value="notifications" className="flex items-center space-x-2">
+              <TabsTrigger
+                value="notifications"
+                className="flex items-center space-x-2"
+              >
                 <Bell className="h-4 w-4" />
                 <span>Notifications</span>
               </TabsTrigger>
-              <TabsTrigger value="integrations" className="flex items-center space-x-2">
+              <TabsTrigger
+                value="integrations"
+                className="flex items-center space-x-2"
+              >
                 <Database className="h-4 w-4" />
                 <span>APIs</span>
               </TabsTrigger>
-              <TabsTrigger value="security" className="flex items-center space-x-2">
+              <TabsTrigger
+                value="security"
+                className="flex items-center space-x-2"
+              >
                 <Shield className="h-4 w-4" />
                 <span>Security</span>
               </TabsTrigger>
@@ -735,8 +931,12 @@ export default function SettingsPage() {
 
             <TabsContent value="general">{renderGeneralSettings()}</TabsContent>
             <TabsContent value="seo">{renderSEOSettings()}</TabsContent>
-            <TabsContent value="notifications">{renderNotifications()}</TabsContent>
-            <TabsContent value="integrations">{renderAPIIntegrations()}</TabsContent>
+            <TabsContent value="notifications">
+              {renderNotifications()}
+            </TabsContent>
+            <TabsContent value="integrations">
+              {renderAPIIntegrations()}
+            </TabsContent>
             <TabsContent value="security">{renderSecurity()}</TabsContent>
           </Tabs>
         </div>
@@ -747,16 +947,20 @@ export default function SettingsPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {selectedAPI ? `Configure ${selectedAPI.name}` : 'Add API Integration'}
+              {selectedAPI
+                ? `Configure ${selectedAPI.name}`
+                : "Add API Integration"}
             </DialogTitle>
             <DialogDescription>
-              {selectedAPI ? selectedAPI.description : 'Choose an API service to integrate with'}
+              {selectedAPI
+                ? selectedAPI.description
+                : "Choose an API service to integrate with"}
             </DialogDescription>
           </DialogHeader>
-          
+
           {selectedAPI ? (
             <div className="space-y-4">
-              {selectedAPI.name === 'Google Search Console' && (
+              {selectedAPI.name === "Google Search Console" && (
                 <>
                   <div>
                     <Label>Site URL</Label>
@@ -769,26 +973,34 @@ export default function SettingsPage() {
                         <SelectValue placeholder="Choose method" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="html_file">HTML File Upload</SelectItem>
+                        <SelectItem value="html_file">
+                          HTML File Upload
+                        </SelectItem>
                         <SelectItem value="html_tag">HTML Tag</SelectItem>
                         <SelectItem value="dns">DNS Record</SelectItem>
-                        <SelectItem value="google_analytics">Google Analytics</SelectItem>
+                        <SelectItem value="google_analytics">
+                          Google Analytics
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </>
               )}
-              
-              {selectedAPI.name === 'Semrush' && (
+
+              {selectedAPI.name === "Semrush" && (
                 <>
                   <div>
                     <Label>API Key</Label>
-                    <Input type="password" placeholder="Enter Semrush API key" />
+                    <Input
+                      type="password"
+                      placeholder="Enter Semrush API key"
+                    />
                   </div>
                   <Alert>
                     <Info className="h-4 w-4" />
                     <AlertDescription>
-                      You can find your API key in your Semrush account settings.
+                      You can find your API key in your Semrush account
+                      settings.
                       <Button variant="link" className="p-0 h-auto ml-1">
                         <ExternalLink className="h-3 w-3 mr-1" />
                         Get API Key
@@ -800,29 +1012,31 @@ export default function SettingsPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              {apiIntegrations.filter(api => api.status === 'disconnected').map((api) => (
-                <div
-                  key={api.id}
-                  className="flex items-center space-x-3 p-3 border rounded cursor-pointer hover:bg-muted/50"
-                  onClick={() => setSelectedAPI(api)}
-                >
-                  <api.icon className="h-5 w-5" />
-                  <div>
-                    <p className="font-medium">{api.name}</p>
-                    <p className="text-sm text-muted-foreground">{api.description}</p>
+              {apiIntegrations
+                .filter((api) => api.status === "disconnected")
+                .map((api) => (
+                  <div
+                    key={api.id}
+                    className="flex items-center space-x-3 p-3 border rounded cursor-pointer hover:bg-muted/50"
+                    onClick={() => setSelectedAPI(api)}
+                  >
+                    <api.icon className="h-5 w-5" />
+                    <div>
+                      <p className="font-medium">{api.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {api.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           )}
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowAPIDialog(false)}>
               Cancel
             </Button>
-            <Button>
-              {selectedAPI ? 'Connect' : 'Next'}
-            </Button>
+            <Button>{selectedAPI ? "Connect" : "Next"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

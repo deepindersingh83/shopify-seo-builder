@@ -24,7 +24,7 @@ import {
   Edit,
   Image,
   Zap,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,15 +71,20 @@ interface AdvancedFiltersProps {
   resultCount?: number;
 }
 
-export function AdvancedFilters({ onFiltersChange, currentFilters, resultCount }: AdvancedFiltersProps) {
+export function AdvancedFilters({
+  onFiltersChange,
+  currentFilters,
+  resultCount,
+}: AdvancedFiltersProps) {
   const [presets, setPresets] = useState<FilterPreset[]>([]);
   const [quickFilters, setQuickFilters] = useState<any[]>([]);
   const [filterFields, setFilterFields] = useState<any[]>([]);
-  const [activeFilters, setActiveFilters] = useState<ProductFilter[]>(currentFilters);
+  const [activeFilters, setActiveFilters] =
+    useState<ProductFilter[]>(currentFilters);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [showFilterBuilder, setShowFilterBuilder] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
 
   useEffect(() => {
@@ -95,14 +100,14 @@ export function AdvancedFilters({ onFiltersChange, currentFilters, resultCount }
       const [presetsData, quickFiltersData, fieldsData] = await Promise.all([
         filterService.generateMockFilterPresets(),
         filterService.getQuickFilters(),
-        filterService.getFilterFields()
+        filterService.getFilterFields(),
       ]);
-      
+
       setPresets(presetsData);
       setQuickFilters(quickFiltersData);
       setFilterFields(fieldsData);
     } catch (error) {
-      console.error('Failed to load filter data:', error);
+      console.error("Failed to load filter data:", error);
     }
   };
 
@@ -115,10 +120,10 @@ export function AdvancedFilters({ onFiltersChange, currentFilters, resultCount }
   const applyPreset = async (preset: FilterPreset) => {
     setActiveFilters(preset.filters);
     onFiltersChange(preset.filters);
-    
+
     // Increment usage count
     await filterService.updateFilterPreset(preset.id, {
-      usageCount: preset.usageCount + 1
+      usageCount: preset.usageCount + 1,
     });
     loadFilterData();
   };
@@ -141,25 +146,25 @@ export function AdvancedFilters({ onFiltersChange, currentFilters, resultCount }
   };
 
   const getFieldLabel = (fieldKey: string) => {
-    const field = filterFields.find(f => f.key === fieldKey);
+    const field = filterFields.find((f) => f.key === fieldKey);
     return field?.label || fieldKey;
   };
 
   const getOperatorLabel = (operator: string) => {
     const operators = {
-      equals: 'equals',
-      not_equals: 'does not equal',
-      contains: 'contains',
-      not_contains: 'does not contain',
-      greater_than: 'greater than',
-      less_than: 'less than',
-      between: 'between',
-      in: 'in',
-      not_in: 'not in',
-      is_empty: 'is empty',
-      is_not_empty: 'is not empty',
-      starts_with: 'starts with',
-      ends_with: 'ends with'
+      equals: "equals",
+      not_equals: "does not equal",
+      contains: "contains",
+      not_contains: "does not contain",
+      greater_than: "greater than",
+      less_than: "less than",
+      between: "between",
+      in: "in",
+      not_in: "not in",
+      is_empty: "is empty",
+      is_not_empty: "is not empty",
+      starts_with: "starts with",
+      ends_with: "ends with",
     };
     return operators[operator as keyof typeof operators] || operator;
   };
@@ -171,14 +176,17 @@ export function AdvancedFilters({ onFiltersChange, currentFilters, resultCount }
       Package: <Package className="h-4 w-4" />,
       DollarSign: <DollarSign className="h-4 w-4" />,
       Edit: <Edit className="h-4 w-4" />,
-      Image: <Image className="h-4 w-4" />
+      Image: <Image className="h-4 w-4" />,
     };
-    return icons[iconName as keyof typeof icons] || <Filter className="h-4 w-4" />;
+    return (
+      icons[iconName as keyof typeof icons] || <Filter className="h-4 w-4" />
+    );
   };
 
-  const filteredPresets = presets.filter(preset => 
-    preset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    preset.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredPresets = presets.filter(
+    (preset) =>
+      preset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      preset.description?.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
@@ -238,11 +246,7 @@ export function AdvancedFilters({ onFiltersChange, currentFilters, resultCount }
                   <Save className="h-3 w-3 mr-1" />
                   Save
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={clearAllFilters}
-                >
+                <Button variant="outline" size="sm" onClick={clearAllFilters}>
                   <X className="h-3 w-3 mr-1" />
                   Clear All
                 </Button>
@@ -257,10 +261,16 @@ export function AdvancedFilters({ onFiltersChange, currentFilters, resultCount }
                   className="flex items-center justify-between p-2 bg-muted/30 rounded border"
                 >
                   <div className="flex items-center space-x-2 text-sm">
-                    <Badge variant="outline">{getFieldLabel(filter.field)}</Badge>
-                    <span className="text-muted-foreground">{getOperatorLabel(filter.operator)}</span>
+                    <Badge variant="outline">
+                      {getFieldLabel(filter.field)}
+                    </Badge>
+                    <span className="text-muted-foreground">
+                      {getOperatorLabel(filter.operator)}
+                    </span>
                     <Badge variant="secondary">
-                      {Array.isArray(filter.value) ? filter.value.join(', ') : String(filter.value)}
+                      {Array.isArray(filter.value)
+                        ? filter.value.join(", ")
+                        : String(filter.value)}
                       {filter.value2 && ` - ${filter.value2}`}
                     </Badge>
                   </div>
@@ -284,8 +294,12 @@ export function AdvancedFilters({ onFiltersChange, currentFilters, resultCount }
           <CollapsibleTrigger asChild>
             <CardHeader className="cursor-pointer hover:bg-muted/30 transition-colors">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium">Saved Filter Presets</CardTitle>
-                <ChevronDown className={`h-4 w-4 transition-transform ${isAdvancedOpen ? 'rotate-180' : ''}`} />
+                <CardTitle className="text-sm font-medium">
+                  Saved Filter Presets
+                </CardTitle>
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform ${isAdvancedOpen ? "rotate-180" : ""}`}
+                />
               </div>
             </CardHeader>
           </CollapsibleTrigger>
@@ -309,7 +323,10 @@ export function AdvancedFilters({ onFiltersChange, currentFilters, resultCount }
                         className="pl-10"
                       />
                     </div>
-                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <Select
+                      value={selectedCategory}
+                      onValueChange={setSelectedCategory}
+                    >
                       <SelectTrigger className="w-40">
                         <SelectValue />
                       </SelectTrigger>
@@ -330,7 +347,9 @@ export function AdvancedFilters({ onFiltersChange, currentFilters, resultCount }
                       >
                         <div className="flex-1">
                           <div className="flex items-center space-x-2">
-                            <h4 className="font-medium text-sm">{preset.name}</h4>
+                            <h4 className="font-medium text-sm">
+                              {preset.name}
+                            </h4>
                             {preset.isPublic && (
                               <Badge variant="outline" className="text-xs">
                                 <Users className="h-3 w-3 mr-1" />
@@ -346,14 +365,13 @@ export function AdvancedFilters({ onFiltersChange, currentFilters, resultCount }
                             <span>•</span>
                             <span>Used {preset.usageCount} times</span>
                             <span>•</span>
-                            <span>{new Date(preset.createdAt).toLocaleDateString()}</span>
+                            <span>
+                              {new Date(preset.createdAt).toLocaleDateString()}
+                            </span>
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Button
-                            size="sm"
-                            onClick={() => applyPreset(preset)}
-                          >
+                          <Button size="sm" onClick={() => applyPreset(preset)}>
                             Apply
                           </Button>
                           <DropdownMenu>
@@ -395,7 +413,9 @@ export function AdvancedFilters({ onFiltersChange, currentFilters, resultCount }
                 <TabsContent value="public-presets" className="space-y-4">
                   <div className="text-center py-8 text-muted-foreground">
                     <Users className="h-12 w-12 mx-auto mb-4" />
-                    <p>Public presets shared by the community will appear here.</p>
+                    <p>
+                      Public presets shared by the community will appear here.
+                    </p>
                   </div>
                 </TabsContent>
 
@@ -407,30 +427,44 @@ export function AdvancedFilters({ onFiltersChange, currentFilters, resultCount }
                           <Star className="h-4 w-4 text-yellow-500" />
                           <span className="text-sm font-medium">Most Used</span>
                         </div>
-                        <p className="text-2xl font-bold mt-2">SEO Optimization</p>
-                        <p className="text-xs text-muted-foreground">67 uses this month</p>
+                        <p className="text-2xl font-bold mt-2">
+                          SEO Optimization
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          67 uses this month
+                        </p>
                       </CardContent>
                     </Card>
-                    
+
                     <Card>
                       <CardContent className="p-4">
                         <div className="flex items-center space-x-2">
                           <Clock className="h-4 w-4 text-blue-500" />
-                          <span className="text-sm font-medium">Time Saved</span>
+                          <span className="text-sm font-medium">
+                            Time Saved
+                          </span>
                         </div>
                         <p className="text-2xl font-bold mt-2">2.5 hours</p>
-                        <p className="text-xs text-muted-foreground">This week</p>
+                        <p className="text-xs text-muted-foreground">
+                          This week
+                        </p>
                       </CardContent>
                     </Card>
-                    
+
                     <Card>
                       <CardContent className="p-4">
                         <div className="flex items-center space-x-2">
                           <Filter className="h-4 w-4 text-green-500" />
-                          <span className="text-sm font-medium">Total Presets</span>
+                          <span className="text-sm font-medium">
+                            Total Presets
+                          </span>
                         </div>
-                        <p className="text-2xl font-bold mt-2">{presets.length}</p>
-                        <p className="text-xs text-muted-foreground">3 added this week</p>
+                        <p className="text-2xl font-bold mt-2">
+                          {presets.length}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          3 added this week
+                        </p>
                       </CardContent>
                     </Card>
                   </div>
@@ -460,19 +494,19 @@ export function AdvancedFilters({ onFiltersChange, currentFilters, resultCount }
   );
 }
 
-function SaveFilterDialog({ 
-  open, 
-  onOpenChange, 
-  filters, 
-  onSave 
-}: { 
-  open: boolean; 
-  onOpenChange: (open: boolean) => void; 
+function SaveFilterDialog({
+  open,
+  onOpenChange,
+  filters,
+  onSave,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   filters: ProductFilter[];
   onSave: () => void;
 }) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [isPublic, setIsPublic] = useState(false);
 
   const handleSave = async () => {
@@ -482,16 +516,16 @@ function SaveFilterDialog({
         description,
         filters,
         isPublic,
-        createdBy: 'current-user'
+        createdBy: "current-user",
       });
-      
-      setName('');
-      setDescription('');
+
+      setName("");
+      setDescription("");
       setIsPublic(false);
       onOpenChange(false);
       onSave();
     } catch (error) {
-      console.error('Failed to save filter preset:', error);
+      console.error("Failed to save filter preset:", error);
     }
   };
 
@@ -504,7 +538,7 @@ function SaveFilterDialog({
             Save your current filter configuration for future use.
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="space-y-4">
           <div>
             <Label htmlFor="preset-name">Name</Label>
@@ -515,7 +549,7 @@ function SaveFilterDialog({
               placeholder="Enter preset name..."
             />
           </div>
-          
+
           <div>
             <Label htmlFor="preset-description">Description (optional)</Label>
             <Textarea
@@ -526,7 +560,7 @@ function SaveFilterDialog({
               rows={3}
             />
           </div>
-          
+
           <div className="flex items-center space-x-2">
             <Switch
               id="preset-public"
@@ -535,12 +569,13 @@ function SaveFilterDialog({
             />
             <Label htmlFor="preset-public">Make this preset public</Label>
           </div>
-          
+
           <div className="text-sm text-muted-foreground">
-            This preset will include {filters.length} filter{filters.length !== 1 ? 's' : ''}
+            This preset will include {filters.length} filter
+            {filters.length !== 1 ? "s" : ""}
           </div>
         </div>
-        
+
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
@@ -555,60 +590,64 @@ function SaveFilterDialog({
   );
 }
 
-function FilterBuilderDialog({ 
-  open, 
-  onOpenChange, 
-  fields, 
-  onAddFilter 
-}: { 
-  open: boolean; 
-  onOpenChange: (open: boolean) => void; 
+function FilterBuilderDialog({
+  open,
+  onOpenChange,
+  fields,
+  onAddFilter,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   fields: any[];
   onAddFilter: (filter: ProductFilter) => void;
 }) {
-  const [selectedField, setSelectedField] = useState('');
-  const [selectedOperator, setSelectedOperator] = useState('');
-  const [value, setValue] = useState('');
-  const [value2, setValue2] = useState('');
+  const [selectedField, setSelectedField] = useState("");
+  const [selectedOperator, setSelectedOperator] = useState("");
+  const [value, setValue] = useState("");
+  const [value2, setValue2] = useState("");
 
-  const field = fields.find(f => f.key === selectedField);
-  
+  const field = fields.find((f) => f.key === selectedField);
+
   const getOperatorsForField = (fieldType: string) => {
     const baseOperators = [
-      { value: 'equals', label: 'Equals' },
-      { value: 'not_equals', label: 'Does not equal' }
+      { value: "equals", label: "Equals" },
+      { value: "not_equals", label: "Does not equal" },
     ];
-    
+
     const textOperators = [
-      { value: 'contains', label: 'Contains' },
-      { value: 'not_contains', label: 'Does not contain' },
-      { value: 'starts_with', label: 'Starts with' },
-      { value: 'ends_with', label: 'Ends with' }
+      { value: "contains", label: "Contains" },
+      { value: "not_contains", label: "Does not contain" },
+      { value: "starts_with", label: "Starts with" },
+      { value: "ends_with", label: "Ends with" },
     ];
-    
+
     const numberOperators = [
-      { value: 'greater_than', label: 'Greater than' },
-      { value: 'less_than', label: 'Less than' },
-      { value: 'between', label: 'Between' }
+      { value: "greater_than", label: "Greater than" },
+      { value: "less_than", label: "Less than" },
+      { value: "between", label: "Between" },
     ];
-    
+
     const emptyOperators = [
-      { value: 'is_empty', label: 'Is empty' },
-      { value: 'is_not_empty', label: 'Is not empty' }
+      { value: "is_empty", label: "Is empty" },
+      { value: "is_not_empty", label: "Is not empty" },
     ];
 
     switch (fieldType) {
-      case 'text':
+      case "text":
         return [...baseOperators, ...textOperators, ...emptyOperators];
-      case 'number':
-      case 'range':
+      case "number":
+      case "range":
         return [...baseOperators, ...numberOperators];
-      case 'select':
-      case 'multiselect':
-        return [...baseOperators, { value: 'in', label: 'In' }, { value: 'not_in', label: 'Not in' }];
-      case 'boolean':
+      case "select":
+      case "multiselect":
+        return [
+          ...baseOperators,
+          { value: "in", label: "In" },
+          { value: "not_in", label: "Not in" },
+        ];
+      case "boolean":
         return baseOperators;
-      case 'date':
+      case "date":
         return [...baseOperators, ...numberOperators];
       default:
         return baseOperators;
@@ -621,23 +660,26 @@ function FilterBuilderDialog({
     const filter: ProductFilter = {
       field: selectedField,
       operator: selectedOperator as any,
-      value: field?.type === 'number' || field?.type === 'range' ? Number(value) : value,
-      ...(selectedOperator === 'between' && { value2: Number(value2) })
+      value:
+        field?.type === "number" || field?.type === "range"
+          ? Number(value)
+          : value,
+      ...(selectedOperator === "between" && { value2: Number(value2) }),
     };
 
     onAddFilter(filter);
-    
+
     // Reset form
-    setSelectedField('');
-    setSelectedOperator('');
-    setValue('');
-    setValue2('');
+    setSelectedField("");
+    setSelectedOperator("");
+    setValue("");
+    setValue2("");
     onOpenChange(false);
   };
 
   const operators = field ? getOperatorsForField(field.type) : [];
-  const needsValue2 = selectedOperator === 'between';
-  const needsValue = !['is_empty', 'is_not_empty'].includes(selectedOperator);
+  const needsValue2 = selectedOperator === "between";
+  const needsValue = !["is_empty", "is_not_empty"].includes(selectedOperator);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -648,7 +690,7 @@ function FilterBuilderDialog({
             Create a custom filter condition for your products.
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="space-y-4">
           <div>
             <Label>Field</Label>
@@ -657,31 +699,43 @@ function FilterBuilderDialog({
                 <SelectValue placeholder="Select field to filter by..." />
               </SelectTrigger>
               <SelectContent>
-                {['basic', 'seo', 'inventory', 'pricing', 'performance', 'advanced'].map(category => (
+                {[
+                  "basic",
+                  "seo",
+                  "inventory",
+                  "pricing",
+                  "performance",
+                  "advanced",
+                ].map((category) => (
                   <div key={category}>
                     <div className="px-2 py-1 text-xs font-medium text-muted-foreground uppercase tracking-wide">
                       {category}
                     </div>
-                    {fields.filter(f => f.category === category).map(field => (
-                      <SelectItem key={field.key} value={field.key}>
-                        {field.label}
-                      </SelectItem>
-                    ))}
+                    {fields
+                      .filter((f) => f.category === category)
+                      .map((field) => (
+                        <SelectItem key={field.key} value={field.key}>
+                          {field.label}
+                        </SelectItem>
+                      ))}
                   </div>
                 ))}
               </SelectContent>
             </Select>
           </div>
-          
+
           {selectedField && (
             <div>
               <Label>Operator</Label>
-              <Select value={selectedOperator} onValueChange={setSelectedOperator}>
+              <Select
+                value={selectedOperator}
+                onValueChange={setSelectedOperator}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select operator..." />
                 </SelectTrigger>
                 <SelectContent>
-                  {operators.map(op => (
+                  {operators.map((op) => (
                     <SelectItem key={op.value} value={op.value}>
                       {op.label}
                     </SelectItem>
@@ -690,17 +744,17 @@ function FilterBuilderDialog({
               </Select>
             </div>
           )}
-          
+
           {selectedOperator && needsValue && (
             <div>
               <Label>Value</Label>
-              {field?.type === 'select' && field?.options ? (
+              {field?.type === "select" && field?.options ? (
                 <Select value={value} onValueChange={setValue}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select value..." />
                   </SelectTrigger>
                   <SelectContent>
-                    {field.options.map(option => (
+                    {field.options.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>
@@ -712,12 +766,16 @@ function FilterBuilderDialog({
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
                   placeholder={field?.placeholder || "Enter value..."}
-                  type={field?.type === 'number' || field?.type === 'range' ? 'number' : 'text'}
+                  type={
+                    field?.type === "number" || field?.type === "range"
+                      ? "number"
+                      : "text"
+                  }
                 />
               )}
             </div>
           )}
-          
+
           {needsValue2 && (
             <div>
               <Label>To Value</Label>
@@ -730,14 +788,16 @@ function FilterBuilderDialog({
             </div>
           )}
         </div>
-        
+
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button 
-            onClick={handleAddFilter} 
-            disabled={!selectedField || !selectedOperator || (needsValue && !value)}
+          <Button
+            onClick={handleAddFilter}
+            disabled={
+              !selectedField || !selectedOperator || (needsValue && !value)
+            }
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Filter
