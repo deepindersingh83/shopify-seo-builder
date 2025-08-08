@@ -195,10 +195,38 @@ const getProductById = (id: string): Product => {
     ],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    description: "High-quality electronics device designed for modern consumers with exceptional durability and style. Features cutting-edge technology and premium materials.",
+    description: "High-quality electronics device designed for modern consumers with exceptional durability and style. Features cutting-edge technology and premium materials. This innovative product combines functionality with aesthetic appeal, making it perfect for professionals and enthusiasts alike. Built with sustainable materials and designed to last.",
     metaTitle: "Premium Electronics Device | Apple | Best Quality",
-    metaDescription: "Discover our premium electronics device featuring cutting-edge technology, exceptional durability, and modern design. Perfect for tech enthusiasts.",
+    metaDescription: "Discover our premium electronics device featuring cutting-edge technology, exceptional durability, and modern design. Perfect for tech enthusiasts seeking quality.",
     searchKeywords: "electronics, device, premium, apple, technology",
+    // Advanced SEO fields
+    canonicalUrl: `https://yourstore.com/products/product-${id}`,
+    robotsMeta: "index,follow",
+    focusKeyword: "premium electronics device",
+    altText: "Premium electronics device with modern design and cutting-edge technology",
+    ogTitle: "Premium Electronics Device - Advanced Technology",
+    ogDescription: "Experience the latest in electronics technology with our premium device featuring exceptional durability and modern design.",
+    ogImage: `https://picsum.photos/1200/630?random=${id}`,
+    twitterTitle: "Premium Electronics Device - Tech Innovation",
+    twitterDescription: "Cutting-edge electronics device with premium quality and modern design. Perfect for tech enthusiasts.",
+    twitterImage: `https://picsum.photos/1200/600?random=${id}`,
+    structuredData: {
+      enableProductSchema: true,
+      enableBrandSchema: true,
+      enableReviewSchema: false,
+      customSchema: ""
+    },
+    technicalSeo: {
+      enableLazyLoading: true,
+      enableAMP: false,
+      excludeFromSitemap: false,
+      customMetaTags: ""
+    },
+    contentAnalysis: {
+      keywordDensity: 2.5,
+      readabilityScore: 78,
+      contentLength: 245
+    },
     isVisible: true,
     trackQuantity: true,
     sku: `SKU-${id}`,
