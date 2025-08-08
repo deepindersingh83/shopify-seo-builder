@@ -31,6 +31,7 @@ import TechnicalSitemapsPage from "./pages/TechnicalSitemapsPage";
 import TechnicalRobotsPage from "./pages/TechnicalRobotsPage";
 import TechnicalSchemaPage from "./pages/TechnicalSchemaPage";
 import TechnicalCrawlPage from "./pages/TechnicalCrawlPage";
+import AnalyticsROIPage from "./pages/AnalyticsROIPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
