@@ -79,6 +79,12 @@ const App = () => (
             element={<ThirdPartyIntegrationsPage />}
           />
           <Route path="/links/internal" element={<InternalLinksPage />} />
+          <Route path="/performance/speed" element={<PerformanceSpeedPage />} />
+          <Route path="/performance/reports" element={<PerformanceReportsPage />} />
+          <Route path="/links/broken" element={<BrokenLinksPage />} />
+          <Route path="/technical/sitemaps" element={<TechnicalSitemapsPage />} />
+          <Route path="/technical/robots" element={<TechnicalRobotsPage />} />
+          <Route path="/technical/schema" element={<TechnicalSchemaPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
