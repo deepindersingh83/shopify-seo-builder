@@ -28,6 +28,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/product/:id/edit" element={<EditProduct />} />
           <Route path="/workflows" element={<WorkflowAutomation />} />
+          <Route path="/workflow-builder" element={<WorkflowBuilderPage />} />
           <Route path="/data-sources" element={<DataSourcesPage />} />
           <Route path="/multi-language-seo" element={<MultiLanguageSEOPage />} />
           <Route path="/market-opportunities" element={<MarketOpportunityPage />} />
