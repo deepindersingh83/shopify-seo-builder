@@ -518,7 +518,7 @@ export function PlatformIntegrations() {
                 <p className="text-sm text-muted-foreground">
                   Select a platform to configure field mappings:
                 </p>
-                <Select>
+                <Select value={selectedPlatform} onValueChange={setSelectedPlatform}>
                   <SelectTrigger className="w-64">
                     <SelectValue placeholder="Select platform" />
                   </SelectTrigger>
@@ -530,7 +530,55 @@ export function PlatformIntegrations() {
                     ))}
                   </SelectContent>
                 </Select>
-                {/* Field mapping interface would go here */}
+
+                {selectedPlatform && (
+                  <div className="mt-6 space-y-4">
+                    <h4 className="font-medium">Field Mappings</h4>
+                    <div className="space-y-3">
+                      {[
+                        { local: 'title', remote: 'title', description: 'Product title/name' },
+                        { local: 'description', remote: 'body_html', description: 'Product description' },
+                        { local: 'price', remote: 'variants[0].price', description: 'Product price' },
+                        { local: 'inventory', remote: 'variants[0].inventory_quantity', description: 'Stock quantity' },
+                        { local: 'sku', remote: 'variants[0].sku', description: 'SKU identifier' },
+                        { local: 'metaTitle', remote: 'seo.title', description: 'SEO meta title' },
+                        { local: 'metaDescription', remote: 'seo.description', description: 'SEO meta description' },
+                        { local: 'handle', remote: 'handle', description: 'URL handle/slug' },
+                        { local: 'tags', remote: 'tags', description: 'Product tags' },
+                        { local: 'vendor', remote: 'vendor', description: 'Product vendor/brand' }
+                      ].map((mapping, index) => (
+                        <div key={index} className="grid grid-cols-3 gap-4 items-center p-3 border rounded-lg">
+                          <div>
+                            <p className="font-medium text-sm">{mapping.local}</p>
+                            <p className="text-xs text-muted-foreground">{mapping.description}</p>
+                          </div>
+                          <div className="text-center">
+                            <ArrowUpDown className="h-4 w-4 text-muted-foreground mx-auto" />
+                          </div>
+                          <div>
+                            <Input
+                              value={mapping.remote}
+                              placeholder="Platform field name"
+                              className="text-sm"
+                              readOnly
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="flex justify-end space-x-2 pt-4">
+                      <Button variant="outline" size="sm">
+                        <RefreshCw className="h-3 w-3 mr-1" />
+                        Reset to Default
+                      </Button>
+                      <Button size="sm">
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        Save Mappings
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
