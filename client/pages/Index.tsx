@@ -428,36 +428,9 @@ export default function Index() {
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <Link to="/data-sources">
-                <Button variant="outline" size="sm">
-                  <Database className="h-4 w-4 mr-2" />
-                  Data Sources
-                </Button>
-              </Link>
-              <Link to="/multi-language-seo">
-                <Button variant="outline" size="sm">
-                  <Globe className="h-4 w-4 mr-2" />
-                  Multi-Language
-                </Button>
-              </Link>
-              <Link to="/market-opportunities">
-                <Button variant="outline" size="sm">
-                  <TrendingUp className="h-4 w-4 mr-2" />
-                  Market Analysis
-                </Button>
-              </Link>
-              <Link to="/multi-channel-listings">
-                <Button variant="outline" size="sm">
-                  <ShoppingCart className="h-4 w-4 mr-2" />
-                  Multi-Channel
-                </Button>
-              </Link>
-              <Link to="/workflows">
-                <Button variant="outline" size="sm">
-                  <Zap className="h-4 w-4 mr-2" />
-                  Workflows
-                </Button>
-              </Link>
+              <Badge variant="outline" className="text-xs">
+                v2.1.0
+              </Badge>
             </div>
           </div>
         </div>
