@@ -300,7 +300,130 @@ const getProductById = (id: string): Product => {
     contentAnalysis: {
       keywordDensity: 2.5,
       readabilityScore: 78,
-      contentLength: 245
+      contentLength: 245,
+      focusKeywordInTitle: true,
+      focusKeywordInMeta: true,
+      focusKeywordInContent: true,
+      internalLinkCount: 3,
+      outboundLinkCount: 1,
+      wordCount: 245,
+      sentenceLength: 15.2
+    },
+    keywordResearch: {
+      suggestedKeywords: ["premium electronics", "apple device", "tech gadget", "professional tools", "innovation technology"],
+      searchVolume: {
+        "premium electronics": 12000,
+        "apple device": 8500,
+        "tech gadget": 15000,
+        "professional tools": 6800,
+        "innovation technology": 4200
+      },
+      competition: {
+        "premium electronics": "high",
+        "apple device": "high",
+        "tech gadget": "medium",
+        "professional tools": "medium",
+        "innovation technology": "low"
+      },
+      difficulty: {
+        "premium electronics": 75,
+        "apple device": 82,
+        "tech gadget": 65,
+        "professional tools": 58,
+        "innovation technology": 45
+      },
+      relatedKeywords: ["electronics store", "tech reviews", "gadget comparison", "apple products", "premium tech"],
+      longtailSuggestions: ["best premium electronics device 2024", "apple professional electronics review", "high quality tech gadgets for professionals"]
+    },
+    serpPreview: {
+      title: "Premium Electronics Device | Apple | Best Quality",
+      url: `https://yourstore.com/products/product-${id}`,
+      description: "Discover our premium electronics device featuring cutting-edge technology, exceptional durability, and modern design. Perfect for tech enthusiasts seeking quality.",
+      richSnippets: true,
+      featuredSnippet: false
+    },
+    competitorAnalysis: {
+      competitorUrls: [
+        "https://competitor1.com/similar-product",
+        "https://competitor2.com/electronics-device",
+        "https://competitor3.com/premium-gadget"
+      ],
+      competitorKeywords: ["premium tech", "electronics", "apple alternative", "professional device"],
+      contentGaps: ["sustainability features", "warranty information", "technical specifications"],
+      backlinksComparison: 156,
+      priceComparison: [
+        { competitor: "Competitor A", price: 329.99 },
+        { competitor: "Competitor B", price: 279.99 },
+        { competitor: "Competitor C", price: 349.99 }
+      ]
+    },
+    performance: {
+      coreWebVitals: {
+        lcp: 2.1, // Good < 2.5s
+        fid: 85,   // Good < 100ms
+        cls: 0.08  // Good < 0.1
+      },
+      pageSpeed: {
+        desktop: 94,
+        mobile: 87
+      },
+      mobileOptimization: {
+        mobileUsability: 92,
+        ampEnabled: false,
+        responsiveDesign: true
+      }
+    },
+    linkManagement: {
+      internalLinks: [
+        { url: "/category/electronics", anchor: "Electronics Category", title: "Browse Electronics" },
+        { url: "/brand/apple", anchor: "Apple Products", title: "Apple Brand Page" },
+        { url: "/reviews", anchor: "Customer Reviews", title: "Product Reviews" }
+      ],
+      backlinks: [
+        { domain: "techreview.com", url: "https://techreview.com/apple-products", authority: 85 },
+        { domain: "gadgetblog.net", url: "https://gadgetblog.net/premium-electronics", authority: 72 },
+        { domain: "electronics-news.com", url: "https://electronics-news.com/featured", authority: 68 }
+      ],
+      brokenLinks: [],
+      redirectChains: []
+    },
+    internationalSeo: {
+      hreflangTags: {
+        "en-US": `https://yourstore.com/products/product-${id}`,
+        "en-GB": `https://yourstore.co.uk/products/product-${id}`,
+        "fr-FR": `https://yourstore.fr/produits/product-${id}`,
+        "de-DE": `https://yourstore.de/produkte/product-${id}`
+      },
+      targetCountries: ["US", "UK", "France", "Germany", "Canada"],
+      currencyOptimization: "USD",
+      localSeoEnabled: false,
+      geoTargeting: "global"
+    },
+    aiOptimization: {
+      contentSuggestions: [
+        "Add more details about sustainability and environmental impact",
+        "Include technical specifications table for better comparison",
+        "Add FAQ section addressing common customer questions",
+        "Include warranty and support information"
+      ],
+      metaOptimization: {
+        suggestedTitle: "Premium Electronics Device 2024 | Apple Quality | Professional Grade",
+        suggestedDescription: "Experience cutting-edge technology with our premium electronics device. Features exceptional durability, modern design, and professional-grade performance for tech enthusiasts."
+      },
+      semanticKeywords: ["innovative technology", "cutting-edge device", "premium quality", "professional grade", "exceptional durability"],
+      voiceSearchOptimization: true,
+      featuredSnippetOptimization: "What makes this electronics device premium? Our device combines cutting-edge technology with exceptional durability and modern design, making it perfect for professionals who demand quality and reliability."
+    },
+    automation: {
+      seoRules: [
+        { rule: "Auto-generate meta descriptions from product description", enabled: true },
+        { rule: "Optimize images with ALT text based on product title", enabled: true },
+        { rule: "Generate structured data for product schema", enabled: true },
+        { rule: "Update internal links when categories change", enabled: false }
+      ],
+      scheduledAudits: true,
+      autoMetaGeneration: false,
+      bulkOptimizationRules: ["Apply focus keyword to meta title", "Ensure meta description length 120-160 chars", "Add structured data to all products"]
     },
     isVisible: true,
     trackQuantity: true,
