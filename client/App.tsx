@@ -24,6 +24,12 @@ import ThirdPartyIntegrationsPage from "./pages/ThirdPartyIntegrationsPage";
 import BulkEditPage from "./pages/BulkEditPage";
 import PerformanceVitalsPage from "./pages/PerformanceVitalsPage";
 import InternalLinksPage from "./pages/InternalLinksPage";
+import PerformanceSpeedPage from "./pages/PerformanceSpeedPage";
+import PerformanceReportsPage from "./pages/PerformanceReportsPage";
+import BrokenLinksPage from "./pages/BrokenLinksPage";
+import TechnicalSitemapsPage from "./pages/TechnicalSitemapsPage";
+import TechnicalRobotsPage from "./pages/TechnicalRobotsPage";
+import TechnicalSchemaPage from "./pages/TechnicalSchemaPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
