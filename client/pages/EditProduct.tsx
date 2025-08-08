@@ -38,6 +38,34 @@ interface Product {
   metaTitle?: string;
   metaDescription?: string;
   searchKeywords?: string;
+  // Advanced SEO fields
+  canonicalUrl?: string;
+  robotsMeta?: string;
+  focusKeyword?: string;
+  altText?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  twitterTitle?: string;
+  twitterDescription?: string;
+  twitterImage?: string;
+  structuredData?: {
+    enableProductSchema: boolean;
+    enableBrandSchema: boolean;
+    enableReviewSchema: boolean;
+    customSchema?: string;
+  };
+  technicalSeo?: {
+    enableLazyLoading: boolean;
+    enableAMP: boolean;
+    excludeFromSitemap: boolean;
+    customMetaTags?: string;
+  };
+  contentAnalysis?: {
+    keywordDensity: number;
+    readabilityScore: number;
+    contentLength: number;
+  };
   isVisible: boolean;
   trackQuantity: boolean;
   sku?: string;
