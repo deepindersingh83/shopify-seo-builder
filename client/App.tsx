@@ -22,6 +22,7 @@ import CompetitorAnalysisPage from "./pages/CompetitorAnalysisPage";
 import ContentOptimizationPage from "./pages/ContentOptimizationPage";
 import ThirdPartyIntegrationsPage from "./pages/ThirdPartyIntegrationsPage";
 import BulkEditPage from "./pages/BulkEditPage";
+import PerformanceVitalsPage from "./pages/PerformanceVitalsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -49,6 +50,9 @@ const App = () => (
           <Route path="/seo/content" element={<ContentOptimizationPage />} />
           <Route path="/integrations" element={<ThirdPartyIntegrationsPage />} />
           <Route path="/bulk-edit" element={<BulkEditPage />} />
+          <Route path="/performance/vitals" element={<PerformanceVitalsPage />} />
+          <Route path="/product/new" element={<EditProduct />} />
+          <Route path="/import-export" element={<ThirdPartyIntegrationsPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
