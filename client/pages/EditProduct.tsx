@@ -41,6 +41,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Layout } from "@/components/Layout";
+import SEOAutomation from "@/components/SEOAutomation";
 
 interface Product {
   id: string;
