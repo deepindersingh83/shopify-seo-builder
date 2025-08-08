@@ -1,13 +1,17 @@
 import { useState, useEffect, useMemo } from "react";
-import { Search, Filter, Grid, List, MoreHorizontal, Edit3, Trash2, Eye, Package, ShoppingCart, DollarSign, BarChart3 } from "lucide-react";
+import { Search, Filter, Grid, List, MoreHorizontal, Edit3, Trash2, Eye, Package, ShoppingCart, DollarSign, BarChart3, Settings, Columns, Target, AlertCircle, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuCheckboxItem } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
 
 interface Product {
   id: string;
@@ -23,21 +27,109 @@ interface Product {
   image: string;
   createdAt: string;
   updatedAt: string;
+  description: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  seoScore: number;
 }
+
+interface ColumnVisibility {
+  product: boolean;
+  status: boolean;
+  vendor: boolean;
+  inventory: boolean;
+  price: boolean;
+  seoScore: boolean;
+  actions: boolean;
+}
+
+// SEO Score calculation function
+const calculateSEOScore = (product: Product): number => {
+  let score = 0;
+  const maxScore = 100;
+
+  // Title optimization (25 points)
+  if (product.title && product.title.length >= 10 && product.title.length <= 60) {
+    score += 25;
+  } else if (product.title && product.title.length > 0) {
+    score += 10;
+  }
+
+  // Meta title (20 points)
+  if (product.metaTitle && product.metaTitle.length >= 30 && product.metaTitle.length <= 60) {
+    score += 20;
+  } else if (product.metaTitle && product.metaTitle.length > 0) {
+    score += 10;
+  }
+
+  // Meta description (20 points)
+  if (product.metaDescription && product.metaDescription.length >= 120 && product.metaDescription.length <= 160) {
+    score += 20;
+  } else if (product.metaDescription && product.metaDescription.length > 0) {
+    score += 10;
+  }
+
+  // Product description (15 points)
+  if (product.description && product.description.length >= 100) {
+    score += 15;
+  } else if (product.description && product.description.length > 0) {
+    score += 8;
+  }
+
+  // Handle/URL optimization (10 points)
+  if (product.handle && product.handle.length <= 50 && !product.handle.includes('_')) {
+    score += 10;
+  } else if (product.handle) {
+    score += 5;
+  }
+
+  // Tags optimization (10 points)
+  if (product.tags && product.tags.length >= 3 && product.tags.length <= 10) {
+    score += 10;
+  } else if (product.tags && product.tags.length > 0) {
+    score += 5;
+  }
+
+  return Math.min(score, maxScore);
+};
+
+const getSEOScoreColor = (score: number) => {
+  if (score >= 80) return "text-green-600";
+  if (score >= 60) return "text-yellow-600";
+  return "text-red-600";
+};
+
+const getSEOScoreBadge = (score: number) => {
+  if (score >= 80) return { variant: "default" as const, label: "Excellent" };
+  if (score >= 60) return { variant: "secondary" as const, label: "Good" };
+  return { variant: "destructive" as const, label: "Needs Work" };
+};
 
 // Mock data generator for 150K+ products
 const generateMockProducts = (page: number, limit: number): Product[] => {
   const statuses: ("active" | "draft" | "archived")[] = ["active", "draft", "archived"];
   const vendors = ["Nike", "Adidas", "Apple", "Samsung", "Sony", "Microsoft", "Amazon", "Google"];
   const productTypes = ["Electronics", "Clothing", "Shoes", "Accessories", "Home & Garden", "Sports", "Beauty", "Books"];
+  const descriptions = [
+    "High-quality product designed for modern consumers with exceptional durability and style.",
+    "Premium offering that combines functionality with aesthetic appeal for the discerning customer.",
+    "Innovative solution that meets the demands of today's fast-paced lifestyle with reliability.",
+    "Expertly crafted item featuring cutting-edge technology and timeless design elements."
+  ];
   
   return Array.from({ length: limit }, (_, i) => {
     const id = `product-${page * limit + i + 1}`;
     const basePrice = Math.floor(Math.random() * 500) + 10;
-    return {
+    const title = `Product ${page * limit + i + 1} - ${productTypes[Math.floor(Math.random() * productTypes.length)]}`;
+    const handle = `product-${page * limit + i + 1}`;
+    const description = descriptions[Math.floor(Math.random() * descriptions.length)];
+    const metaTitle = Math.random() > 0.5 ? `${title} | Best Quality` : undefined;
+    const metaDescription = Math.random() > 0.3 ? `${description.substring(0, 140)}...` : undefined;
+    
+    const product: Product = {
       id,
-      title: `Product ${page * limit + i + 1} - ${productTypes[Math.floor(Math.random() * productTypes.length)]}`,
-      handle: `product-${page * limit + i + 1}`,
+      title,
+      handle,
       status: statuses[Math.floor(Math.random() * statuses.length)],
       vendor: vendors[Math.floor(Math.random() * vendors.length)],
       productType: productTypes[Math.floor(Math.random() * productTypes.length)],
@@ -48,7 +140,14 @@ const generateMockProducts = (page: number, limit: number): Product[] => {
       image: `https://picsum.photos/400/400?random=${page * limit + i + 1}`,
       createdAt: new Date(Date.now() - Math.floor(Math.random() * 365 * 24 * 60 * 60 * 1000)).toISOString(),
       updatedAt: new Date(Date.now() - Math.floor(Math.random() * 30 * 24 * 60 * 60 * 1000)).toISOString(),
+      description,
+      metaTitle,
+      metaDescription,
+      seoScore: 0
     };
+    
+    product.seoScore = calculateSEOScore(product);
+    return product;
   });
 };
 
@@ -62,6 +161,27 @@ export default function Index() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [showBulkEditModal, setShowBulkEditModal] = useState(false);
+  const [columnVisibility, setColumnVisibility] = useState<ColumnVisibility>({
+    product: true,
+    status: true,
+    vendor: true,
+    inventory: true,
+    price: true,
+    seoScore: true,
+    actions: true
+  });
+  
+  // Bulk edit form state
+  const [bulkEditData, setBulkEditData] = useState({
+    status: "",
+    vendor: "",
+    productType: "",
+    tags: "",
+    metaTitle: "",
+    metaDescription: "",
+    description: ""
+  });
   
   const itemsPerPage = 50;
   const totalProducts = 152847; // Mock total for 150K+
@@ -123,6 +243,56 @@ export default function Index() {
     }
   };
 
+  const handleBulkEdit = () => {
+    // Apply bulk edit changes to selected products
+    const updatedProducts = products.map(product => {
+      if (selectedProducts.has(product.id)) {
+        const updated = { ...product };
+        if (bulkEditData.status) updated.status = bulkEditData.status as any;
+        if (bulkEditData.vendor) updated.vendor = bulkEditData.vendor;
+        if (bulkEditData.productType) updated.productType = bulkEditData.productType;
+        if (bulkEditData.metaTitle) updated.metaTitle = bulkEditData.metaTitle;
+        if (bulkEditData.metaDescription) updated.metaDescription = bulkEditData.metaDescription;
+        if (bulkEditData.description) updated.description = bulkEditData.description;
+        if (bulkEditData.tags) {
+          updated.tags = bulkEditData.tags.split(',').map(tag => tag.trim());
+        }
+        
+        // Recalculate SEO score
+        updated.seoScore = calculateSEOScore(updated);
+        return updated;
+      }
+      return product;
+    });
+    
+    setProducts(updatedProducts);
+    setShowBulkEditModal(false);
+    setSelectedProducts(new Set());
+    setBulkEditData({
+      status: "",
+      vendor: "",
+      productType: "",
+      tags: "",
+      metaTitle: "",
+      metaDescription: "",
+      description: ""
+    });
+  };
+
+  const toggleColumnVisibility = (column: keyof ColumnVisibility) => {
+    setColumnVisibility(prev => ({
+      ...prev,
+      [column]: !prev[column]
+    }));
+  };
+
+  const getGridCols = () => {
+    const visibleColumns = Object.values(columnVisibility).filter(Boolean).length;
+    return `grid-cols-${Math.max(visibleColumns, 1)}`;
+  };
+
+  const averageSEOScore = Math.round(products.reduce((sum, p) => sum + p.seoScore, 0) / products.length || 0);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -149,7 +319,7 @@ export default function Index() {
       {/* Main Content */}
       <div className="container mx-auto px-6 py-6">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Products</CardTitle>
@@ -188,6 +358,18 @@ export default function Index() {
             <CardContent>
               <div className="text-2xl font-bold">$127.50</div>
               <p className="text-xs text-muted-foreground">+5.2% vs last period</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Avg. SEO Score</CardTitle>
+              <Target className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className={`text-2xl font-bold ${getSEOScoreColor(averageSEOScore)}`}>
+                {averageSEOScore}/100
+              </div>
+              <p className="text-xs text-muted-foreground">SEO optimization level</p>
             </CardContent>
           </Card>
         </div>
@@ -249,6 +431,60 @@ export default function Index() {
                 </Select>
 
                 <div className="flex items-center space-x-2 ml-auto">
+                  {/* Column Visibility */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        <Columns className="h-4 w-4 mr-2" />
+                        Columns
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuCheckboxItem
+                        checked={columnVisibility.product}
+                        onCheckedChange={() => toggleColumnVisibility('product')}
+                      >
+                        Product
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem
+                        checked={columnVisibility.status}
+                        onCheckedChange={() => toggleColumnVisibility('status')}
+                      >
+                        Status
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem
+                        checked={columnVisibility.vendor}
+                        onCheckedChange={() => toggleColumnVisibility('vendor')}
+                      >
+                        Vendor
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem
+                        checked={columnVisibility.inventory}
+                        onCheckedChange={() => toggleColumnVisibility('inventory')}
+                      >
+                        Inventory
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem
+                        checked={columnVisibility.price}
+                        onCheckedChange={() => toggleColumnVisibility('price')}
+                      >
+                        Price
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem
+                        checked={columnVisibility.seoScore}
+                        onCheckedChange={() => toggleColumnVisibility('seoScore')}
+                      >
+                        SEO Score
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem
+                        checked={columnVisibility.actions}
+                        onCheckedChange={() => toggleColumnVisibility('actions')}
+                      >
+                        Actions
+                      </DropdownMenuCheckboxItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
                   <Button
                     variant={viewMode === "list" ? "default" : "outline"}
                     size="sm"
@@ -280,10 +516,129 @@ export default function Index() {
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Button variant="outline" size="sm">
-                    <Edit3 className="h-4 w-4 mr-2" />
-                    Bulk Edit
-                  </Button>
+                  <Dialog open={showBulkEditModal} onOpenChange={setShowBulkEditModal}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        <Edit3 className="h-4 w-4 mr-2" />
+                        Bulk Edit
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>Bulk Edit Products</DialogTitle>
+                        <DialogDescription>
+                          Edit {selectedProducts.size} selected products. Only fill in the fields you want to update.
+                        </DialogDescription>
+                      </DialogHeader>
+                      
+                      <div className="space-y-6">
+                        {/* Basic Info */}
+                        <div className="space-y-4">
+                          <h3 className="text-lg font-medium">Basic Information</h3>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <Label htmlFor="status">Status</Label>
+                              <Select value={bulkEditData.status} onValueChange={(value) => setBulkEditData(prev => ({ ...prev, status: value }))}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="">No change</SelectItem>
+                                  <SelectItem value="active">Active</SelectItem>
+                                  <SelectItem value="draft">Draft</SelectItem>
+                                  <SelectItem value="archived">Archived</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div>
+                              <Label htmlFor="vendor">Vendor</Label>
+                              <Input
+                                id="vendor"
+                                placeholder="Vendor name"
+                                value={bulkEditData.vendor}
+                                onChange={(e) => setBulkEditData(prev => ({ ...prev, vendor: e.target.value }))}
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor="productType">Product Type</Label>
+                              <Input
+                                id="productType"
+                                placeholder="Product type"
+                                value={bulkEditData.productType}
+                                onChange={(e) => setBulkEditData(prev => ({ ...prev, productType: e.target.value }))}
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor="tags">Tags (comma-separated)</Label>
+                              <Input
+                                id="tags"
+                                placeholder="tag1, tag2, tag3"
+                                value={bulkEditData.tags}
+                                onChange={(e) => setBulkEditData(prev => ({ ...prev, tags: e.target.value }))}
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <Separator />
+
+                        {/* SEO Optimization */}
+                        <div className="space-y-4">
+                          <div className="flex items-center space-x-2">
+                            <Target className="h-5 w-5 text-primary" />
+                            <h3 className="text-lg font-medium">SEO Optimization</h3>
+                          </div>
+                          <div className="space-y-4">
+                            <div>
+                              <Label htmlFor="metaTitle">Meta Title</Label>
+                              <Input
+                                id="metaTitle"
+                                placeholder="SEO optimized title (30-60 characters)"
+                                value={bulkEditData.metaTitle}
+                                onChange={(e) => setBulkEditData(prev => ({ ...prev, metaTitle: e.target.value }))}
+                              />
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {bulkEditData.metaTitle.length}/60 characters
+                              </p>
+                            </div>
+                            <div>
+                              <Label htmlFor="metaDescription">Meta Description</Label>
+                              <Textarea
+                                id="metaDescription"
+                                placeholder="SEO optimized description (120-160 characters)"
+                                value={bulkEditData.metaDescription}
+                                onChange={(e) => setBulkEditData(prev => ({ ...prev, metaDescription: e.target.value }))}
+                                rows={3}
+                              />
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {bulkEditData.metaDescription.length}/160 characters
+                              </p>
+                            </div>
+                            <div>
+                              <Label htmlFor="description">Product Description</Label>
+                              <Textarea
+                                id="description"
+                                placeholder="Detailed product description"
+                                value={bulkEditData.description}
+                                onChange={(e) => setBulkEditData(prev => ({ ...prev, description: e.target.value }))}
+                                rows={4}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setShowBulkEditModal(false)}>
+                          Cancel
+                        </Button>
+                        <Button onClick={handleBulkEdit}>
+                          Update {selectedProducts.size} Product{selectedProducts.size !== 1 ? 's' : ''}
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                  
                   <Button variant="outline" size="sm">
                     <Eye className="h-4 w-4 mr-2" />
                     Export
@@ -325,13 +680,16 @@ export default function Index() {
                       onCheckedChange={toggleAllProducts}
                       className="mr-4"
                     />
-                    <div className="grid grid-cols-12 gap-4 flex-1 text-sm font-medium text-muted-foreground">
-                      <div className="col-span-4">Product</div>
-                      <div className="col-span-2">Status</div>
-                      <div className="col-span-2">Vendor</div>
-                      <div className="col-span-1">Inventory</div>
-                      <div className="col-span-2">Price</div>
-                      <div className="col-span-1">Actions</div>
+                    <div className="grid gap-4 flex-1 text-sm font-medium text-muted-foreground" style={{
+                      gridTemplateColumns: `${columnVisibility.product ? '4fr' : ''} ${columnVisibility.status ? '2fr' : ''} ${columnVisibility.vendor ? '2fr' : ''} ${columnVisibility.inventory ? '1fr' : ''} ${columnVisibility.price ? '2fr' : ''} ${columnVisibility.seoScore ? '2fr' : ''} ${columnVisibility.actions ? '1fr' : ''}`.trim()
+                    }}>
+                      {columnVisibility.product && <div>Product</div>}
+                      {columnVisibility.status && <div>Status</div>}
+                      {columnVisibility.vendor && <div>Vendor</div>}
+                      {columnVisibility.inventory && <div>Inventory</div>}
+                      {columnVisibility.price && <div>Price</div>}
+                      {columnVisibility.seoScore && <div>SEO Score</div>}
+                      {columnVisibility.actions && <div>Actions</div>}
                     </div>
                   </div>
 
@@ -344,75 +702,118 @@ export default function Index() {
                           onCheckedChange={() => toggleProductSelection(product.id)}
                           className="mr-4"
                         />
-                        <div className="grid grid-cols-12 gap-4 flex-1">
+                        <div className="grid gap-4 flex-1" style={{
+                          gridTemplateColumns: `${columnVisibility.product ? '4fr' : ''} ${columnVisibility.status ? '2fr' : ''} ${columnVisibility.vendor ? '2fr' : ''} ${columnVisibility.inventory ? '1fr' : ''} ${columnVisibility.price ? '2fr' : ''} ${columnVisibility.seoScore ? '2fr' : ''} ${columnVisibility.actions ? '1fr' : ''}`.trim()
+                        }}>
                           {/* Product Info */}
-                          <div className="col-span-4 flex items-center space-x-3">
-                            <img
-                              src={product.image}
-                              alt={product.title}
-                              className="w-12 h-12 rounded-lg object-cover"
-                            />
-                            <div>
-                              <p className="font-medium text-foreground">{product.title}</p>
-                              <p className="text-sm text-muted-foreground">{product.handle}</p>
+                          {columnVisibility.product && (
+                            <div className="flex items-center space-x-3">
+                              <img
+                                src={product.image}
+                                alt={product.title}
+                                className="w-12 h-12 rounded-lg object-cover"
+                              />
+                              <div>
+                                <p className="font-medium text-foreground">{product.title}</p>
+                                <p className="text-sm text-muted-foreground">{product.handle}</p>
+                              </div>
                             </div>
-                          </div>
+                          )}
 
                           {/* Status */}
-                          <div className="col-span-2 flex items-center">
-                            <Badge variant={getStatusBadgeVariant(product.status)}>
-                              {product.status}
-                            </Badge>
-                          </div>
+                          {columnVisibility.status && (
+                            <div className="flex items-center">
+                              <Badge variant={getStatusBadgeVariant(product.status)}>
+                                {product.status}
+                              </Badge>
+                            </div>
+                          )}
 
                           {/* Vendor */}
-                          <div className="col-span-2 flex items-center">
-                            <span className="text-sm">{product.vendor}</span>
-                          </div>
+                          {columnVisibility.vendor && (
+                            <div className="flex items-center">
+                              <span className="text-sm">{product.vendor}</span>
+                            </div>
+                          )}
 
                           {/* Inventory */}
-                          <div className="col-span-1 flex items-center">
-                            <span className={`text-sm ${product.inventory < 10 ? 'text-destructive' : 'text-foreground'}`}>
-                              {product.inventory}
-                            </span>
-                          </div>
+                          {columnVisibility.inventory && (
+                            <div className="flex items-center">
+                              <span className={`text-sm ${product.inventory < 10 ? 'text-destructive' : 'text-foreground'}`}>
+                                {product.inventory}
+                              </span>
+                            </div>
+                          )}
 
                           {/* Price */}
-                          <div className="col-span-2 flex items-center">
-                            <div>
-                              <span className="text-sm font-medium">${product.price}</span>
-                              {product.compareAtPrice && (
-                                <span className="text-xs text-muted-foreground line-through ml-2">
-                                  ${product.compareAtPrice}
-                                </span>
-                              )}
+                          {columnVisibility.price && (
+                            <div className="flex items-center">
+                              <div>
+                                <span className="text-sm font-medium">${product.price}</span>
+                                {product.compareAtPrice && (
+                                  <span className="text-xs text-muted-foreground line-through ml-2">
+                                    ${product.compareAtPrice}
+                                  </span>
+                                )}
+                              </div>
                             </div>
-                          </div>
+                          )}
+
+                          {/* SEO Score */}
+                          {columnVisibility.seoScore && (
+                            <div className="flex items-center space-x-2">
+                              <div className="flex-1">
+                                <div className="flex items-center justify-between text-xs mb-1">
+                                  <span className={getSEOScoreColor(product.seoScore)}>
+                                    {product.seoScore}/100
+                                  </span>
+                                  {product.seoScore >= 80 ? (
+                                    <CheckCircle className="h-3 w-3 text-green-600" />
+                                  ) : (
+                                    <AlertCircle className="h-3 w-3 text-yellow-600" />
+                                  )}
+                                </div>
+                                <Progress 
+                                  value={product.seoScore} 
+                                  className="h-2"
+                                />
+                                <Badge variant={getSEOScoreBadge(product.seoScore).variant} className="text-xs mt-1">
+                                  {getSEOScoreBadge(product.seoScore).label}
+                                </Badge>
+                              </div>
+                            </div>
+                          )}
 
                           {/* Actions */}
-                          <div className="col-span-1 flex items-center">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem>
-                                  <Edit3 className="h-4 w-4 mr-2" />
-                                  Edit
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                  <Eye className="h-4 w-4 mr-2" />
-                                  View
-                                </DropdownMenuItem>
-                                <DropdownMenuItem className="text-destructive">
-                                  <Trash2 className="h-4 w-4 mr-2" />
-                                  Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
+                          {columnVisibility.actions && (
+                            <div className="flex items-center">
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="sm">
+                                    <MoreHorizontal className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem>
+                                    <Edit3 className="h-4 w-4 mr-2" />
+                                    Edit
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem>
+                                    <Eye className="h-4 w-4 mr-2" />
+                                    View
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem>
+                                    <Target className="h-4 w-4 mr-2" />
+                                    Optimize SEO
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem className="text-destructive">
+                                    <Trash2 className="h-4 w-4 mr-2" />
+                                    Delete
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}
