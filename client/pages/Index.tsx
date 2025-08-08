@@ -795,9 +795,11 @@ export default function Index() {
                                   </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
-                                  <DropdownMenuItem>
-                                    <Edit3 className="h-4 w-4 mr-2" />
-                                    Edit
+                                  <DropdownMenuItem asChild>
+                                    <Link to={`/product/${product.id}/edit`}>
+                                      <Edit3 className="h-4 w-4 mr-2" />
+                                      Edit
+                                    </Link>
                                   </DropdownMenuItem>
                                   <DropdownMenuItem>
                                     <Eye className="h-4 w-4 mr-2" />
