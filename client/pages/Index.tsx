@@ -18,6 +18,7 @@ import {
   Target,
   AlertCircle,
   CheckCircle,
+  Zap,
 } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import AdvancedFilters from "@/components/AdvancedFilters";
