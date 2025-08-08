@@ -292,13 +292,18 @@ export default function Index() {
   }, []);
 
   const loadProducts = async (page: number) => {
-    setIsLoading(true);
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    const newProducts = generateMockProducts(page - 1, itemsPerPage);
-    setProducts(newProducts);
-    setCurrentPage(page);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      const newProducts = generateMockProducts(page - 1, itemsPerPage);
+      setProducts(newProducts);
+      setCurrentPage(page);
+    } catch (error) {
+      console.error("Error loading products:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const filteredProducts = useMemo(() => {
