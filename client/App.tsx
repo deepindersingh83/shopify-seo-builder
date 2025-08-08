@@ -23,6 +23,7 @@ import ContentOptimizationPage from "./pages/ContentOptimizationPage";
 import ThirdPartyIntegrationsPage from "./pages/ThirdPartyIntegrationsPage";
 import BulkEditPage from "./pages/BulkEditPage";
 import PerformanceVitalsPage from "./pages/PerformanceVitalsPage";
+import InternalLinksPage from "./pages/InternalLinksPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
