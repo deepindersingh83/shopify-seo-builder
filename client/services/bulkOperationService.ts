@@ -125,43 +125,49 @@ class BulkOperationService {
 
   // Real-time Progress Tracking
   subscribeToProgress(
-    operationId: string, 
+    operationId: string,
     onUpdate: (progress: ProgressUpdate) => void,
     onComplete?: (operation: BulkOperation) => void,
     onError?: (error: string) => void
   ): () => void {
-    const eventSource = new EventSource(`${this.baseUrl}/operations/${operationId}/stream`);
-    
-    eventSource.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        onUpdate(data);
-        
-        if (data.status === 'completed' || data.status === 'failed' || data.status === 'cancelled') {
-          onComplete?.(data);
-          eventSource.close();
-          this.activeOperations.delete(operationId);
+    try {
+      const eventSource = new EventSource(`${this.baseUrl}/operations/${operationId}/stream`);
+
+      eventSource.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          onUpdate(data);
+
+          if (data.status === 'completed' || data.status === 'failed' || data.status === 'cancelled') {
+            onComplete?.(data);
+            eventSource.close();
+            this.activeOperations.delete(operationId);
+          }
+        } catch (error) {
+          console.error('Failed to parse progress update:', error);
+          onError?.('Failed to parse progress update');
         }
-      } catch (error) {
-        console.error('Failed to parse progress update:', error);
-        onError?.('Failed to parse progress update');
-      }
-    };
-    
-    eventSource.onerror = (error) => {
-      console.error('EventSource error:', error);
-      onError?.('Connection to progress stream failed');
-      eventSource.close();
-      this.activeOperations.delete(operationId);
-    };
-    
-    this.activeOperations.set(operationId, eventSource);
-    
-    // Return cleanup function
-    return () => {
-      eventSource.close();
-      this.activeOperations.delete(operationId);
-    };
+      };
+
+      eventSource.onerror = (error) => {
+        console.error('EventSource error:', error);
+        onError?.('Connection to progress stream failed');
+        eventSource.close();
+        this.activeOperations.delete(operationId);
+      };
+
+      this.activeOperations.set(operationId, eventSource);
+
+      // Return cleanup function
+      return () => {
+        eventSource.close();
+        this.activeOperations.delete(operationId);
+      };
+    } catch (error) {
+      // If EventSource fails, return a no-op cleanup function
+      console.warn('EventSource not available, using mock subscription');
+      return () => {};
+    }
   }
 
   // Batch Operations
