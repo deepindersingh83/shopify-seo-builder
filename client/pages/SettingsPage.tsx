@@ -408,8 +408,8 @@ export default function SettingsPage() {
                 placeholder="{{product_name}} | {{store_name}}"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Available variables: {{ product_name }}, {{ store_name }},{" "}
-                {{ category }}, {{ brand }}
+                Available variables: {"{{ product_name }}"}, {"{{ store_name }}"},
+                {"{{ category }}"}, {"{{ brand }}"}
               </p>
             </div>
             <div>
