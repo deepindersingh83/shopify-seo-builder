@@ -1285,6 +1285,466 @@ export default function EditProduct() {
                   </CardContent>
                 </Card>
               </TabsContent>
+
+              {/* Keywords Research Tab */}
+              <TabsContent value="keywords" className="space-y-6">
+                {/* Keyword Overview */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Search className="h-4 w-4" />
+                      <span>Keyword Research & Tracking</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="p-4 border rounded-lg text-center">
+                        <div className="text-2xl font-bold text-blue-600">
+                          {product.keywordResearch?.suggestedKeywords.length || 0}
+                        </div>
+                        <div className="text-sm text-muted-foreground">Suggested Keywords</div>
+                      </div>
+                      <div className="p-4 border rounded-lg text-center">
+                        <div className="text-2xl font-bold text-green-600">
+                          {Object.values(product.keywordResearch?.searchVolume || {}).reduce((a, b) => a + b, 0).toLocaleString()}
+                        </div>
+                        <div className="text-sm text-muted-foreground">Total Search Volume</div>
+                      </div>
+                      <div className="p-4 border rounded-lg text-center">
+                        <div className="text-2xl font-bold text-purple-600">
+                          {Math.round(Object.values(product.keywordResearch?.difficulty || {}).reduce((a, b) => a + b, 0) / Object.keys(product.keywordResearch?.difficulty || {}).length) || 0}
+                        </div>
+                        <div className="text-sm text-muted-foreground">Avg. Difficulty</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Suggested Keywords */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Suggested Keywords</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {product.keywordResearch?.suggestedKeywords.map((keyword, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                          <div className="flex items-center space-x-3">
+                            <Badge variant="outline">{keyword}</Badge>
+                            <div className="text-sm text-muted-foreground">
+                              Volume: {product.keywordResearch?.searchVolume[keyword]?.toLocaleString() || 'N/A'}
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Badge variant={
+                              product.keywordResearch?.competition[keyword] === 'low' ? 'default' :
+                              product.keywordResearch?.competition[keyword] === 'medium' ? 'secondary' : 'destructive'
+                            }>
+                              {product.keywordResearch?.competition[keyword] || 'unknown'} competition
+                            </Badge>
+                            <div className="text-sm font-medium">
+                              {product.keywordResearch?.difficulty[keyword]}/100
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Long-tail Keywords */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Long-tail Keyword Opportunities</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {product.keywordResearch?.longtailSuggestions.map((keyword, index) => (
+                        <div key={index} className="flex items-center justify-between p-2 border rounded">
+                          <span className="text-sm">{keyword}</span>
+                          <Badge variant="outline" className="text-xs">Long-tail</Badge>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Related Keywords */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Related Keywords</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {product.keywordResearch?.relatedKeywords.map((keyword, index) => (
+                        <Badge key={index} variant="secondary">{keyword}</Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Performance Tab */}
+              <TabsContent value="performance" className="space-y-6">
+                {/* Core Web Vitals */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Zap className="h-4 w-4" />
+                      <span>Core Web Vitals</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="p-4 border rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium">LCP (Largest Contentful Paint)</span>
+                          <div className={`text-lg font-bold ${product.performance?.coreWebVitals.lcp <= 2.5 ? 'text-green-600' : product.performance?.coreWebVitals.lcp <= 4 ? 'text-yellow-600' : 'text-red-600'}`}>
+                            {product.performance?.coreWebVitals.lcp}s
+                          </div>
+                        </div>
+                        <Progress value={Math.min((product.performance?.coreWebVitals.lcp || 0) / 4 * 100, 100)} className="mb-2" />
+                        <p className="text-xs text-muted-foreground">
+                          {product.performance?.coreWebVitals.lcp <= 2.5 ? 'Good' : product.performance?.coreWebVitals.lcp <= 4 ? 'Needs Improvement' : 'Poor'}
+                        </p>
+                      </div>
+
+                      <div className="p-4 border rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium">FID (First Input Delay)</span>
+                          <div className={`text-lg font-bold ${product.performance?.coreWebVitals.fid <= 100 ? 'text-green-600' : product.performance?.coreWebVitals.fid <= 300 ? 'text-yellow-600' : 'text-red-600'}`}>
+                            {product.performance?.coreWebVitals.fid}ms
+                          </div>
+                        </div>
+                        <Progress value={Math.min((product.performance?.coreWebVitals.fid || 0) / 300 * 100, 100)} className="mb-2" />
+                        <p className="text-xs text-muted-foreground">
+                          {product.performance?.coreWebVitals.fid <= 100 ? 'Good' : product.performance?.coreWebVitals.fid <= 300 ? 'Needs Improvement' : 'Poor'}
+                        </p>
+                      </div>
+
+                      <div className="p-4 border rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium">CLS (Cumulative Layout Shift)</span>
+                          <div className={`text-lg font-bold ${product.performance?.coreWebVitals.cls <= 0.1 ? 'text-green-600' : product.performance?.coreWebVitals.cls <= 0.25 ? 'text-yellow-600' : 'text-red-600'}`}>
+                            {product.performance?.coreWebVitals.cls}
+                          </div>
+                        </div>
+                        <Progress value={Math.min((product.performance?.coreWebVitals.cls || 0) / 0.25 * 100, 100)} className="mb-2" />
+                        <p className="text-xs text-muted-foreground">
+                          {product.performance?.coreWebVitals.cls <= 0.1 ? 'Good' : product.performance?.coreWebVitals.cls <= 0.25 ? 'Needs Improvement' : 'Poor'}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Page Speed */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Monitor className="h-4 w-4" />
+                      <span>Page Speed Analysis</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium">Desktop Speed</span>
+                          <div className={`text-2xl font-bold ${product.performance?.pageSpeed.desktop >= 90 ? 'text-green-600' : product.performance?.pageSpeed.desktop >= 70 ? 'text-yellow-600' : 'text-red-600'}`}>
+                            {product.performance?.pageSpeed.desktop}/100
+                          </div>
+                        </div>
+                        <Progress value={product.performance?.pageSpeed.desktop || 0} className="mb-2" />
+                        <p className="text-xs text-muted-foreground">
+                          {product.performance?.pageSpeed.desktop >= 90 ? 'Excellent' : product.performance?.pageSpeed.desktop >= 70 ? 'Good' : 'Needs Improvement'}
+                        </p>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium">Mobile Speed</span>
+                          <div className={`text-2xl font-bold ${product.performance?.pageSpeed.mobile >= 90 ? 'text-green-600' : product.performance?.pageSpeed.mobile >= 70 ? 'text-yellow-600' : 'text-red-600'}`}>
+                            {product.performance?.pageSpeed.mobile}/100
+                          </div>
+                        </div>
+                        <Progress value={product.performance?.pageSpeed.mobile || 0} className="mb-2" />
+                        <p className="text-xs text-muted-foreground">
+                          {product.performance?.pageSpeed.mobile >= 90 ? 'Excellent' : product.performance?.pageSpeed.mobile >= 70 ? 'Good' : 'Needs Improvement'}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Mobile Optimization */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Globe className="h-4 w-4" />
+                      <span>Mobile Optimization</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Mobile Usability Score</span>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-lg font-bold text-green-600">{product.performance?.mobileOptimization.mobileUsability}/100</span>
+                        <Progress value={product.performance?.mobileOptimization.mobileUsability || 0} className="w-24" />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="responsiveDesign"
+                        checked={product.performance?.mobileOptimization.responsiveDesign || false}
+                        disabled
+                      />
+                      <Label htmlFor="responsiveDesign">Responsive Design</Label>
+                      {product.performance?.mobileOptimization.responsiveDesign && <CheckCircle className="h-4 w-4 text-green-600" />}
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="ampEnabled"
+                        checked={product.performance?.mobileOptimization.ampEnabled || false}
+                        onCheckedChange={(checked) => handleInputChange('performance', {
+                          ...product.performance,
+                          mobileOptimization: {
+                            ...product.performance?.mobileOptimization,
+                            ampEnabled: checked
+                          }
+                        })}
+                      />
+                      <Label htmlFor="ampEnabled">AMP (Accelerated Mobile Pages)</Label>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* AI Tools Tab */}
+              <TabsContent value="ai" className="space-y-6">
+                {/* AI Content Optimization */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Bot className="h-4 w-4" />
+                      <span>AI-Powered Optimization</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <h4 className="font-medium text-sm mb-2 flex items-center space-x-2">
+                        <Target className="h-4 w-4" />
+                        <span>AI Meta Optimization Suggestions</span>
+                      </h4>
+                      <div className="space-y-3 p-3 bg-muted/50 rounded-lg">
+                        <div>
+                          <Label className="text-xs text-muted-foreground">Suggested Title:</Label>
+                          <p className="text-sm font-medium">{product.aiOptimization?.metaOptimization.suggestedTitle}</p>
+                          <Button variant="outline" size="sm" className="mt-1">Apply Suggestion</Button>
+                        </div>
+                        <Separator />
+                        <div>
+                          <Label className="text-xs text-muted-foreground">Suggested Description:</Label>
+                          <p className="text-sm">{product.aiOptimization?.metaOptimization.suggestedDescription}</p>
+                          <Button variant="outline" size="sm" className="mt-1">Apply Suggestion</Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-medium text-sm mb-2">Content Improvement Suggestions</h4>
+                      <div className="space-y-2">
+                        {product.aiOptimization?.contentSuggestions.map((suggestion, index) => (
+                          <div key={index} className="flex items-start space-x-2 p-2 border rounded">
+                            <AlertCircle className="h-4 w-4 text-blue-600 mt-0.5" />
+                            <span className="text-sm">{suggestion}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-medium text-sm mb-2">Semantic Keywords</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {product.aiOptimization?.semanticKeywords.map((keyword, index) => (
+                          <Badge key={index} variant="outline" className="bg-blue-50">{keyword}</Badge>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-medium text-sm mb-2">Featured Snippet Optimization</h4>
+                      <div className="p-3 border rounded-lg bg-green-50">
+                        <p className="text-sm">{product.aiOptimization?.featuredSnippetOptimization}</p>
+                        <Button variant="outline" size="sm" className="mt-2">Use for Description</Button>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="voiceSearchOptimization"
+                        checked={product.aiOptimization?.voiceSearchOptimization || false}
+                        onCheckedChange={(checked) => handleInputChange('aiOptimization', {
+                          ...product.aiOptimization,
+                          voiceSearchOptimization: checked
+                        })}
+                      />
+                      <Label htmlFor="voiceSearchOptimization">Voice Search Optimization</Label>
+                      <Badge variant="outline" className="text-xs">AI</Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Advanced Tab */}
+              <TabsContent value="advanced" className="space-y-6">
+                {/* Competitor Analysis */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Users className="h-4 w-4" />
+                      <span>Competitor Analysis</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <h4 className="font-medium text-sm mb-2">Price Comparison</h4>
+                      <div className="space-y-2">
+                        {product.competitorAnalysis?.priceComparison.map((comp, index) => (
+                          <div key={index} className="flex items-center justify-between p-2 border rounded">
+                            <span className="text-sm">{comp.competitor}</span>
+                            <div className="flex items-center space-x-2">
+                              <span className="font-medium">${comp.price}</span>
+                              <Badge variant={comp.price < product.price ? "destructive" : "default"}>
+                                {comp.price < product.price ? "Lower" : "Higher"}
+                              </Badge>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-medium text-sm mb-2">Content Gaps</h4>
+                      <div className="space-y-1">
+                        {product.competitorAnalysis?.contentGaps.map((gap, index) => (
+                          <div key={index} className="text-sm text-muted-foreground">• {gap}</div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-medium text-sm mb-2">Backlinks Comparison</h4>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-lg font-bold">{product.competitorAnalysis?.backlinksComparison}</span>
+                        <span className="text-sm text-muted-foreground">average competitor backlinks</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* International SEO */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Globe className="h-4 w-4" />
+                      <span>International & Local SEO</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <h4 className="font-medium text-sm mb-2">Hreflang Tags</h4>
+                      <div className="space-y-2">
+                        {Object.entries(product.internationalSeo?.hreflangTags || {}).map(([lang, url]) => (
+                          <div key={lang} className="flex items-center justify-between p-2 border rounded text-sm">
+                            <Badge variant="outline">{lang}</Badge>
+                            <span className="text-muted-foreground font-mono text-xs">{url}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-medium text-sm mb-2">Target Countries</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {product.internationalSeo?.targetCountries.map((country, index) => (
+                          <Badge key={index} variant="secondary">{country}</Badge>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-sm">Currency Optimization</Label>
+                        <p className="text-lg font-medium">{product.internationalSeo?.currencyOptimization}</p>
+                      </div>
+                      <div>
+                        <Label className="text-sm">Geo Targeting</Label>
+                        <p className="text-lg font-medium capitalize">{product.internationalSeo?.geoTargeting}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Automation Rules */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <RefreshCw className="h-4 w-4" />
+                      <span>SEO Automation</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <h4 className="font-medium text-sm mb-2">Active SEO Rules</h4>
+                      <div className="space-y-2">
+                        {product.automation?.seoRules.map((rule, index) => (
+                          <div key={index} className="flex items-center space-x-2">
+                            <Switch
+                              checked={rule.enabled}
+                              onCheckedChange={(checked) => {
+                                const newRules = [...(product.automation?.seoRules || [])];
+                                newRules[index] = { ...rule, enabled: checked };
+                                handleInputChange('automation', {
+                                  ...product.automation,
+                                  seoRules: newRules
+                                });
+                              }}
+                            />
+                            <span className="text-sm">{rule.rule}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="scheduledAudits"
+                        checked={product.automation?.scheduledAudits || false}
+                        onCheckedChange={(checked) => handleInputChange('automation', {
+                          ...product.automation,
+                          scheduledAudits: checked
+                        })}
+                      />
+                      <Label htmlFor="scheduledAudits">Scheduled SEO Audits</Label>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="autoMetaGeneration"
+                        checked={product.automation?.autoMetaGeneration || false}
+                        onCheckedChange={(checked) => handleInputChange('automation', {
+                          ...product.automation,
+                          autoMetaGeneration: checked
+                        })}
+                      />
+                      <Label htmlFor="autoMetaGeneration">Auto Meta Generation</Label>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
             </Tabs>
           </div>
 
