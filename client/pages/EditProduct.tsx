@@ -66,6 +66,80 @@ interface Product {
     keywordDensity: number;
     readabilityScore: number;
     contentLength: number;
+    focusKeywordInTitle: boolean;
+    focusKeywordInMeta: boolean;
+    focusKeywordInContent: boolean;
+    internalLinkCount: number;
+    outboundLinkCount: number;
+    wordCount: number;
+    sentenceLength: number;
+  };
+  keywordResearch?: {
+    suggestedKeywords: string[];
+    searchVolume: { [key: string]: number };
+    competition: { [key: string]: 'low' | 'medium' | 'high' };
+    difficulty: { [key: string]: number };
+    relatedKeywords: string[];
+    longtailSuggestions: string[];
+  };
+  serpPreview?: {
+    title: string;
+    url: string;
+    description: string;
+    richSnippets: boolean;
+    featuredSnippet: boolean;
+  };
+  competitorAnalysis?: {
+    competitorUrls: string[];
+    competitorKeywords: string[];
+    contentGaps: string[];
+    backlinksComparison: number;
+    priceComparison: { competitor: string; price: number }[];
+  };
+  performance?: {
+    coreWebVitals: {
+      lcp: number; // Largest Contentful Paint
+      fid: number; // First Input Delay
+      cls: number; // Cumulative Layout Shift
+    };
+    pageSpeed: {
+      desktop: number;
+      mobile: number;
+    };
+    mobileOptimization: {
+      mobileUsability: number;
+      ampEnabled: boolean;
+      responsiveDesign: boolean;
+    };
+  };
+  linkManagement?: {
+    internalLinks: { url: string; anchor: string; title: string }[];
+    backlinks: { domain: string; url: string; authority: number }[];
+    brokenLinks: string[];
+    redirectChains: string[];
+  };
+  internationalSeo?: {
+    hreflangTags: { [lang: string]: string };
+    targetCountries: string[];
+    currencyOptimization: string;
+    localSeoEnabled: boolean;
+    geoTargeting: string;
+  };
+  aiOptimization?: {
+    contentSuggestions: string[];
+    metaOptimization: {
+      suggestedTitle: string;
+      suggestedDescription: string;
+    };
+    semanticKeywords: string[];
+    voiceSearchOptimization: boolean;
+    featuredSnippetOptimization: string;
+  };
+  automation?: {
+    seoRules: { rule: string; enabled: boolean }[];
+    scheduledAudits: boolean;
+    autoMetaGeneration: boolean;
+    bulkOptimizationRules: string[];
   };
   isVisible: boolean;
   trackQuantity: boolean;
