@@ -419,10 +419,10 @@ export default function Index() {
               <Package className="h-8 w-8 text-primary" />
               <div>
                 <h1 className="text-2xl font-bold text-foreground">
-                  Product Manager
+                  SEO Product Manager
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Bulk edit and manage your inventory
+                  Complete SEO management for your Shopify store
                 </p>
               </div>
             </div>
