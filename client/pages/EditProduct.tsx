@@ -73,49 +73,83 @@ interface Product {
   seoScore: number;
 }
 
-// SEO Score calculation function
+// Advanced SEO Score calculation function
 const calculateSEOScore = (product: Partial<Product>): number => {
   let score = 0;
 
-  // Title optimization (25 points)
+  // Basic SEO (60 points total)
+  // Title optimization (15 points)
   if (product.title && product.title.length >= 10 && product.title.length <= 60) {
-    score += 25;
-  } else if (product.title && product.title.length > 0) {
-    score += 10;
-  }
-
-  // Meta title (20 points)
-  if (product.metaTitle && product.metaTitle.length >= 30 && product.metaTitle.length <= 60) {
-    score += 20;
-  } else if (product.metaTitle && product.metaTitle.length > 0) {
-    score += 10;
-  }
-
-  // Meta description (20 points)
-  if (product.metaDescription && product.metaDescription.length >= 120 && product.metaDescription.length <= 160) {
-    score += 20;
-  } else if (product.metaDescription && product.metaDescription.length > 0) {
-    score += 10;
-  }
-
-  // Product description (15 points)
-  if (product.description && product.description.length >= 100) {
     score += 15;
-  } else if (product.description && product.description.length > 0) {
+  } else if (product.title && product.title.length > 0) {
     score += 8;
   }
 
-  // Handle/URL optimization (10 points)
+  // Meta title (12 points)
+  if (product.metaTitle && product.metaTitle.length >= 30 && product.metaTitle.length <= 60) {
+    score += 12;
+  } else if (product.metaTitle && product.metaTitle.length > 0) {
+    score += 6;
+  }
+
+  // Meta description (12 points)
+  if (product.metaDescription && product.metaDescription.length >= 120 && product.metaDescription.length <= 160) {
+    score += 12;
+  } else if (product.metaDescription && product.metaDescription.length > 0) {
+    score += 6;
+  }
+
+  // Product description (8 points)
+  if (product.description && product.description.length >= 100) {
+    score += 8;
+  } else if (product.description && product.description.length > 0) {
+    score += 4;
+  }
+
+  // Handle/URL optimization (8 points)
   if (product.handle && product.handle.length <= 50 && !product.handle.includes('_')) {
-    score += 10;
+    score += 8;
   } else if (product.handle) {
+    score += 4;
+  }
+
+  // Tags optimization (5 points)
+  if (product.tags && product.tags.length >= 3 && product.tags.length <= 10) {
+    score += 5;
+  } else if (product.tags && product.tags.length > 0) {
+    score += 2;
+  }
+
+  // Advanced SEO Features (40 points total)
+  // Focus keyword (5 points)
+  if (product.focusKeyword) {
     score += 5;
   }
 
-  // Tags optimization (10 points)
-  if (product.tags && product.tags.length >= 3 && product.tags.length <= 10) {
+  // Alt text for images (5 points)
+  if (product.altText) {
+    score += 5;
+  }
+
+  // Open Graph optimization (10 points)
+  if (product.ogTitle && product.ogDescription) {
     score += 10;
-  } else if (product.tags && product.tags.length > 0) {
+  } else if (product.ogTitle || product.ogDescription) {
+    score += 5;
+  }
+
+  // Structured data (8 points)
+  if (product.structuredData?.enableProductSchema) {
+    score += 8;
+  }
+
+  // Technical SEO (7 points)
+  if (product.technicalSeo?.enableLazyLoading) score += 2;
+  if (product.canonicalUrl) score += 3;
+  if (product.robotsMeta && product.robotsMeta !== 'index,follow') score += 2;
+
+  // Content analysis bonus (5 points)
+  if (product.contentAnalysis?.readabilityScore && product.contentAnalysis.readabilityScore >= 70) {
     score += 5;
   }
 
