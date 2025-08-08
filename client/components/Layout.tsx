@@ -69,6 +69,8 @@ const navigationItems: NavItem[] = [
     icon: Target,
     children: [
       { title: "SEO Overview", href: "/seo/overview", icon: BarChart3 },
+      { title: "Data Sources", href: "/data-sources", icon: RefreshCw },
+      { title: "Market Analysis", href: "/market-opportunities", icon: TrendingUp },
       {
         title: "Keyword Research",
         href: "/seo/keywords",
