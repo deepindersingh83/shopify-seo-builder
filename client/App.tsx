@@ -29,4 +29,13 @@ const App = () => (
   </QueryClientProvider>
 );
 
-createRoot(document.getElementById("root")!).render(<App />);
+// Prevent duplicate root creation during development hot reloading
+const rootElement = document.getElementById("root")!;
+let root = (rootElement as any)._reactRootContainer;
+
+if (!root) {
+  root = createRoot(rootElement);
+  (rootElement as any)._reactRootContainer = root;
+}
+
+root.render(<App />);
