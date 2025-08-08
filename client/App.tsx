@@ -15,6 +15,11 @@ import MarketOpportunityPage from "./pages/MarketOpportunityPage";
 import MultiChannelListingsPage from "./pages/MultiChannelListingsPage";
 import WorkflowBuilderPage from "./pages/WorkflowBuilderPage";
 import SettingsPage from "./pages/SettingsPage";
+import SEOOverviewPage from "./pages/SEOOverviewPage";
+import KeywordResearchPage from "./pages/KeywordResearchPage";
+import SERPPreviewPage from "./pages/SERPPreviewPage";
+import CompetitorAnalysisPage from "./pages/CompetitorAnalysisPage";
+import ContentOptimizationPage from "./pages/ContentOptimizationPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
