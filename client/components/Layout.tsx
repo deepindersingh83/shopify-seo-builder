@@ -151,6 +151,8 @@ const navigationItems: NavItem[] = [
     title: "Automation",
     icon: RefreshCw,
     children: [
+      { title: "Workflows", href: "/workflows", icon: Zap },
+      { title: "Multi-Channel Listings", href: "/multi-channel-listings", icon: Package },
       { title: "SEO Rules", href: "/automation/rules", icon: Settings },
       {
         title: "Scheduled Audits",
