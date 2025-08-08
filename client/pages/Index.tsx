@@ -19,6 +19,9 @@ import {
   AlertCircle,
   CheckCircle,
   Zap,
+  Database,
+  Globe,
+  TrendingUp,
 } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import AdvancedFilters from "@/components/AdvancedFilters";
