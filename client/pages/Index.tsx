@@ -436,14 +436,6 @@ export default function Index() {
                 <span>total products</span>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <span className="font-medium">
-                  {totalProducts.toLocaleString()}
-                </span>
-                <span>total products</span>
-              </div>
-            </div>
           </div>
         </div>
       </header>
