@@ -516,10 +516,20 @@ export default function Index() {
           </Card>
         </div>
 
-        {/* Filters */}
+        {/* Advanced Filters */}
+        <AdvancedFilters
+          onFiltersChange={(filters) => {
+            // Apply filters to products
+            console.log('Filters changed:', filters);
+          }}
+          currentFilters={[]}
+          resultCount={filteredProducts.length}
+        />
+
+        {/* Basic Filters */}
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-lg">Filters & Search</CardTitle>
+            <CardTitle className="text-lg">Basic Search & Filters</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col space-y-4">
