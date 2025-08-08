@@ -183,7 +183,7 @@ export function SEOAutomation({ productId, onUpdate }: SEOAutomationProps) {
               </Button>
               
               <Button size="sm" variant="outline" onClick={() => handleAutoFix('missing_meta_description')}>
-                <Magic className="h-4 w-4 mr-2" />
+                <Wand2 className="h-4 w-4 mr-2" />
                 Fix Meta Tags
               </Button>
               
