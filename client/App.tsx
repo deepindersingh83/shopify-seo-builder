@@ -46,6 +46,7 @@ const App = () => (
           <Route path="/seo/serp-preview" element={<SERPPreviewPage />} />
           <Route path="/seo/competitors" element={<CompetitorAnalysisPage />} />
           <Route path="/seo/content" element={<ContentOptimizationPage />} />
+          <Route path="/integrations" element={<ThirdPartyIntegrationsPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
