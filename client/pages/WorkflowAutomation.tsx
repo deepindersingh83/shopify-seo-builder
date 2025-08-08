@@ -287,25 +287,12 @@ export default function WorkflowAutomation() {
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
               </Button>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button size="sm">
-                    <Plus className="h-4 w-4 mr-2" />
-                    New Workflow
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle>Create New Workflow</DialogTitle>
-                    <DialogDescription>
-                      Set up automated tasks to optimize your products and SEO.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="p-4 text-center text-muted-foreground">
-                    Workflow builder interface would go here...
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <Link to="/workflow-builder">
+                <Button size="sm">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Workflow Builder
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
