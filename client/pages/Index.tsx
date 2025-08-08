@@ -867,7 +867,7 @@ export default function Index() {
                                   </DropdownMenuItem>
                                   <DropdownMenuItem>
                                     <Target className="h-4 w-4 mr-2" />
-                                    Optimize SEO
+                                    SEO Analysis
                                   </DropdownMenuItem>
                                   <DropdownMenuItem className="text-destructive">
                                     <Trash2 className="h-4 w-4 mr-2" />
