@@ -187,6 +187,11 @@ const navigationItems: NavItem[] = [
     ],
   },
   {
+    title: "Integrations",
+    href: "/integrations",
+    icon: RefreshCw,
+  },
+  {
     title: "Settings",
     href: "/settings",
     icon: Settings,
