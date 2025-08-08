@@ -2,6 +2,8 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
+import * as workflowRoutes from "./routes/workflows";
+import * as bulkRoutes from "./routes/bulk";
 
 export function createServer() {
   const app = express();
