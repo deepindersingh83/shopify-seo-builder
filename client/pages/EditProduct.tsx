@@ -1637,6 +1637,22 @@ export default function EditProduct() {
                 </Card>
               </TabsContent>
 
+              {/* SEO Automation Tab */}
+              <TabsContent value="automation" className="space-y-6">
+                <SEOAutomation
+                  productId={product.id}
+                  onUpdate={() => {
+                    // Recalculate SEO score after automation
+                    const updatedProduct = {
+                      ...product,
+                      seoScore: calculateSEOScore(product),
+                      updatedAt: new Date().toISOString(),
+                    };
+                    setProduct(updatedProduct);
+                  }}
+                />
+              </TabsContent>
+
               {/* Keywords Research Tab */}
               <TabsContent value="keywords" className="space-y-6">
                 {/* Keyword Overview */}
