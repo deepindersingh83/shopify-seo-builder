@@ -123,14 +123,14 @@ const navigationItems: NavItem[] = [
     icon: Globe,
     children: [
       {
-        title: "Hreflang Manager",
-        href: "/international/hreflang",
+        title: "Multi-Language SEO",
+        href: "/multi-language-seo",
         icon: Globe,
       },
       { title: "Local SEO", href: "/international/local", icon: MapPin },
       {
-        title: "Multi-language",
-        href: "/international/languages",
+        title: "Hreflang Manager",
+        href: "/international/hreflang",
         icon: Globe,
       },
     ],
