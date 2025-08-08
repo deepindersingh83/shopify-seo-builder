@@ -11,18 +11,18 @@ export default function PerformanceSpeedPage() {
         {
           title: "Core Web Vitals",
           href: "/performance/vitals",
-          description: "Monitor Core Web Vitals metrics"
+          description: "Monitor Core Web Vitals metrics",
         },
         {
           title: "Mobile Optimization",
           href: "/performance/mobile",
-          description: "Optimize for mobile devices"
+          description: "Optimize for mobile devices",
         },
         {
           title: "Performance Reports",
           href: "/performance/reports",
-          description: "View detailed performance analytics"
-        }
+          description: "View detailed performance analytics",
+        },
       ]}
     />
   );

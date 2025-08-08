@@ -408,8 +408,8 @@ export default function SettingsPage() {
                 placeholder="{{product_name}} | {{store_name}}"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Available variables: {"{{ product_name }}"}, {"{{ store_name }}"},
-                {"{{ category }}"}, {"{{ brand }}"}
+                Available variables: {"{{ product_name }}"},{" "}
+                {"{{ store_name }}"},{"{{ category }}"}, {"{{ brand }}"}
               </p>
             </div>
             <div>
@@ -878,67 +878,67 @@ export default function SettingsPage() {
   return (
     <Layout>
       <div className="container mx-auto px-6 py-6">
-          <div className="flex items-center space-x-4 mb-8">
-            <Settings className="h-8 w-8 text-primary" />
-            <div>
-              <h1 className="text-3xl font-bold">Settings</h1>
-              <p className="text-muted-foreground">
-                Manage your SEO Manager configuration
-              </p>
-            </div>
+        <div className="flex items-center space-x-4 mb-8">
+          <Settings className="h-8 w-8 text-primary" />
+          <div>
+            <h1 className="text-3xl font-bold">Settings</h1>
+            <p className="text-muted-foreground">
+              Manage your SEO Manager configuration
+            </p>
           </div>
-
-          <Tabs
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="space-y-6"
-          >
-            <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger
-                value="general"
-                className="flex items-center space-x-2"
-              >
-                <Settings className="h-4 w-4" />
-                <span>General</span>
-              </TabsTrigger>
-              <TabsTrigger value="seo" className="flex items-center space-x-2">
-                <Zap className="h-4 w-4" />
-                <span>SEO</span>
-              </TabsTrigger>
-              <TabsTrigger
-                value="notifications"
-                className="flex items-center space-x-2"
-              >
-                <Bell className="h-4 w-4" />
-                <span>Notifications</span>
-              </TabsTrigger>
-              <TabsTrigger
-                value="integrations"
-                className="flex items-center space-x-2"
-              >
-                <Database className="h-4 w-4" />
-                <span>APIs</span>
-              </TabsTrigger>
-              <TabsTrigger
-                value="security"
-                className="flex items-center space-x-2"
-              >
-                <Shield className="h-4 w-4" />
-                <span>Security</span>
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="general">{renderGeneralSettings()}</TabsContent>
-            <TabsContent value="seo">{renderSEOSettings()}</TabsContent>
-            <TabsContent value="notifications">
-              {renderNotifications()}
-            </TabsContent>
-            <TabsContent value="integrations">
-              {renderAPIIntegrations()}
-            </TabsContent>
-            <TabsContent value="security">{renderSecurity()}</TabsContent>
-          </Tabs>
         </div>
+
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-6"
+        >
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger
+              value="general"
+              className="flex items-center space-x-2"
+            >
+              <Settings className="h-4 w-4" />
+              <span>General</span>
+            </TabsTrigger>
+            <TabsTrigger value="seo" className="flex items-center space-x-2">
+              <Zap className="h-4 w-4" />
+              <span>SEO</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="notifications"
+              className="flex items-center space-x-2"
+            >
+              <Bell className="h-4 w-4" />
+              <span>Notifications</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="integrations"
+              className="flex items-center space-x-2"
+            >
+              <Database className="h-4 w-4" />
+              <span>APIs</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="security"
+              className="flex items-center space-x-2"
+            >
+              <Shield className="h-4 w-4" />
+              <span>Security</span>
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="general">{renderGeneralSettings()}</TabsContent>
+          <TabsContent value="seo">{renderSEOSettings()}</TabsContent>
+          <TabsContent value="notifications">
+            {renderNotifications()}
+          </TabsContent>
+          <TabsContent value="integrations">
+            {renderAPIIntegrations()}
+          </TabsContent>
+          <TabsContent value="security">{renderSecurity()}</TabsContent>
+        </Tabs>
+      </div>
 
       {/* API Integration Dialog */}
       <Dialog open={showAPIDialog} onOpenChange={setShowAPIDialog}>

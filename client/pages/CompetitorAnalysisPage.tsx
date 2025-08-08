@@ -3,18 +3,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { 
-  ArrowLeft, 
-  Users, 
-  Search, 
-  BarChart3, 
-  Target, 
+import {
+  ArrowLeft,
+  Users,
+  Search,
+  BarChart3,
+  Target,
   Globe,
   TrendingUp,
   Shield,
   Zap,
   Eye,
-  Link2
+  Link2,
 } from "lucide-react";
 
 export default function CompetitorAnalysisPage() {
@@ -23,46 +23,52 @@ export default function CompetitorAnalysisPage() {
       title: "Competitor Keyword Gap Analysis",
       description: "Identify keywords your competitors rank for that you don't",
       icon: <Search className="h-5 w-5" />,
-      priority: "High"
+      priority: "High",
     },
     {
       title: "Backlink Profile Comparison",
       description: "Compare your backlink profile against top competitors",
       icon: <Link2 className="h-5 w-5" />,
-      priority: "High"
+      priority: "High",
     },
     {
       title: "Content Strategy Analysis",
-      description: "Analyze competitor content performance and identify opportunities",
+      description:
+        "Analyze competitor content performance and identify opportunities",
       icon: <BarChart3 className="h-5 w-5" />,
-      priority: "Medium"
+      priority: "Medium",
     },
     {
       title: "SERP Position Monitoring",
       description: "Track competitor positions for your target keywords",
       icon: <Target className="h-5 w-5" />,
-      priority: "High"
+      priority: "High",
     },
     {
       title: "Traffic Estimation",
       description: "Estimate competitor traffic and identify their top pages",
       icon: <TrendingUp className="h-5 w-5" />,
-      priority: "Medium"
+      priority: "Medium",
     },
     {
       title: "Technical SEO Comparison",
-      description: "Compare technical SEO factors like site speed and structure",
+      description:
+        "Compare technical SEO factors like site speed and structure",
       icon: <Shield className="h-5 w-5" />,
-      priority: "Low"
-    }
+      priority: "Low",
+    },
   ];
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "High": return "destructive";
-      case "Medium": return "secondary";
-      case "Low": return "outline";
-      default: return "outline";
+      case "High":
+        return "destructive";
+      case "Medium":
+        return "secondary";
+      case "Low":
+        return "outline";
+      default:
+        return "outline";
     }
   };
 
@@ -87,10 +93,12 @@ export default function CompetitorAnalysisPage() {
               </div>
               <h1 className="text-4xl font-bold mb-4">Competitor Analysis</h1>
               <p className="text-xl text-muted-foreground mb-6">
-                Analyze your competitors' SEO strategies, keywords, and performance to gain competitive advantages.
+                Analyze your competitors' SEO strategies, keywords, and
+                performance to gain competitive advantages.
               </p>
               <Badge variant="secondary" className="text-sm">
-                🚀 This feature is coming soon! In the meantime, check out our other SEO tools.
+                🚀 This feature is coming soon! In the meantime, check out our
+                other SEO tools.
               </Badge>
             </CardContent>
           </Card>
@@ -116,7 +124,10 @@ export default function CompetitorAnalysisPage() {
                           <div className="text-purple-600">{feature.icon}</div>
                           <h3 className="font-semibold">{feature.title}</h3>
                         </div>
-                        <Badge variant={getPriorityColor(feature.priority)} className="text-xs">
+                        <Badge
+                          variant={getPriorityColor(feature.priority)}
+                          className="text-xs"
+                        >
                           {feature.priority}
                         </Badge>
                       </div>
@@ -151,15 +162,23 @@ export default function CompetitorAnalysisPage() {
                   </div>
                   <div className="grid grid-cols-3 gap-4 text-sm">
                     <div>
-                      <div className="text-lg font-bold text-blue-600">1,247</div>
-                      <div className="text-muted-foreground">Shared Keywords</div>
+                      <div className="text-lg font-bold text-blue-600">
+                        1,247
+                      </div>
+                      <div className="text-muted-foreground">
+                        Shared Keywords
+                      </div>
                     </div>
                     <div>
-                      <div className="text-lg font-bold text-green-600">89%</div>
+                      <div className="text-lg font-bold text-green-600">
+                        89%
+                      </div>
                       <div className="text-muted-foreground">Overlap Score</div>
                     </div>
                     <div>
-                      <div className="text-lg font-bold text-orange-600">45K</div>
+                      <div className="text-lg font-bold text-orange-600">
+                        45K
+                      </div>
                       <div className="text-muted-foreground">Est. Traffic</div>
                     </div>
                   </div>
@@ -173,14 +192,20 @@ export default function CompetitorAnalysisPage() {
                   <div className="grid grid-cols-3 gap-4 text-sm">
                     <div>
                       <div className="text-lg font-bold text-blue-600">892</div>
-                      <div className="text-muted-foreground">Shared Keywords</div>
+                      <div className="text-muted-foreground">
+                        Shared Keywords
+                      </div>
                     </div>
                     <div>
-                      <div className="text-lg font-bold text-green-600">67%</div>
+                      <div className="text-lg font-bold text-green-600">
+                        67%
+                      </div>
                       <div className="text-muted-foreground">Overlap Score</div>
                     </div>
                     <div>
-                      <div className="text-lg font-bold text-orange-600">32K</div>
+                      <div className="text-lg font-bold text-orange-600">
+                        32K
+                      </div>
                       <div className="text-muted-foreground">Est. Traffic</div>
                     </div>
                   </div>

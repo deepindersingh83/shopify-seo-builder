@@ -11,18 +11,18 @@ export default function TechnicalRobotsPage() {
         {
           title: "XML Sitemaps",
           href: "/technical/sitemaps",
-          description: "Generate and manage XML sitemaps"
+          description: "Generate and manage XML sitemaps",
         },
         {
           title: "Schema Markup",
           href: "/technical/schema",
-          description: "Add structured data markup"
+          description: "Add structured data markup",
         },
         {
           title: "Crawl Analysis",
           href: "/technical/crawl",
-          description: "Analyze website crawlability"
-        }
+          description: "Analyze website crawlability",
+        },
       ]}
     />
   );

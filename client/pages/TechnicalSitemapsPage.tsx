@@ -11,18 +11,18 @@ export default function TechnicalSitemapsPage() {
         {
           title: "Robots.txt",
           href: "/technical/robots",
-          description: "Manage robots.txt file"
+          description: "Manage robots.txt file",
         },
         {
           title: "Schema Markup",
           href: "/technical/schema",
-          description: "Add structured data markup"
+          description: "Add structured data markup",
         },
         {
           title: "Crawl Analysis",
           href: "/technical/crawl",
-          description: "Analyze website crawlability"
-        }
+          description: "Analyze website crawlability",
+        },
       ]}
     />
   );

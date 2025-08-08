@@ -11,18 +11,18 @@ export default function AnalyticsReportsPage() {
         {
           title: "Keyword Rankings",
           href: "/analytics/rankings",
-          description: "Monitor keyword position changes"
+          description: "Monitor keyword position changes",
         },
         {
           title: "Traffic Analysis",
           href: "/analytics/traffic",
-          description: "Analyze website traffic patterns"
+          description: "Analyze website traffic patterns",
         },
         {
           title: "ROI Tracking",
           href: "/analytics/roi",
-          description: "Track return on investment"
-        }
+          description: "Track return on investment",
+        },
       ]}
     />
   );

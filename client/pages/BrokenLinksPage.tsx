@@ -11,18 +11,18 @@ export default function BrokenLinksPage() {
         {
           title: "Internal Links",
           href: "/links/internal",
-          description: "Manage internal linking structure"
+          description: "Manage internal linking structure",
         },
         {
           title: "Backlink Monitor",
           href: "/links/backlinks",
-          description: "Track your backlink profile"
+          description: "Track your backlink profile",
         },
         {
           title: "Redirect Manager",
           href: "/links/redirects",
-          description: "Manage URL redirects"
-        }
+          description: "Manage URL redirects",
+        },
       ]}
     />
   );

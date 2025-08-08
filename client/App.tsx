@@ -83,9 +83,15 @@ const App = () => (
           />
           <Route path="/links/internal" element={<InternalLinksPage />} />
           <Route path="/performance/speed" element={<PerformanceSpeedPage />} />
-          <Route path="/performance/reports" element={<PerformanceReportsPage />} />
+          <Route
+            path="/performance/reports"
+            element={<PerformanceReportsPage />}
+          />
           <Route path="/links/broken" element={<BrokenLinksPage />} />
-          <Route path="/technical/sitemaps" element={<TechnicalSitemapsPage />} />
+          <Route
+            path="/technical/sitemaps"
+            element={<TechnicalSitemapsPage />}
+          />
           <Route path="/technical/robots" element={<TechnicalRobotsPage />} />
           <Route path="/technical/schema" element={<TechnicalSchemaPage />} />
           <Route path="/technical/crawl" element={<TechnicalCrawlPage />} />

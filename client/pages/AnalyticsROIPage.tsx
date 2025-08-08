@@ -3,65 +3,73 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { 
-  ArrowLeft, 
-  TrendingUp, 
-  DollarSign, 
-  BarChart3, 
-  Target, 
+import {
+  ArrowLeft,
+  TrendingUp,
+  DollarSign,
+  BarChart3,
+  Target,
   Calendar,
   Users,
   Zap,
   Eye,
-  CheckCircle2
+  CheckCircle2,
 } from "lucide-react";
 
 export default function AnalyticsROIPage() {
   const comingSoonFeatures = [
     {
       title: "Revenue Attribution",
-      description: "Track revenue directly attributed to SEO efforts and specific keywords",
+      description:
+        "Track revenue directly attributed to SEO efforts and specific keywords",
       icon: <DollarSign className="h-5 w-5" />,
-      priority: "High"
+      priority: "High",
     },
     {
       title: "Cost Per Acquisition",
-      description: "Calculate and monitor CPA for organic traffic vs paid campaigns",
+      description:
+        "Calculate and monitor CPA for organic traffic vs paid campaigns",
       icon: <Target className="h-5 w-5" />,
-      priority: "High"
+      priority: "High",
     },
     {
       title: "Conversion Tracking",
-      description: "Advanced conversion tracking with goal-based ROI calculations",
+      description:
+        "Advanced conversion tracking with goal-based ROI calculations",
       icon: <CheckCircle2 className="h-5 w-5" />,
-      priority: "Medium"
+      priority: "Medium",
     },
     {
       title: "Competitive ROI Analysis",
       description: "Compare your ROI performance against industry benchmarks",
       icon: <Users className="h-5 w-5" />,
-      priority: "Medium"
+      priority: "Medium",
     },
     {
       title: "ROI Forecasting",
-      description: "Predict future ROI based on current trends and historical data",
+      description:
+        "Predict future ROI based on current trends and historical data",
       icon: <BarChart3 className="h-5 w-5" />,
-      priority: "Low"
+      priority: "Low",
     },
     {
       title: "Automated ROI Reports",
       description: "Scheduled reports with ROI insights sent to stakeholders",
       icon: <Calendar className="h-5 w-5" />,
-      priority: "Low"
-    }
+      priority: "Low",
+    },
   ];
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "High": return "destructive";
-      case "Medium": return "secondary";
-      case "Low": return "outline";
-      default: return "outline";
+      case "High":
+        return "destructive";
+      case "Medium":
+        return "secondary";
+      case "Low":
+        return "outline";
+      default:
+        return "outline";
     }
   };
 
@@ -86,7 +94,8 @@ export default function AnalyticsROIPage() {
               </div>
               <h1 className="text-4xl font-bold mb-4">ROI Tracking</h1>
               <p className="text-xl text-muted-foreground mb-6">
-                Track and analyze the return on investment for your SEO efforts and marketing campaigns.
+                Track and analyze the return on investment for your SEO efforts
+                and marketing campaigns.
               </p>
               <Badge variant="secondary" className="text-sm">
                 🚀 Feature Coming Soon
@@ -102,7 +111,8 @@ export default function AnalyticsROIPage() {
                 Upcoming Features
               </CardTitle>
               <p className="text-sm text-muted-foreground">
-                Here's what we're building to help you track and optimize your ROI
+                Here's what we're building to help you track and optimize your
+                ROI
               </p>
             </CardHeader>
             <CardContent>
@@ -115,7 +125,10 @@ export default function AnalyticsROIPage() {
                           <div className="text-blue-600">{feature.icon}</div>
                           <h3 className="font-semibold">{feature.title}</h3>
                         </div>
-                        <Badge variant={getPriorityColor(feature.priority)} className="text-xs">
+                        <Badge
+                          variant={getPriorityColor(feature.priority)}
+                          className="text-xs"
+                        >
                           {feature.priority}
                         </Badge>
                       </div>
@@ -144,18 +157,32 @@ export default function AnalyticsROIPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="p-4 border rounded-lg bg-muted/50">
                   <div className="text-2xl font-bold text-green-600">324%</div>
-                  <div className="text-sm text-muted-foreground">Overall SEO ROI</div>
-                  <div className="text-xs text-green-600 mt-1">+12% vs last month</div>
+                  <div className="text-sm text-muted-foreground">
+                    Overall SEO ROI
+                  </div>
+                  <div className="text-xs text-green-600 mt-1">
+                    +12% vs last month
+                  </div>
                 </div>
                 <div className="p-4 border rounded-lg bg-muted/50">
-                  <div className="text-2xl font-bold text-blue-600">$45,230</div>
-                  <div className="text-sm text-muted-foreground">Revenue from Organic</div>
-                  <div className="text-xs text-blue-600 mt-1">+8% vs last month</div>
+                  <div className="text-2xl font-bold text-blue-600">
+                    $45,230
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Revenue from Organic
+                  </div>
+                  <div className="text-xs text-blue-600 mt-1">
+                    +8% vs last month
+                  </div>
                 </div>
                 <div className="p-4 border rounded-lg bg-muted/50">
                   <div className="text-2xl font-bold text-orange-600">$140</div>
-                  <div className="text-sm text-muted-foreground">Cost per Conversion</div>
-                  <div className="text-xs text-green-600 mt-1">-5% vs last month</div>
+                  <div className="text-sm text-muted-foreground">
+                    Cost per Conversion
+                  </div>
+                  <div className="text-xs text-green-600 mt-1">
+                    -5% vs last month
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -166,7 +193,8 @@ export default function AnalyticsROIPage() {
             <CardHeader>
               <CardTitle>Available Now - Related Features</CardTitle>
               <p className="text-sm text-muted-foreground">
-                While ROI tracking is in development, explore these current analytics features
+                While ROI tracking is in development, explore these current
+                analytics features
               </p>
             </CardHeader>
             <CardContent>
