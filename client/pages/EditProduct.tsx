@@ -641,12 +641,13 @@ export default function EditProduct() {
 
               {/* SEO Tab */}
               <TabsContent value="seo" className="space-y-6">
+                {/* SEO Overview Card */}
                 <Card>
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <CardTitle className="flex items-center space-x-2">
                         <Target className="h-5 w-5 text-primary" />
-                        <span>SEO Optimization</span>
+                        <span>SEO Score & Overview</span>
                       </CardTitle>
                       <div className="text-right">
                         <div className={`text-2xl font-bold ${getSEOScoreColor(product.seoScore)}`}>
@@ -658,22 +659,59 @@ export default function EditProduct() {
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <Progress value={product.seoScore} className="mb-4" />
+                  <CardContent>
+                    <Progress value={product.seoScore} className="mb-4" />
+                    <div className="grid grid-cols-3 gap-4 text-center">
+                      <div>
+                        <div className="text-2xl font-bold text-green-600">{product.contentAnalysis?.readabilityScore || 0}</div>
+                        <div className="text-xs text-muted-foreground">Readability</div>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-blue-600">{product.contentAnalysis?.keywordDensity || 0}%</div>
+                        <div className="text-xs text-muted-foreground">Keyword Density</div>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-purple-600">{product.contentAnalysis?.contentLength || 0}</div>
+                        <div className="text-xs text-muted-foreground">Content Length</div>
+                      </div>
                     </div>
+                  </CardContent>
+                </Card>
 
-                    <div>
-                      <Label htmlFor="handle">URL Handle</Label>
-                      <Input
-                        id="handle"
-                        value={product.handle}
-                        onChange={(e) => handleInputChange('handle', e.target.value)}
-                        placeholder="product-url-handle"
-                      />
-                      <p className="text-xs text-muted-foreground mt-1">
-                        yourstore.com/products/{product.handle}
-                      </p>
+                {/* Basic SEO Settings */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Globe className="h-4 w-4" />
+                      <span>Basic SEO Settings</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="handle">URL Handle</Label>
+                        <Input
+                          id="handle"
+                          value={product.handle}
+                          onChange={(e) => handleInputChange('handle', e.target.value)}
+                          placeholder="product-url-handle"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          yourstore.com/products/{product.handle}
+                        </p>
+                      </div>
+                      <div>
+                        <Label htmlFor="focusKeyword">Focus Keyword</Label>
+                        <Input
+                          id="focusKeyword"
+                          value={product.focusKeyword || ''}
+                          onChange={(e) => handleInputChange('focusKeyword', e.target.value)}
+                          placeholder="main target keyword"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Primary keyword to optimize for
+                        </p>
+                      </div>
                     </div>
 
                     <div>
@@ -710,16 +748,337 @@ export default function EditProduct() {
                     </div>
 
                     <div>
-                      <Label htmlFor="searchKeywords">Search Keywords</Label>
+                      <Label htmlFor="altText">Image Alt Text</Label>
                       <Input
-                        id="searchKeywords"
-                        value={product.searchKeywords || ''}
-                        onChange={(e) => handleInputChange('searchKeywords', e.target.value)}
-                        placeholder="keyword1, keyword2, keyword3"
+                        id="altText"
+                        value={product.altText || ''}
+                        onChange={(e) => handleInputChange('altText', e.target.value)}
+                        placeholder="Descriptive alt text for main image"
                       />
                       <p className="text-xs text-muted-foreground mt-1">
-                        Comma-separated keywords for search optimization
+                        Describe the main product image for accessibility and SEO
                       </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Social Media & Open Graph */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Share2 className="h-4 w-4" />
+                      <span>Social Media Optimization</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-sm">Open Graph (Facebook, LinkedIn)</h4>
+                      <div>
+                        <Label htmlFor="ogTitle">Open Graph Title</Label>
+                        <Input
+                          id="ogTitle"
+                          value={product.ogTitle || ''}
+                          onChange={(e) => handleInputChange('ogTitle', e.target.value)}
+                          placeholder="Title for social media sharing"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="ogDescription">Open Graph Description</Label>
+                        <Textarea
+                          id="ogDescription"
+                          value={product.ogDescription || ''}
+                          onChange={(e) => handleInputChange('ogDescription', e.target.value)}
+                          placeholder="Description for social media sharing"
+                          rows={2}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="ogImage">Open Graph Image URL</Label>
+                        <Input
+                          id="ogImage"
+                          value={product.ogImage || ''}
+                          onChange={(e) => handleInputChange('ogImage', e.target.value)}
+                          placeholder="https://example.com/image.jpg (1200x630 recommended)"
+                        />
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div className="space-y-4">
+                      <h4 className="font-medium text-sm">Twitter Cards</h4>
+                      <div>
+                        <Label htmlFor="twitterTitle">Twitter Title</Label>
+                        <Input
+                          id="twitterTitle"
+                          value={product.twitterTitle || ''}
+                          onChange={(e) => handleInputChange('twitterTitle', e.target.value)}
+                          placeholder="Title for Twitter sharing"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="twitterDescription">Twitter Description</Label>
+                        <Textarea
+                          id="twitterDescription"
+                          value={product.twitterDescription || ''}
+                          onChange={(e) => handleInputChange('twitterDescription', e.target.value)}
+                          placeholder="Description for Twitter sharing"
+                          rows={2}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="twitterImage">Twitter Image URL</Label>
+                        <Input
+                          id="twitterImage"
+                          value={product.twitterImage || ''}
+                          onChange={(e) => handleInputChange('twitterImage', e.target.value)}
+                          placeholder="https://example.com/image.jpg (1200x600 recommended)"
+                        />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Structured Data */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Code className="h-4 w-4" />
+                      <span>Structured Data (Schema Markup)</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          id="enableProductSchema"
+                          checked={product.structuredData?.enableProductSchema || false}
+                          onCheckedChange={(checked) => handleInputChange('structuredData', {
+                            ...product.structuredData,
+                            enableProductSchema: checked
+                          })}
+                        />
+                        <Label htmlFor="enableProductSchema">Enable Product Schema</Label>
+                        <Badge variant="outline" className="text-xs">Recommended</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground ml-6">
+                        Helps search engines understand your product details (price, availability, reviews)
+                      </p>
+
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          id="enableBrandSchema"
+                          checked={product.structuredData?.enableBrandSchema || false}
+                          onCheckedChange={(checked) => handleInputChange('structuredData', {
+                            ...product.structuredData,
+                            enableBrandSchema: checked
+                          })}
+                        />
+                        <Label htmlFor="enableBrandSchema">Enable Brand Schema</Label>
+                      </div>
+                      <p className="text-xs text-muted-foreground ml-6">
+                        Provides brand information to search engines for better recognition
+                      </p>
+
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          id="enableReviewSchema"
+                          checked={product.structuredData?.enableReviewSchema || false}
+                          onCheckedChange={(checked) => handleInputChange('structuredData', {
+                            ...product.structuredData,
+                            enableReviewSchema: checked
+                          })}
+                        />
+                        <Label htmlFor="enableReviewSchema">Enable Review Schema</Label>
+                      </div>
+                      <p className="text-xs text-muted-foreground ml-6">
+                        Shows star ratings in search results when reviews are available
+                      </p>
+
+                      <div>
+                        <Label htmlFor="customSchema">Custom Schema (JSON-LD)</Label>
+                        <Textarea
+                          id="customSchema"
+                          value={product.structuredData?.customSchema || ''}
+                          onChange={(e) => handleInputChange('structuredData', {
+                            ...product.structuredData,
+                            customSchema: e.target.value
+                          })}
+                          placeholder='{"@context": "https://schema.org", "@type": "Product", ...}'
+                          rows={4}
+                          className="font-mono text-sm"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Advanced: Add custom structured data in JSON-LD format
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Technical SEO */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Settings2 className="h-4 w-4" />
+                      <span>Technical SEO</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="canonicalUrl">Canonical URL</Label>
+                        <Input
+                          id="canonicalUrl"
+                          value={product.canonicalUrl || ''}
+                          onChange={(e) => handleInputChange('canonicalUrl', e.target.value)}
+                          placeholder="https://yourstore.com/products/..."
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Prevents duplicate content issues
+                        </p>
+                      </div>
+                      <div>
+                        <Label htmlFor="robotsMeta">Robots Meta Tag</Label>
+                        <Select value={product.robotsMeta || 'index,follow'} onValueChange={(value) => handleInputChange('robotsMeta', value)}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="index,follow">Index, Follow (Default)</SelectItem>
+                            <SelectItem value="index,nofollow">Index, No Follow</SelectItem>
+                            <SelectItem value="noindex,follow">No Index, Follow</SelectItem>
+                            <SelectItem value="noindex,nofollow">No Index, No Follow</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          id="enableLazyLoading"
+                          checked={product.technicalSeo?.enableLazyLoading || false}
+                          onCheckedChange={(checked) => handleInputChange('technicalSeo', {
+                            ...product.technicalSeo,
+                            enableLazyLoading: checked
+                          })}
+                        />
+                        <Label htmlFor="enableLazyLoading">Enable Lazy Loading</Label>
+                        <Badge variant="outline" className="text-xs">Performance</Badge>
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          id="enableAMP"
+                          checked={product.technicalSeo?.enableAMP || false}
+                          onCheckedChange={(checked) => handleInputChange('technicalSeo', {
+                            ...product.technicalSeo,
+                            enableAMP: checked
+                          })}
+                        />
+                        <Label htmlFor="enableAMP">Enable AMP (Accelerated Mobile Pages)</Label>
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          id="excludeFromSitemap"
+                          checked={product.technicalSeo?.excludeFromSitemap || false}
+                          onCheckedChange={(checked) => handleInputChange('technicalSeo', {
+                            ...product.technicalSeo,
+                            excludeFromSitemap: checked
+                          })}
+                        />
+                        <Label htmlFor="excludeFromSitemap">Exclude from XML Sitemap</Label>
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="customMetaTags">Custom Meta Tags</Label>
+                      <Textarea
+                        id="customMetaTags"
+                        value={product.technicalSeo?.customMetaTags || ''}
+                        onChange={(e) => handleInputChange('technicalSeo', {
+                          ...product.technicalSeo,
+                          customMetaTags: e.target.value
+                        })}
+                        placeholder='<meta name="custom-tag" content="value">'
+                        rows={3}
+                        className="font-mono text-sm"
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Add custom meta tags (one per line)
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Content Analysis */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <BarChart3 className="h-4 w-4" />
+                      <span>Content Analysis</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="p-4 border rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium">Readability</span>
+                          <div className={`text-lg font-bold ${product.contentAnalysis?.readabilityScore >= 70 ? 'text-green-600' : product.contentAnalysis?.readabilityScore >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
+                            {product.contentAnalysis?.readabilityScore || 0}
+                          </div>
+                        </div>
+                        <Progress value={product.contentAnalysis?.readabilityScore || 0} className="mb-2" />
+                        <p className="text-xs text-muted-foreground">
+                          {product.contentAnalysis?.readabilityScore >= 70 ? 'Excellent - Easy to read' :
+                           product.contentAnalysis?.readabilityScore >= 50 ? 'Good - Moderately easy' :
+                           'Poor - Hard to read'}
+                        </p>
+                      </div>
+
+                      <div className="p-4 border rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium">Keyword Density</span>
+                          <div className={`text-lg font-bold ${product.contentAnalysis?.keywordDensity >= 1 && product.contentAnalysis?.keywordDensity <= 3 ? 'text-green-600' : 'text-yellow-600'}`}>
+                            {product.contentAnalysis?.keywordDensity || 0}%
+                          </div>
+                        </div>
+                        <Progress value={(product.contentAnalysis?.keywordDensity || 0) * 20} className="mb-2" />
+                        <p className="text-xs text-muted-foreground">
+                          {product.contentAnalysis?.keywordDensity >= 1 && product.contentAnalysis?.keywordDensity <= 3 ? 'Optimal range (1-3%)' :
+                           product.contentAnalysis?.keywordDensity > 3 ? 'Too high - may be spam' :
+                           'Too low - add more keywords'}
+                        </p>
+                      </div>
+
+                      <div className="p-4 border rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium">Content Length</span>
+                          <div className={`text-lg font-bold ${product.contentAnalysis?.contentLength >= 300 ? 'text-green-600' : product.contentAnalysis?.contentLength >= 150 ? 'text-yellow-600' : 'text-red-600'}`}>
+                            {product.contentAnalysis?.contentLength || 0}
+                          </div>
+                        </div>
+                        <Progress value={Math.min((product.contentAnalysis?.contentLength || 0) / 5, 100)} className="mb-2" />
+                        <p className="text-xs text-muted-foreground">
+                          {product.contentAnalysis?.contentLength >= 300 ? 'Excellent length' :
+                           product.contentAnalysis?.contentLength >= 150 ? 'Good length' :
+                           'Too short - add more content'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="p-4 bg-muted/50 rounded-lg">
+                      <h4 className="font-medium text-sm mb-2">SEO Recommendations</h4>
+                      <ul className="space-y-1 text-xs text-muted-foreground">
+                        {!product.focusKeyword && <li>• Add a focus keyword to improve targeting</li>}
+                        {!product.altText && <li>• Add alt text for better image SEO</li>}
+                        {(!product.ogTitle || !product.ogDescription) && <li>• Complete Open Graph tags for social media</li>}
+                        {!product.structuredData?.enableProductSchema && <li>• Enable Product Schema for rich snippets</li>}
+                        {product.contentAnalysis?.readabilityScore < 70 && <li>• Improve content readability for better user experience</li>}
+                        {product.contentAnalysis?.contentLength < 150 && <li>• Add more detailed product description</li>}
+                      </ul>
                     </div>
                   </CardContent>
                 </Card>
