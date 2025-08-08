@@ -426,19 +426,37 @@ export default function Index() {
                 </p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
+              <Link to="/data-sources">
+                <Button variant="outline" size="sm">
+                  <Database className="h-4 w-4 mr-2" />
+                  Data Sources
+                </Button>
+              </Link>
+              <Link to="/multi-language-seo">
+                <Button variant="outline" size="sm">
+                  <Globe className="h-4 w-4 mr-2" />
+                  Multi-Language
+                </Button>
+              </Link>
+              <Link to="/market-opportunities">
+                <Button variant="outline" size="sm">
+                  <TrendingUp className="h-4 w-4 mr-2" />
+                  Market Analysis
+                </Button>
+              </Link>
+              <Link to="/multi-channel-listings">
+                <Button variant="outline" size="sm">
+                  <ShoppingCart className="h-4 w-4 mr-2" />
+                  Multi-Channel
+                </Button>
+              </Link>
               <Link to="/workflows">
                 <Button variant="outline" size="sm">
                   <Zap className="h-4 w-4 mr-2" />
-                  Workflow Automation
+                  Workflows
                 </Button>
               </Link>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <span className="font-medium">
-                  {totalProducts.toLocaleString()}
-                </span>
-                <span>total products</span>
-              </div>
             </div>
           </div>
         </div>
