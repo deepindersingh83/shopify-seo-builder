@@ -33,6 +33,8 @@ import TechnicalSchemaPage from "./pages/TechnicalSchemaPage";
 import TechnicalCrawlPage from "./pages/TechnicalCrawlPage";
 import AnalyticsROIPage from "./pages/AnalyticsROIPage";
 import AnalyticsReportsPage from "./pages/AnalyticsReportsPage";
+import SocialMediaAutopostPage from "./pages/SocialMediaAutopostPage";
+import CollectionSEOPage from "./pages/CollectionSEOPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
