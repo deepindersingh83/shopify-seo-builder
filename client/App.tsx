@@ -34,6 +34,7 @@ const App = () => (
           <Route path="/multi-language-seo" element={<MultiLanguageSEOPage />} />
           <Route path="/market-opportunities" element={<MarketOpportunityPage />} />
           <Route path="/multi-channel-listings" element={<MultiChannelListingsPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
