@@ -20,6 +20,9 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { Layout } from "@/components/Layout";
+import AdvancedFilters from "@/components/AdvancedFilters";
+import BulkOperations from "@/components/BulkOperations";
+import SEOAutomation from "@/components/SEOAutomation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
