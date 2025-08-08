@@ -7,7 +7,7 @@ import {
   AlertCircle,
   XCircle,
   RefreshCw,
-  Magic,
+  Wand2,
   Tags,
   Code,
   TrendingUp,
