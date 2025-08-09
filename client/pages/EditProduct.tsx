@@ -652,41 +652,36 @@ export default function EditProduct() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card sticky top-0 z-10">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Products
-                </Link>
-              </Button>
-              <Separator orientation="vertical" className="h-6" />
-              <div>
-                <h1 className="text-xl font-semibold">{product.title}</h1>
-                <p className="text-sm text-muted-foreground">
-                  Edit product details
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm">
-                <Eye className="h-4 w-4 mr-2" />
-                Preview
-              </Button>
-              <Button onClick={handleSave} disabled={isSaving} size="sm">
-                <Save className="h-4 w-4 mr-2" />
-                {isSaving ? "Saving..." : "Save"}
-              </Button>
+    <Layout>
+      <div className="container mx-auto px-6 py-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Products
+              </Link>
+            </Button>
+            <Separator orientation="vertical" className="h-6" />
+            <div>
+              <h1 className="text-xl font-semibold">{product.title}</h1>
+              <p className="text-sm text-muted-foreground">
+                Edit product details
+              </p>
             </div>
           </div>
+          <div className="flex items-center space-x-2">
+            <Button variant="outline" size="sm">
+              <Eye className="h-4 w-4 mr-2" />
+              Preview
+            </Button>
+            <Button onClick={handleSave} disabled={isSaving} size="sm">
+              <Save className="h-4 w-4 mr-2" />
+              {isSaving ? "Saving..." : "Save"}
+            </Button>
+          </div>
         </div>
-      </header>
-
-      <div className="container mx-auto px-6 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
@@ -2584,6 +2579,6 @@ export default function EditProduct() {
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }
