@@ -351,9 +351,9 @@ export function ThirdPartyIntegrations() {
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">5</div>
+            <div className="text-2xl font-bold">9</div>
             <p className="text-xs text-muted-foreground">
-              SEO & Analytics platforms
+              SEO, Analytics & Microsoft platforms
             </p>
           </CardContent>
         </Card>
