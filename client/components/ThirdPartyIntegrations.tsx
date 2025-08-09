@@ -897,6 +897,10 @@ function ConnectServiceForm({
               Google Search Console
             </SelectItem>
             <SelectItem value="google_analytics">Google Analytics 4</SelectItem>
+            <SelectItem value="microsoft_clarity">Microsoft Clarity</SelectItem>
+            <SelectItem value="microsoft_ads">Microsoft Advertising</SelectItem>
+            <SelectItem value="azure_insights">Azure Application Insights</SelectItem>
+            <SelectItem value="linkedin_ads">LinkedIn Ads</SelectItem>
             <SelectItem value="semrush">SEMrush</SelectItem>
             <SelectItem value="ahrefs">Ahrefs</SelectItem>
             <SelectItem value="facebook">Facebook/Meta</SelectItem>
