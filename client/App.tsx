@@ -46,6 +46,10 @@ import SEORulesPage from "./pages/SEORulesPage";
 import ScheduledAuditsPage from "./pages/ScheduledAuditsPage";
 import AutomationBulkPage from "./pages/AutomationBulkPage";
 import AutomationTemplatesPage from "./pages/AutomationTemplatesPage";
+import MultiStoreSEOPage from "./pages/MultiStoreSEOPage";
+import AdvancedContentPage from "./pages/AdvancedContentPage";
+import AdvancedAnalyticsPage from "./pages/AdvancedAnalyticsPage";
+import LandingPageBuilderPage from "./pages/LandingPageBuilderPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
