@@ -37,7 +37,6 @@ import SocialMediaAutopostPage from "./pages/SocialMediaAutopostPage";
 import CollectionSEOPage from "./pages/CollectionSEOPage";
 import HreflangManagerPage from "./pages/HreflangManagerPage";
 import BacklinkMonitorPage from "./pages/BacklinkMonitorPage";
-import RedirectManagerPage from "./pages/RedirectManagerPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -106,7 +105,6 @@ const App = () => (
           <Route path="/seo/collections" element={<CollectionSEOPage />} />
           <Route path="/international/hreflang" element={<HreflangManagerPage />} />
           <Route path="/links/backlinks" element={<BacklinkMonitorPage />} />
-          <Route path="/links/redirects" element={<RedirectManagerPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
