@@ -991,6 +991,8 @@ function ConnectServiceForm({
         <Button type="submit" disabled={!service}>
           {service === "google_search_console" || service === "google_analytics"
             ? "Authenticate with Google"
+            : service === "microsoft_clarity" || service === "microsoft_ads" || service === "azure_insights"
+            ? "Authenticate with Microsoft"
             : "Connect Service"}
         </Button>
       </DialogFooter>
