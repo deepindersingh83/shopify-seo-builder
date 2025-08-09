@@ -4,6 +4,7 @@ import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import * as workflowRoutes from "./routes/workflows";
 import * as bulkRoutes from "./routes/bulk";
+import * as productRoutes from "./routes/products";
 
 export function createServer() {
   const app = express();
