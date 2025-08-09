@@ -38,6 +38,10 @@ import CollectionSEOPage from "./pages/CollectionSEOPage";
 import HreflangManagerPage from "./pages/HreflangManagerPage";
 import BacklinkMonitorPage from "./pages/BacklinkMonitorPage";
 import RedirectManagerPage from "./pages/RedirectManagerPage";
+import MobileOptimizationPage from "./pages/MobileOptimizationPage";
+import LocalSEOPage from "./pages/LocalSEOPage";
+import KeywordRankingsPage from "./pages/KeywordRankingsPage";
+import TrafficAnalysisPage from "./pages/TrafficAnalysisPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
