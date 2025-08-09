@@ -40,5 +40,13 @@ export function createServer() {
   app.post("/api/bulk/operations/:id/retry", bulkRoutes.retryFailedItems);
   app.get("/api/bulk/operations/:id/stream", bulkRoutes.streamBulkOperation);
 
+  // Product routes
+  app.post("/api/products/paginated", productRoutes.getPaginatedProducts);
+  app.post("/api/products/search", productRoutes.searchProducts);
+  app.post("/api/products/count", productRoutes.getProductCount);
+  app.post("/api/products/lazy-load", productRoutes.lazyLoadProducts);
+  app.post("/api/products/bulk-update", productRoutes.bulkUpdateProducts);
+  app.get("/api/products/:id", productRoutes.getProduct);
+
   return app;
 }
