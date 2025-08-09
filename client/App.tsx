@@ -119,6 +119,10 @@ const App = () => (
           <Route path="/international/local" element={<LocalSEOPage />} />
           <Route path="/analytics/rankings" element={<KeywordRankingsPage />} />
           <Route path="/analytics/traffic" element={<TrafficAnalysisPage />} />
+          <Route path="/automation/rules" element={<SEORulesPage />} />
+          <Route path="/automation/audits" element={<ScheduledAuditsPage />} />
+          <Route path="/automation/bulk" element={<AutomationBulkPage />} />
+          <Route path="/automation/templates" element={<AutomationTemplatesPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
