@@ -68,7 +68,8 @@ interface BacklinkGap {
 
 export default function CompetitorAnalysisPage() {
   const [activeTab, setActiveTab] = useState("overview");
-  const [selectedCompetitor, setSelectedCompetitor] = useState<Competitor | null>(null);
+  const [selectedCompetitor, setSelectedCompetitor] =
+    useState<Competitor | null>(null);
   const [newCompetitorDomain, setNewCompetitorDomain] = useState("");
 
   const competitors: Competitor[] = [
@@ -195,19 +196,27 @@ export default function CompetitorAnalysisPage() {
 
   const getOpportunityColor = (opportunity: string) => {
     switch (opportunity) {
-      case "high": return "text-red-600 bg-red-50";
-      case "medium": return "text-yellow-600 bg-yellow-50";
-      case "low": return "text-green-600 bg-green-50";
-      default: return "text-gray-600 bg-gray-50";
+      case "high":
+        return "text-red-600 bg-red-50";
+      case "medium":
+        return "text-yellow-600 bg-yellow-50";
+      case "low":
+        return "text-green-600 bg-green-50";
+      default:
+        return "text-gray-600 bg-gray-50";
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "completed": return <CheckCircle className="h-4 w-4 text-green-600" />;
-      case "analyzing": return <Zap className="h-4 w-4 text-blue-600 animate-pulse" />;
-      case "monitoring": return <Eye className="h-4 w-4 text-yellow-600" />;
-      default: return null;
+      case "completed":
+        return <CheckCircle className="h-4 w-4 text-green-600" />;
+      case "analyzing":
+        return <Zap className="h-4 w-4 text-blue-600 animate-pulse" />;
+      case "monitoring":
+        return <Eye className="h-4 w-4 text-yellow-600" />;
+      default:
+        return null;
     }
   };
 
@@ -232,9 +241,12 @@ export default function CompetitorAnalysisPage() {
 
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Competitor Analysis</h1>
+            <h1 className="text-3xl font-bold text-foreground">
+              Competitor Analysis
+            </h1>
             <p className="text-muted-foreground">
-              Analyze competitor strategies, keywords, and performance to gain competitive advantages
+              Analyze competitor strategies, keywords, and performance to gain
+              competitive advantages
             </p>
           </div>
           <div className="flex items-center space-x-3">
@@ -248,7 +260,11 @@ export default function CompetitorAnalysisPage() {
           </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-6"
+        >
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="keywords">Keyword Gaps</TabsTrigger>
@@ -286,7 +302,10 @@ export default function CompetitorAnalysisPage() {
             {/* Competitors Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {competitors.map((competitor) => (
-                <Card key={competitor.id} className="cursor-pointer hover:shadow-md transition-shadow">
+                <Card
+                  key={competitor.id}
+                  className="cursor-pointer hover:shadow-md transition-shadow"
+                >
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -297,7 +316,9 @@ export default function CompetitorAnalysisPage() {
                         </div>
                         <div>
                           <h3 className="font-semibold">{competitor.name}</h3>
-                          <p className="text-sm text-muted-foreground">{competitor.domain}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {competitor.domain}
+                          </p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -314,13 +335,17 @@ export default function CompetitorAnalysisPage() {
                         <div className="text-2xl font-bold text-blue-600">
                           {formatNumber(competitor.estimatedTraffic)}
                         </div>
-                        <div className="text-xs text-muted-foreground">Monthly Traffic</div>
+                        <div className="text-xs text-muted-foreground">
+                          Monthly Traffic
+                        </div>
                       </div>
                       <div>
                         <div className="text-2xl font-bold text-green-600">
                           {competitor.domainAuthority}
                         </div>
-                        <div className="text-xs text-muted-foreground">Domain Authority</div>
+                        <div className="text-xs text-muted-foreground">
+                          Domain Authority
+                        </div>
                       </div>
                     </div>
 
@@ -328,18 +353,27 @@ export default function CompetitorAnalysisPage() {
                       <div>
                         <div className="flex justify-between text-sm mb-1">
                           <span>Market Share</span>
-                          <span className="font-medium">{competitor.marketShare}%</span>
+                          <span className="font-medium">
+                            {competitor.marketShare}%
+                          </span>
                         </div>
-                        <Progress value={competitor.marketShare} className="h-2" />
+                        <Progress
+                          value={competitor.marketShare}
+                          className="h-2"
+                        />
                       </div>
 
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
-                          <div className="font-medium">{formatNumber(competitor.backlinks)}</div>
+                          <div className="font-medium">
+                            {formatNumber(competitor.backlinks)}
+                          </div>
                           <div className="text-muted-foreground">Backlinks</div>
                         </div>
                         <div>
-                          <div className="font-medium">{formatNumber(competitor.organicKeywords)}</div>
+                          <div className="font-medium">
+                            {formatNumber(competitor.organicKeywords)}
+                          </div>
                           <div className="text-muted-foreground">Keywords</div>
                         </div>
                       </div>
@@ -367,7 +401,10 @@ export default function CompetitorAnalysisPage() {
               <CardContent>
                 <div className="space-y-4">
                   {competitors.slice(0, 4).map((competitor, index) => (
-                    <div key={competitor.id} className="flex items-center justify-between">
+                    <div
+                      key={competitor.id}
+                      className="flex items-center justify-between"
+                    >
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded flex items-center justify-center">
                           <span className="text-white font-bold text-xs">
@@ -378,9 +415,14 @@ export default function CompetitorAnalysisPage() {
                       </div>
                       <div className="flex items-center gap-4">
                         <div className="w-32">
-                          <Progress value={competitor.marketShare} className="h-2" />
+                          <Progress
+                            value={competitor.marketShare}
+                            className="h-2"
+                          />
                         </div>
-                        <span className="font-medium w-12 text-right">{competitor.marketShare}%</span>
+                        <span className="font-medium w-12 text-right">
+                          {competitor.marketShare}%
+                        </span>
                       </div>
                     </div>
                   ))}
@@ -398,19 +440,25 @@ export default function CompetitorAnalysisPage() {
                   Keyword Gap Analysis
                 </CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Keywords your competitors rank for that you don't, or where they outrank you
+                  Keywords your competitors rank for that you don't, or where
+                  they outrank you
                 </p>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {keywordGaps.map((gap, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
                       <div className="flex-1">
                         <h4 className="font-medium">{gap.keyword}</h4>
                         <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
                           <span>Volume: {formatNumber(gap.searchVolume)}</span>
                           <span>Difficulty: {gap.difficulty}%</span>
-                          {gap.yourPosition && <span>Your position: #{gap.yourPosition}</span>}
+                          {gap.yourPosition && (
+                            <span>Your position: #{gap.yourPosition}</span>
+                          )}
                           <span>Competitor: #{gap.competitorPosition}</span>
                         </div>
                       </div>
@@ -437,15 +485,25 @@ export default function CompetitorAnalysisPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="text-center p-4 border rounded-lg">
                     <div className="text-2xl font-bold text-red-600">247</div>
-                    <div className="text-sm text-muted-foreground">High Opportunity Keywords</div>
+                    <div className="text-sm text-muted-foreground">
+                      High Opportunity Keywords
+                    </div>
                   </div>
                   <div className="text-center p-4 border rounded-lg">
-                    <div className="text-2xl font-bold text-yellow-600">589</div>
-                    <div className="text-sm text-muted-foreground">Medium Opportunity Keywords</div>
+                    <div className="text-2xl font-bold text-yellow-600">
+                      589
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Medium Opportunity Keywords
+                    </div>
                   </div>
                   <div className="text-center p-4 border rounded-lg">
-                    <div className="text-2xl font-bold text-green-600">1,247</div>
-                    <div className="text-sm text-muted-foreground">Total Keywords Analyzed</div>
+                    <div className="text-2xl font-bold text-green-600">
+                      1,247
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Total Keywords Analyzed
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -467,16 +525,25 @@ export default function CompetitorAnalysisPage() {
               <CardContent>
                 <div className="space-y-4">
                   {backlinkGaps.map((gap, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
                       <div className="flex-1">
                         <div className="flex items-center gap-3">
                           <h4 className="font-medium">{gap.domain}</h4>
-                          <Badge variant="outline">DA {gap.domainAuthority}</Badge>
-                          {gap.linkToYou && <Badge variant="default">Links to you</Badge>}
+                          <Badge variant="outline">
+                            DA {gap.domainAuthority}
+                          </Badge>
+                          {gap.linkToYou && (
+                            <Badge variant="default">Links to you</Badge>
+                          )}
                         </div>
                         <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
                           <span>Type: {gap.linkType}</span>
-                          <span>Links to competitors: {gap.linkToCompetitors}</span>
+                          <span>
+                            Links to competitors: {gap.linkToCompetitors}
+                          </span>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
@@ -507,9 +574,12 @@ export default function CompetitorAnalysisPage() {
               <CardContent>
                 <div className="text-center py-12">
                   <AlertTriangle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium mb-2">Content Analysis Coming Soon</h3>
+                  <h3 className="text-lg font-medium mb-2">
+                    Content Analysis Coming Soon
+                  </h3>
                   <p className="text-muted-foreground">
-                    Advanced content gap analysis features will be available in the next update.
+                    Advanced content gap analysis features will be available in
+                    the next update.
                   </p>
                 </div>
               </CardContent>
@@ -550,12 +620,18 @@ export default function CompetitorAnalysisPage() {
                       <h4 className="font-medium mb-2">New Keywords</h4>
                       <div className="space-y-2">
                         <div className="text-sm">
-                          <div className="font-medium">wireless earbuds 2024</div>
-                          <div className="text-muted-foreground">Amazon ranked #1</div>
+                          <div className="font-medium">
+                            wireless earbuds 2024
+                          </div>
+                          <div className="text-muted-foreground">
+                            Amazon ranked #1
+                          </div>
                         </div>
                         <div className="text-sm">
                           <div className="font-medium">gaming headset sale</div>
-                          <div className="text-muted-foreground">Best Buy ranked #3</div>
+                          <div className="text-muted-foreground">
+                            Best Buy ranked #3
+                          </div>
                         </div>
                       </div>
                     </div>

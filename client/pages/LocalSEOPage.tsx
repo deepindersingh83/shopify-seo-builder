@@ -1,16 +1,48 @@
 import { Layout } from "../components/Layout";
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { Progress } from "../components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs";
 import { Input } from "../components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../components/ui/table";
 import { Alert, AlertDescription } from "../components/ui/alert";
 import { Textarea } from "../components/ui/textarea";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../components/ui/dialog";
 import { Label } from "../components/ui/label";
 import {
   MapPin,
@@ -47,7 +79,7 @@ import {
   Navigation,
   Camera,
   Award,
-  ExternalLink
+  ExternalLink,
 } from "lucide-react";
 
 interface BusinessLocation {
@@ -136,7 +168,7 @@ export default function LocalSEOPage() {
       photos: 45,
       posts: 12,
       lastUpdated: "2024-01-20",
-      isMainLocation: true
+      isMainLocation: true,
     },
     {
       id: "2",
@@ -155,7 +187,7 @@ export default function LocalSEOPage() {
       photos: 32,
       posts: 8,
       lastUpdated: "2024-01-19",
-      isMainLocation: false
+      isMainLocation: false,
     },
     {
       id: "3",
@@ -174,8 +206,8 @@ export default function LocalSEOPage() {
       photos: 28,
       posts: 5,
       lastUpdated: "2024-01-18",
-      isMainLocation: false
-    }
+      isMainLocation: false,
+    },
   ];
 
   // Mock citations data
@@ -191,7 +223,7 @@ export default function LocalSEOPage() {
       status: "accurate",
       authority: 100,
       lastChecked: "2024-01-20",
-      category: "directory"
+      category: "directory",
     },
     {
       id: "2",
@@ -204,7 +236,7 @@ export default function LocalSEOPage() {
       status: "accurate",
       authority: 95,
       lastChecked: "2024-01-20",
-      category: "review_site"
+      category: "review_site",
     },
     {
       id: "3",
@@ -217,7 +249,7 @@ export default function LocalSEOPage() {
       status: "inconsistent",
       authority: 78,
       lastChecked: "2024-01-19",
-      category: "directory"
+      category: "directory",
     },
     {
       id: "4",
@@ -230,8 +262,8 @@ export default function LocalSEOPage() {
       status: "missing",
       authority: 85,
       lastChecked: "2024-01-18",
-      category: "industry_specific"
-    }
+      category: "industry_specific",
+    },
   ];
 
   // Mock local keywords data
@@ -246,7 +278,7 @@ export default function LocalSEOPage() {
       targetRank: 1,
       localSearchVolume: 890,
       mapPackPosition: 2,
-      competitionLevel: "high"
+      competitionLevel: "high",
     },
     {
       id: "2",
@@ -257,7 +289,7 @@ export default function LocalSEOPage() {
       currentRank: 12,
       targetRank: 5,
       localSearchVolume: 640,
-      competitionLevel: "high"
+      competitionLevel: "high",
     },
     {
       id: "3",
@@ -269,8 +301,8 @@ export default function LocalSEOPage() {
       targetRank: 3,
       localSearchVolume: 720,
       mapPackPosition: 1,
-      competitionLevel: "high"
-    }
+      competitionLevel: "high",
+    },
   ];
 
   // Mock reviews data
@@ -282,10 +314,11 @@ export default function LocalSEOPage() {
       rating: 5,
       text: "Excellent SEO software! Has helped our business grow significantly. The interface is intuitive and the support team is fantastic.",
       date: "2024-01-18",
-      response: "Thank you Sarah! We're thrilled to hear about your success with our platform.",
+      response:
+        "Thank you Sarah! We're thrilled to hear about your success with our platform.",
       responseDate: "2024-01-19",
       status: "responded",
-      sentiment: "positive"
+      sentiment: "positive",
     },
     {
       id: "2",
@@ -295,7 +328,7 @@ export default function LocalSEOPage() {
       text: "Good software overall. The keyword tracking features are really helpful. Could use some improvements in the reporting section.",
       date: "2024-01-16",
       status: "new",
-      sentiment: "positive"
+      sentiment: "positive",
     },
     {
       id: "3",
@@ -305,8 +338,8 @@ export default function LocalSEOPage() {
       text: "Had some issues with the initial setup. Support was slow to respond. The features are good but onboarding needs work.",
       date: "2024-01-15",
       status: "escalated",
-      sentiment: "negative"
-    }
+      sentiment: "negative",
+    },
   ];
 
   const getGMBStatusIcon = (status: string) => {
@@ -375,7 +408,8 @@ export default function LocalSEOPage() {
           <div>
             <h1 className="text-3xl font-bold">Local SEO</h1>
             <p className="text-muted-foreground mt-2">
-              Optimize your business for local search results and improve visibility in your target geographic areas
+              Optimize your business for local search results and improve
+              visibility in your target geographic areas
             </p>
           </div>
           <div className="flex gap-3">
@@ -383,7 +417,10 @@ export default function LocalSEOPage() {
               <Download className="h-4 w-4 mr-2" />
               Export Report
             </Button>
-            <Dialog open={isAddLocationDialogOpen} onOpenChange={setIsAddLocationDialogOpen}>
+            <Dialog
+              open={isAddLocationDialogOpen}
+              onOpenChange={setIsAddLocationDialogOpen}
+            >
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
@@ -401,7 +438,10 @@ export default function LocalSEOPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="business-name">Business Name</Label>
-                      <Input id="business-name" placeholder="Your Business Name" />
+                      <Input
+                        id="business-name"
+                        placeholder="Your Business Name"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="category">Category</Label>
@@ -410,10 +450,14 @@ export default function LocalSEOPage() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="software">Software Company</SelectItem>
+                          <SelectItem value="software">
+                            Software Company
+                          </SelectItem>
                           <SelectItem value="retail">Retail Store</SelectItem>
                           <SelectItem value="restaurant">Restaurant</SelectItem>
-                          <SelectItem value="service">Service Provider</SelectItem>
+                          <SelectItem value="service">
+                            Service Provider
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -448,8 +492,15 @@ export default function LocalSEOPage() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsAddLocationDialogOpen(false)}>Cancel</Button>
-                  <Button onClick={() => setIsAddLocationDialogOpen(false)}>Add Location</Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsAddLocationDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button onClick={() => setIsAddLocationDialogOpen(false)}>
+                    Add Location
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -460,55 +511,85 @@ export default function LocalSEOPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Business Locations</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Business Locations
+              </CardTitle>
               <Building className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{businessLocations.length}</div>
+              <div className="text-2xl font-bold">
+                {businessLocations.length}
+              </div>
               <div className="text-xs text-muted-foreground">
-                {businessLocations.filter(l => l.gmbStatus === "verified").length} verified
+                {
+                  businessLocations.filter((l) => l.gmbStatus === "verified")
+                    .length
+                }{" "}
+                verified
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Average Rating</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Average Rating
+              </CardTitle>
               <Star className="h-4 w-4 text-yellow-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {(businessLocations.reduce((acc, loc) => acc + loc.rating, 0) / businessLocations.length).toFixed(1)}
+                {(
+                  businessLocations.reduce((acc, loc) => acc + loc.rating, 0) /
+                  businessLocations.length
+                ).toFixed(1)}
               </div>
               <div className="text-xs text-muted-foreground">
-                {businessLocations.reduce((acc, loc) => acc + loc.reviewCount, 0)} total reviews
+                {businessLocations.reduce(
+                  (acc, loc) => acc + loc.reviewCount,
+                  0,
+                )}{" "}
+                total reviews
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Citation Accuracy</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Citation Accuracy
+              </CardTitle>
               <CheckCircle className="h-4 w-4 text-green-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-green-600">
-                {Math.round((citations.filter(c => c.status === "accurate").length / citations.length) * 100)}%
+                {Math.round(
+                  (citations.filter((c) => c.status === "accurate").length /
+                    citations.length) *
+                    100,
+                )}
+                %
               </div>
               <div className="text-xs text-muted-foreground">
-                {citations.filter(c => c.status === "inconsistent").length} need fixing
+                {citations.filter((c) => c.status === "inconsistent").length}{" "}
+                need fixing
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Local Rankings</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Local Rankings
+              </CardTitle>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {Math.round(localKeywords.reduce((acc, kw) => acc + kw.currentRank, 0) / localKeywords.length)}
+                {Math.round(
+                  localKeywords.reduce((acc, kw) => acc + kw.currentRank, 0) /
+                    localKeywords.length,
+                )}
               </div>
               <div className="text-xs text-muted-foreground">
                 Average position
@@ -525,32 +606,52 @@ export default function LocalSEOPage() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Button variant="outline" className="h-auto p-4 flex flex-col items-start">
+              <Button
+                variant="outline"
+                className="h-auto p-4 flex flex-col items-start"
+              >
                 <Building className="h-5 w-5 mb-2" />
                 <div className="text-left">
                   <div className="font-medium">GMB Optimization</div>
-                  <div className="text-sm text-muted-foreground">Optimize Google My Business</div>
+                  <div className="text-sm text-muted-foreground">
+                    Optimize Google My Business
+                  </div>
                 </div>
               </Button>
-              <Button variant="outline" className="h-auto p-4 flex flex-col items-start">
+              <Button
+                variant="outline"
+                className="h-auto p-4 flex flex-col items-start"
+              >
                 <FileText className="h-5 w-5 mb-2" />
                 <div className="text-left">
                   <div className="font-medium">Citation Audit</div>
-                  <div className="text-sm text-muted-foreground">Check citation consistency</div>
+                  <div className="text-sm text-muted-foreground">
+                    Check citation consistency
+                  </div>
                 </div>
               </Button>
-              <Button variant="outline" className="h-auto p-4 flex flex-col items-start">
+              <Button
+                variant="outline"
+                className="h-auto p-4 flex flex-col items-start"
+              >
                 <Star className="h-5 w-5 mb-2" />
                 <div className="text-left">
                   <div className="font-medium">Review Response</div>
-                  <div className="text-sm text-muted-foreground">Respond to customer reviews</div>
+                  <div className="text-sm text-muted-foreground">
+                    Respond to customer reviews
+                  </div>
                 </div>
               </Button>
-              <Button variant="outline" className="h-auto p-4 flex flex-col items-start">
+              <Button
+                variant="outline"
+                className="h-auto p-4 flex flex-col items-start"
+              >
                 <Search className="h-5 w-5 mb-2" />
                 <div className="text-left">
                   <div className="font-medium">Local Keywords</div>
-                  <div className="text-sm text-muted-foreground">Track local search rankings</div>
+                  <div className="text-sm text-muted-foreground">
+                    Track local search rankings
+                  </div>
                 </div>
               </Button>
             </div>
@@ -578,13 +679,24 @@ export default function LocalSEOPage() {
                       {selectedLocations.length} location(s) selected
                     </span>
                     <div className="flex gap-2">
-                      <Button size="sm" variant="outline" onClick={() => handleBulkAction("update")}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleBulkAction("update")}
+                      >
                         Bulk Update
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => handleBulkAction("verify")}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleBulkAction("verify")}
+                      >
                         Verify GMB
                       </Button>
-                      <Button size="sm" onClick={() => handleBulkAction("optimize")}>
+                      <Button
+                        size="sm"
+                        onClick={() => handleBulkAction("optimize")}
+                      >
                         Optimize
                       </Button>
                     </div>
@@ -596,7 +708,9 @@ export default function LocalSEOPage() {
             {/* Business Locations Table */}
             <Card>
               <CardHeader>
-                <CardTitle>Business Locations ({businessLocations.length})</CardTitle>
+                <CardTitle>
+                  Business Locations ({businessLocations.length})
+                </CardTitle>
                 <CardDescription>
                   Manage your business locations and Google My Business profiles
                 </CardDescription>
@@ -607,11 +721,13 @@ export default function LocalSEOPage() {
                     <TableHeader>
                       <TableRow>
                         <TableHead className="w-[50px]">
-                          <input 
-                            type="checkbox" 
+                          <input
+                            type="checkbox"
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setSelectedLocations(businessLocations.map(l => l.id));
+                                setSelectedLocations(
+                                  businessLocations.map((l) => l.id),
+                                );
                               } else {
                                 setSelectedLocations([]);
                               }
@@ -631,14 +747,21 @@ export default function LocalSEOPage() {
                       {businessLocations.map((location) => (
                         <TableRow key={location.id}>
                           <TableCell>
-                            <input 
-                              type="checkbox" 
+                            <input
+                              type="checkbox"
                               checked={selectedLocations.includes(location.id)}
                               onChange={(e) => {
                                 if (e.target.checked) {
-                                  setSelectedLocations([...selectedLocations, location.id]);
+                                  setSelectedLocations([
+                                    ...selectedLocations,
+                                    location.id,
+                                  ]);
                                 } else {
-                                  setSelectedLocations(selectedLocations.filter(id => id !== location.id));
+                                  setSelectedLocations(
+                                    selectedLocations.filter(
+                                      (id) => id !== location.id,
+                                    ),
+                                  );
                                 }
                               }}
                             />
@@ -648,12 +771,17 @@ export default function LocalSEOPage() {
                               <div className="font-medium flex items-center">
                                 {location.name}
                                 {location.isMainLocation && (
-                                  <Badge variant="default" className="ml-2 text-xs">
+                                  <Badge
+                                    variant="default"
+                                    className="ml-2 text-xs"
+                                  >
                                     Main
                                   </Badge>
                                 )}
                               </div>
-                              <div className="text-sm text-muted-foreground">{location.category}</div>
+                              <div className="text-sm text-muted-foreground">
+                                {location.category}
+                              </div>
                               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                 <Phone className="h-3 w-3" />
                                 {location.phone}
@@ -664,16 +792,22 @@ export default function LocalSEOPage() {
                             <div className="text-sm">
                               <div>{location.address}</div>
                               <div className="text-muted-foreground">
-                                {location.city}, {location.state} {location.zipCode}
+                                {location.city}, {location.state}{" "}
+                                {location.zipCode}
                               </div>
                             </div>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center">
                               {getGMBStatusIcon(location.gmbStatus)}
-                              <Badge 
-                                variant={location.gmbStatus === "verified" ? "success" : 
-                                        location.gmbStatus === "pending" ? "secondary" : "destructive"}
+                              <Badge
+                                variant={
+                                  location.gmbStatus === "verified"
+                                    ? "success"
+                                    : location.gmbStatus === "pending"
+                                      ? "secondary"
+                                      : "destructive"
+                                }
                                 className="ml-2"
                               >
                                 {location.gmbStatus.replace("_", " ")}
@@ -684,7 +818,9 @@ export default function LocalSEOPage() {
                             <div className="text-sm">
                               <div className="flex items-center">
                                 <Star className="h-3 w-3 text-yellow-500 mr-1" />
-                                <span className="font-medium">{location.rating}</span>
+                                <span className="font-medium">
+                                  {location.rating}
+                                </span>
                               </div>
                               <div className="text-muted-foreground">
                                 {location.reviewCount} reviews
@@ -694,24 +830,44 @@ export default function LocalSEOPage() {
                           <TableCell>
                             <div className="text-sm">
                               <div>{location.photos} photos</div>
-                              <div className="text-muted-foreground">{location.posts} posts</div>
+                              <div className="text-muted-foreground">
+                                {location.posts} posts
+                              </div>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="text-sm">{location.lastUpdated}</div>
+                            <div className="text-sm">
+                              {location.lastUpdated}
+                            </div>
                           </TableCell>
                           <TableCell>
                             <div className="flex space-x-1">
-                              <Button size="sm" variant="ghost" title="View Details">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="View Details"
+                              >
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="ghost" title="Edit Location">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="Edit Location"
+                              >
                                 <Edit className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="ghost" title="Optimize">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="Optimize"
+                              >
                                 <Target className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="ghost" title="Analytics">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="Analytics"
+                              >
                                 <BarChart3 className="h-4 w-4" />
                               </Button>
                             </div>
@@ -729,28 +885,42 @@ export default function LocalSEOPage() {
             <Alert>
               <Info className="h-4 w-4" />
               <AlertDescription>
-                Citation consistency is crucial for local SEO. Ensure your business information is accurate across all directories.
+                Citation consistency is crucial for local SEO. Ensure your
+                business information is accurate across all directories.
               </AlertDescription>
             </Alert>
 
             <Card>
               <CardHeader>
                 <CardTitle>Citation Status Overview</CardTitle>
-                <CardDescription>Monitor your business listings across the web</CardDescription>
+                <CardDescription>
+                  Monitor your business listings across the web
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  {["accurate", "inconsistent", "missing", "duplicate"].map((status) => {
-                    const count = citations.filter(c => c.status === status).length;
-                    const percentage = (count / citations.length) * 100;
-                    return (
-                      <div key={status} className="text-center p-4 border rounded-lg">
-                        <div className="text-2xl font-bold">{count}</div>
-                        <div className="text-sm text-muted-foreground capitalize">{status}</div>
-                        <div className="text-xs text-muted-foreground">{percentage.toFixed(1)}%</div>
-                      </div>
-                    );
-                  })}
+                  {["accurate", "inconsistent", "missing", "duplicate"].map(
+                    (status) => {
+                      const count = citations.filter(
+                        (c) => c.status === status,
+                      ).length;
+                      const percentage = (count / citations.length) * 100;
+                      return (
+                        <div
+                          key={status}
+                          className="text-center p-4 border rounded-lg"
+                        >
+                          <div className="text-2xl font-bold">{count}</div>
+                          <div className="text-sm text-muted-foreground capitalize">
+                            {status}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {percentage.toFixed(1)}%
+                          </div>
+                        </div>
+                      );
+                    },
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -759,7 +929,8 @@ export default function LocalSEOPage() {
               <CardHeader>
                 <CardTitle>Citations ({citations.length})</CardTitle>
                 <CardDescription>
-                  Manage your business citations across directories and review sites
+                  Manage your business citations across directories and review
+                  sites
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -787,18 +958,30 @@ export default function LocalSEOPage() {
                           </TableCell>
                           <TableCell>
                             <div className="text-sm space-y-1">
-                              <div className="font-medium">{citation.businessName}</div>
-                              <div className="text-muted-foreground">{citation.address}</div>
-                              <div className="text-muted-foreground">{citation.phone}</div>
+                              <div className="font-medium">
+                                {citation.businessName}
+                              </div>
+                              <div className="text-muted-foreground">
+                                {citation.address}
+                              </div>
+                              <div className="text-muted-foreground">
+                                {citation.phone}
+                              </div>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Badge className={getCitationStatusColor(citation.status)}>
+                            <Badge
+                              className={getCitationStatusColor(
+                                citation.status,
+                              )}
+                            >
                               {citation.status}
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            <div className="text-sm font-medium">{citation.authority}</div>
+                            <div className="text-sm font-medium">
+                              {citation.authority}
+                            </div>
                           </TableCell>
                           <TableCell>
                             <Badge variant="outline" className="capitalize">
@@ -806,17 +989,31 @@ export default function LocalSEOPage() {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            <div className="text-sm">{citation.lastChecked}</div>
+                            <div className="text-sm">
+                              {citation.lastChecked}
+                            </div>
                           </TableCell>
                           <TableCell>
                             <div className="flex space-x-1">
-                              <Button size="sm" variant="ghost" title="View Citation">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="View Citation"
+                              >
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="ghost" title="Update Citation">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="Update Citation"
+                              >
                                 <Edit className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="ghost" title="Visit Site">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="Visit Site"
+                              >
                                 <ExternalLink className="h-4 w-4" />
                               </Button>
                             </div>
@@ -834,7 +1031,9 @@ export default function LocalSEOPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Local Keyword Performance</CardTitle>
-                <CardDescription>Track your rankings for location-based keywords</CardDescription>
+                <CardDescription>
+                  Track your rankings for location-based keywords
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="rounded-md border">
@@ -862,7 +1061,9 @@ export default function LocalSEOPage() {
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center">
-                              <span className="font-medium">#{keyword.currentRank}</span>
+                              <span className="font-medium">
+                                #{keyword.currentRank}
+                              </span>
                               {keyword.currentRank <= keyword.targetRank ? (
                                 <CheckCircle className="h-4 w-4 text-green-500 ml-2" />
                               ) : (
@@ -871,32 +1072,46 @@ export default function LocalSEOPage() {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Badge variant="outline">#{keyword.targetRank}</Badge>
+                            <Badge variant="outline">
+                              #{keyword.targetRank}
+                            </Badge>
                           </TableCell>
                           <TableCell>
                             <div className="text-sm">
                               <div>{keyword.searchVolume.toLocaleString()}</div>
                               <div className="text-muted-foreground">
-                                {keyword.localSearchVolume.toLocaleString()} local
+                                {keyword.localSearchVolume.toLocaleString()}{" "}
+                                local
                               </div>
                             </div>
                           </TableCell>
                           <TableCell>
                             {keyword.mapPackPosition ? (
-                              <Badge variant="success">#{keyword.mapPackPosition}</Badge>
+                              <Badge variant="success">
+                                #{keyword.mapPackPosition}
+                              </Badge>
                             ) : (
                               <Badge variant="secondary">Not in pack</Badge>
                             )}
                           </TableCell>
                           <TableCell>
-                            <Badge className={getCompetitionColor(keyword.competitionLevel)}>
+                            <Badge
+                              className={getCompetitionColor(
+                                keyword.competitionLevel,
+                              )}
+                            >
                               {keyword.competitionLevel}
                             </Badge>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center">
-                              <span className="text-sm font-medium">{keyword.difficulty}%</span>
-                              <Progress value={keyword.difficulty} className="w-16 h-2 ml-2" />
+                              <span className="text-sm font-medium">
+                                {keyword.difficulty}%
+                              </span>
+                              <Progress
+                                value={keyword.difficulty}
+                                className="w-16 h-2 ml-2"
+                              />
                             </div>
                           </TableCell>
                         </TableRow>
@@ -920,10 +1135,15 @@ export default function LocalSEOPage() {
                       <div className="text-3xl font-bold">4.6</div>
                       <div className="flex items-center justify-center">
                         {[1, 2, 3, 4, 5].map((star) => (
-                          <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <Star
+                            key={star}
+                            className="h-4 w-4 fill-yellow-400 text-yellow-400"
+                          />
                         ))}
                       </div>
-                      <div className="text-sm text-muted-foreground">280 reviews</div>
+                      <div className="text-sm text-muted-foreground">
+                        280 reviews
+                      </div>
                     </div>
                     <div className="space-y-2">
                       {[5, 4, 3, 2, 1].map((rating) => {
@@ -933,7 +1153,10 @@ export default function LocalSEOPage() {
                           <div key={rating} className="flex items-center gap-2">
                             <span className="text-sm w-2">{rating}</span>
                             <Star className="h-3 w-3 text-yellow-400" />
-                            <Progress value={percentage} className="flex-1 h-2" />
+                            <Progress
+                              value={percentage}
+                              className="flex-1 h-2"
+                            />
                             <span className="text-sm w-8">{count}</span>
                           </div>
                         );
@@ -946,7 +1169,9 @@ export default function LocalSEOPage() {
               <Card className="lg:col-span-2">
                 <CardHeader>
                   <CardTitle>Recent Reviews</CardTitle>
-                  <CardDescription>Latest customer feedback across all platforms</CardDescription>
+                  <CardDescription>
+                    Latest customer feedback across all platforms
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -960,9 +1185,9 @@ export default function LocalSEOPage() {
                           </div>
                           <div className="flex items-center gap-1">
                             {[1, 2, 3, 4, 5].map((star) => (
-                              <Star 
-                                key={star} 
-                                className={`h-3 w-3 ${star <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
+                              <Star
+                                key={star}
+                                className={`h-3 w-3 ${star <= review.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
                               />
                             ))}
                           </div>
@@ -972,15 +1197,23 @@ export default function LocalSEOPage() {
                         </div>
                         {review.response && (
                           <div className="pl-4 border-l-2 border-blue-200 bg-blue-50 p-2 rounded">
-                            <div className="text-sm font-medium text-blue-900">Business Response:</div>
-                            <div className="text-sm text-blue-800">{review.response}</div>
+                            <div className="text-sm font-medium text-blue-900">
+                              Business Response:
+                            </div>
+                            <div className="text-sm text-blue-800">
+                              {review.response}
+                            </div>
                           </div>
                         )}
                         <div className="flex items-center justify-between mt-2">
-                          <span className="text-xs text-muted-foreground">{review.date}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {review.date}
+                          </span>
                           <div className="flex gap-2">
                             {review.status === "new" && (
-                              <Button size="sm" variant="outline">Respond</Button>
+                              <Button size="sm" variant="outline">
+                                Respond
+                              </Button>
                             )}
                             <Button size="sm" variant="ghost">
                               <MessageSquare className="h-4 w-4" />
@@ -999,7 +1232,9 @@ export default function LocalSEOPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Google My Business Optimization</CardTitle>
-                <CardDescription>Manage and optimize your Google My Business profiles</CardDescription>
+                <CardDescription>
+                  Manage and optimize your Google My Business profiles
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1012,9 +1247,12 @@ export default function LocalSEOPage() {
                         { item: "Photos (10+)", completed: true },
                         { item: "Business Description", completed: false },
                         { item: "Services/Products", completed: true },
-                        { item: "Regular Posts", completed: false }
+                        { item: "Regular Posts", completed: false },
                       ].map((check, index) => (
-                        <div key={index} className="flex items-center justify-between">
+                        <div
+                          key={index}
+                          className="flex items-center justify-between"
+                        >
                           <span className="text-sm">{check.item}</span>
                           {check.completed ? (
                             <CheckCircle className="h-4 w-4 text-green-500" />
@@ -1036,23 +1274,38 @@ export default function LocalSEOPage() {
                   <div className="space-y-4">
                     <h4 className="font-medium">Quick Actions</h4>
                     <div className="space-y-2">
-                      <Button variant="outline" className="w-full justify-start">
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start"
+                      >
                         <Camera className="h-4 w-4 mr-2" />
                         Upload Photos
                       </Button>
-                      <Button variant="outline" className="w-full justify-start">
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start"
+                      >
                         <FileText className="h-4 w-4 mr-2" />
                         Create Post
                       </Button>
-                      <Button variant="outline" className="w-full justify-start">
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start"
+                      >
                         <MessageSquare className="h-4 w-4 mr-2" />
                         Respond to Reviews
                       </Button>
-                      <Button variant="outline" className="w-full justify-start">
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start"
+                      >
                         <Settings className="h-4 w-4 mr-2" />
                         Update Business Hours
                       </Button>
-                      <Button variant="outline" className="w-full justify-start">
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start"
+                      >
                         <BarChart3 className="h-4 w-4 mr-2" />
                         View Insights
                       </Button>
@@ -1065,28 +1318,46 @@ export default function LocalSEOPage() {
             <Card>
               <CardHeader>
                 <CardTitle>GMB Performance Insights</CardTitle>
-                <CardDescription>Key metrics from your Google My Business profiles</CardDescription>
+                <CardDescription>
+                  Key metrics from your Google My Business profiles
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">2,847</div>
-                    <div className="text-sm text-muted-foreground">Profile Views</div>
-                    <div className="text-xs text-green-600">+12% this month</div>
+                    <div className="text-2xl font-bold text-blue-600">
+                      2,847
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Profile Views
+                    </div>
+                    <div className="text-xs text-green-600">
+                      +12% this month
+                    </div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-green-600">567</div>
-                    <div className="text-sm text-muted-foreground">Website Clicks</div>
+                    <div className="text-sm text-muted-foreground">
+                      Website Clicks
+                    </div>
                     <div className="text-xs text-green-600">+8% this month</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-orange-600">234</div>
-                    <div className="text-sm text-muted-foreground">Direction Requests</div>
-                    <div className="text-xs text-green-600">+15% this month</div>
+                    <div className="text-2xl font-bold text-orange-600">
+                      234
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Direction Requests
+                    </div>
+                    <div className="text-xs text-green-600">
+                      +15% this month
+                    </div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-purple-600">89</div>
-                    <div className="text-sm text-muted-foreground">Phone Calls</div>
+                    <div className="text-sm text-muted-foreground">
+                      Phone Calls
+                    </div>
                     <div className="text-xs text-red-600">-3% this month</div>
                   </div>
                 </div>
@@ -1099,13 +1370,19 @@ export default function LocalSEOPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Local Search Visibility</CardTitle>
-                  <CardDescription>Your visibility in local search results</CardDescription>
+                  <CardDescription>
+                    Your visibility in local search results
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-green-600">87%</div>
-                      <div className="text-sm text-muted-foreground">Local Visibility Score</div>
+                      <div className="text-4xl font-bold text-green-600">
+                        87%
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Local Visibility Score
+                      </div>
                     </div>
                     <div className="space-y-3">
                       <div className="flex justify-between">
@@ -1128,17 +1405,42 @@ export default function LocalSEOPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Competitor Comparison</CardTitle>
-                  <CardDescription>How you compare to local competitors</CardDescription>
+                  <CardDescription>
+                    How you compare to local competitors
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {[
-                      { name: "Your Business", score: 87, reviews: 280, rating: 4.6 },
-                      { name: "Competitor A", score: 82, reviews: 156, rating: 4.3 },
-                      { name: "Competitor B", score: 75, reviews: 203, rating: 4.1 },
-                      { name: "Competitor C", score: 68, reviews: 89, rating: 4.4 }
+                      {
+                        name: "Your Business",
+                        score: 87,
+                        reviews: 280,
+                        rating: 4.6,
+                      },
+                      {
+                        name: "Competitor A",
+                        score: 82,
+                        reviews: 156,
+                        rating: 4.3,
+                      },
+                      {
+                        name: "Competitor B",
+                        score: 75,
+                        reviews: 203,
+                        rating: 4.1,
+                      },
+                      {
+                        name: "Competitor C",
+                        score: 68,
+                        reviews: 89,
+                        rating: 4.4,
+                      },
                     ].map((business, index) => (
-                      <div key={index} className="flex items-center justify-between">
+                      <div
+                        key={index}
+                        className="flex items-center justify-between"
+                      >
                         <div className="flex-1">
                           <div className="font-medium">{business.name}</div>
                           <div className="text-xs text-muted-foreground">
@@ -1146,8 +1448,13 @@ export default function LocalSEOPage() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Progress value={business.score} className="w-20 h-2" />
-                          <span className="text-sm font-medium w-8">{business.score}%</span>
+                          <Progress
+                            value={business.score}
+                            className="w-20 h-2"
+                          />
+                          <span className="text-sm font-medium w-8">
+                            {business.score}%
+                          </span>
                         </div>
                       </div>
                     ))}
@@ -1159,41 +1466,58 @@ export default function LocalSEOPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Local SEO Recommendations</CardTitle>
-                <CardDescription>AI-powered suggestions to improve your local SEO</CardDescription>
+                <CardDescription>
+                  AI-powered suggestions to improve your local SEO
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="p-4 border rounded-lg bg-green-50">
                     <div className="flex items-center mb-2">
                       <Award className="h-4 w-4 text-green-600 mr-2" />
-                      <span className="font-medium text-green-900">High Priority</span>
+                      <span className="font-medium text-green-900">
+                        High Priority
+                      </span>
                     </div>
                     <div className="text-sm text-green-800 mb-2">
-                      Add business description to your GMB profile to improve local search visibility.
+                      Add business description to your GMB profile to improve
+                      local search visibility.
                     </div>
-                    <Button size="sm" variant="outline">Complete Now</Button>
+                    <Button size="sm" variant="outline">
+                      Complete Now
+                    </Button>
                   </div>
-                  
+
                   <div className="p-4 border rounded-lg bg-orange-50">
                     <div className="flex items-center mb-2">
                       <Target className="h-4 w-4 text-orange-600 mr-2" />
-                      <span className="font-medium text-orange-900">Medium Priority</span>
+                      <span className="font-medium text-orange-900">
+                        Medium Priority
+                      </span>
                     </div>
                     <div className="text-sm text-orange-800 mb-2">
-                      Optimize for "SEO software Austin" - you're currently ranking #8 but could reach top 3.
+                      Optimize for "SEO software Austin" - you're currently
+                      ranking #8 but could reach top 3.
                     </div>
-                    <Button size="sm" variant="outline">Start Optimization</Button>
+                    <Button size="sm" variant="outline">
+                      Start Optimization
+                    </Button>
                   </div>
 
                   <div className="p-4 border rounded-lg bg-blue-50">
                     <div className="flex items-center mb-2">
                       <Info className="h-4 w-4 text-blue-600 mr-2" />
-                      <span className="font-medium text-blue-900">Low Priority</span>
+                      <span className="font-medium text-blue-900">
+                        Low Priority
+                      </span>
                     </div>
                     <div className="text-sm text-blue-800 mb-2">
-                      Consider creating location-specific landing pages for better local SEO performance.
+                      Consider creating location-specific landing pages for
+                      better local SEO performance.
                     </div>
-                    <Button size="sm" variant="outline">Learn More</Button>
+                    <Button size="sm" variant="outline">
+                      Learn More
+                    </Button>
                   </div>
                 </div>
               </CardContent>

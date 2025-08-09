@@ -110,19 +110,31 @@ const App = () => (
           <Route path="/technical/crawl" element={<TechnicalCrawlPage />} />
           <Route path="/analytics/roi" element={<AnalyticsROIPage />} />
           <Route path="/analytics/reports" element={<AnalyticsReportsPage />} />
-          <Route path="/social-media-autopost" element={<SocialMediaAutopostPage />} />
+          <Route
+            path="/social-media-autopost"
+            element={<SocialMediaAutopostPage />}
+          />
           <Route path="/seo/collections" element={<CollectionSEOPage />} />
-          <Route path="/international/hreflang" element={<HreflangManagerPage />} />
+          <Route
+            path="/international/hreflang"
+            element={<HreflangManagerPage />}
+          />
           <Route path="/links/backlinks" element={<BacklinkMonitorPage />} />
           <Route path="/links/redirects" element={<RedirectManagerPage />} />
-          <Route path="/performance/mobile" element={<MobileOptimizationPage />} />
+          <Route
+            path="/performance/mobile"
+            element={<MobileOptimizationPage />}
+          />
           <Route path="/international/local" element={<LocalSEOPage />} />
           <Route path="/analytics/rankings" element={<KeywordRankingsPage />} />
           <Route path="/analytics/traffic" element={<TrafficAnalysisPage />} />
           <Route path="/automation/rules" element={<SEORulesPage />} />
           <Route path="/automation/audits" element={<ScheduledAuditsPage />} />
           <Route path="/automation/bulk" element={<AutomationBulkPage />} />
-          <Route path="/automation/templates" element={<AutomationTemplatesPage />} />
+          <Route
+            path="/automation/templates"
+            element={<AutomationTemplatesPage />}
+          />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -1,13 +1,37 @@
 import { Layout } from "../components/Layout";
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { Progress } from "../components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs";
 import { Input } from "../components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../components/ui/table";
 import { Alert, AlertDescription } from "../components/ui/alert";
 import { Textarea } from "../components/ui/textarea";
 import {
@@ -33,7 +57,7 @@ import {
   Target,
   ArrowRight,
   FileText,
-  Zap
+  Zap,
 } from "lucide-react";
 
 interface BrokenLink {
@@ -75,7 +99,7 @@ export default function BrokenLinksPage() {
     pagesScanned: 1247,
     linksFound: 15632,
     brokenLinksFound: 23,
-    isScanning: false
+    isScanning: false,
   });
 
   // Mock broken links data
@@ -94,7 +118,7 @@ export default function BrokenLinksPage() {
       priority: "high",
       linkType: "external",
       pageTitle: "Automation Tools - SEO Manager",
-      traffic: 1250
+      traffic: 1250,
     },
     {
       id: "2",
@@ -110,7 +134,7 @@ export default function BrokenLinksPage() {
       priority: "medium",
       linkType: "internal",
       pageTitle: "SEO Best Practices Guide",
-      traffic: 890
+      traffic: 890,
     },
     {
       id: "3",
@@ -125,7 +149,7 @@ export default function BrokenLinksPage() {
       priority: "high",
       linkType: "external",
       pageTitle: "Pricing - SEO Manager",
-      traffic: 2100
+      traffic: 2100,
     },
     {
       id: "4",
@@ -141,7 +165,7 @@ export default function BrokenLinksPage() {
       priority: "low",
       linkType: "internal",
       pageTitle: "Help & Tutorials",
-      traffic: 320
+      traffic: 320,
     },
     {
       id: "5",
@@ -156,20 +180,23 @@ export default function BrokenLinksPage() {
       priority: "medium",
       linkType: "external",
       pageTitle: "Features Overview",
-      traffic: 650
-    }
+      traffic: 650,
+    },
   ];
 
-  const filteredLinks = brokenLinks.filter(link => {
-    const matchesSearch = searchTerm === "" || 
+  const filteredLinks = brokenLinks.filter((link) => {
+    const matchesSearch =
+      searchTerm === "" ||
       link.sourceUrl.toLowerCase().includes(searchTerm.toLowerCase()) ||
       link.targetUrl.toLowerCase().includes(searchTerm.toLowerCase()) ||
       link.linkText.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = filterStatus === "all" || link.status === filterStatus;
+
+    const matchesStatus =
+      filterStatus === "all" || link.status === filterStatus;
     const matchesType = filterType === "all" || link.linkType === filterType;
-    const matchesPriority = filterPriority === "all" || link.priority === filterPriority;
-    
+    const matchesPriority =
+      filterPriority === "all" || link.priority === filterPriority;
+
     return matchesSearch && matchesStatus && matchesType && matchesPriority;
   });
 
@@ -236,10 +263,10 @@ export default function BrokenLinksPage() {
   };
 
   const startScan = () => {
-    setScanProgress(prev => ({ ...prev, isScanning: true, pagesScanned: 0 }));
+    setScanProgress((prev) => ({ ...prev, isScanning: true, pagesScanned: 0 }));
     // Simulate scan progress
     const interval = setInterval(() => {
-      setScanProgress(prev => {
+      setScanProgress((prev) => {
         if (prev.pagesScanned >= prev.totalPages) {
           clearInterval(interval);
           return { ...prev, isScanning: false };
@@ -262,7 +289,8 @@ export default function BrokenLinksPage() {
           <div>
             <h1 className="text-3xl font-bold">Broken Links</h1>
             <p className="text-muted-foreground mt-2">
-              Find and fix broken links to improve user experience and SEO performance
+              Find and fix broken links to improve user experience and SEO
+              performance
             </p>
           </div>
           <div className="flex gap-3">
@@ -299,10 +327,15 @@ export default function BrokenLinksPage() {
               <div className="space-y-4">
                 <div className="flex justify-between text-sm">
                   <span>Progress</span>
-                  <span>{scanProgress.pagesScanned} / {scanProgress.totalPages} pages</span>
+                  <span>
+                    {scanProgress.pagesScanned} / {scanProgress.totalPages}{" "}
+                    pages
+                  </span>
                 </div>
-                <Progress 
-                  value={(scanProgress.pagesScanned / scanProgress.totalPages) * 100} 
+                <Progress
+                  value={
+                    (scanProgress.pagesScanned / scanProgress.totalPages) * 100
+                  }
                   className="h-2"
                 />
                 <div className="text-sm text-muted-foreground">
@@ -317,11 +350,15 @@ export default function BrokenLinksPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Links Scanned</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Links Scanned
+              </CardTitle>
               <Link2 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{scanProgress.linksFound.toLocaleString()}</div>
+              <div className="text-2xl font-bold">
+                {scanProgress.linksFound.toLocaleString()}
+              </div>
               <div className="text-xs text-muted-foreground">
                 Across {scanProgress.totalPages.toLocaleString()} pages
               </div>
@@ -330,13 +367,22 @@ export default function BrokenLinksPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Broken Links</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Broken Links
+              </CardTitle>
               <XCircle className="h-4 w-4 text-red-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-600">{brokenLinks.filter(l => l.status === "broken").length}</div>
+              <div className="text-2xl font-bold text-red-600">
+                {brokenLinks.filter((l) => l.status === "broken").length}
+              </div>
               <div className="text-xs text-muted-foreground">
-                {((brokenLinks.filter(l => l.status === "broken").length / scanProgress.linksFound) * 100).toFixed(2)}% error rate
+                {(
+                  (brokenLinks.filter((l) => l.status === "broken").length /
+                    scanProgress.linksFound) *
+                  100
+                ).toFixed(2)}
+                % error rate
               </div>
             </CardContent>
           </Card>
@@ -347,7 +393,9 @@ export default function BrokenLinksPage() {
               <CheckCircle className="h-4 w-4 text-green-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">{brokenLinks.filter(l => l.status === "fixed").length}</div>
+              <div className="text-2xl font-bold text-green-600">
+                {brokenLinks.filter((l) => l.status === "fixed").length}
+              </div>
               <div className="text-xs text-muted-foreground">
                 Recently resolved
               </div>
@@ -356,11 +404,15 @@ export default function BrokenLinksPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">High Priority</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                High Priority
+              </CardTitle>
               <AlertTriangle className="h-4 w-4 text-red-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-orange-600">{brokenLinks.filter(l => l.priority === "high").length}</div>
+              <div className="text-2xl font-bold text-orange-600">
+                {brokenLinks.filter((l) => l.priority === "high").length}
+              </div>
               <div className="text-xs text-muted-foreground">
                 Require immediate attention
               </div>
@@ -418,7 +470,10 @@ export default function BrokenLinksPage() {
                       <SelectItem value="external">External</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Select value={filterPriority} onValueChange={setFilterPriority}>
+                  <Select
+                    value={filterPriority}
+                    onValueChange={setFilterPriority}
+                  >
                     <SelectTrigger className="w-[150px]">
                       <SelectValue placeholder="Priority" />
                     </SelectTrigger>
@@ -442,10 +497,18 @@ export default function BrokenLinksPage() {
                       {selectedLinks.length} link(s) selected
                     </span>
                     <div className="flex gap-2">
-                      <Button size="sm" variant="outline" onClick={() => handleBulkAction("ignore")}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleBulkAction("ignore")}
+                      >
                         Ignore Selected
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => handleBulkAction("recheck")}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleBulkAction("recheck")}
+                      >
                         Recheck Selected
                       </Button>
                       <Button size="sm" onClick={() => handleBulkAction("fix")}>
@@ -471,11 +534,13 @@ export default function BrokenLinksPage() {
                     <TableHeader>
                       <TableRow>
                         <TableHead className="w-[50px]">
-                          <input 
-                            type="checkbox" 
+                          <input
+                            type="checkbox"
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setSelectedLinks(filteredLinks.map(l => l.id));
+                                setSelectedLinks(
+                                  filteredLinks.map((l) => l.id),
+                                );
                               } else {
                                 setSelectedLinks([]);
                               }
@@ -496,21 +561,28 @@ export default function BrokenLinksPage() {
                       {filteredLinks.map((link) => (
                         <TableRow key={link.id}>
                           <TableCell>
-                            <input 
-                              type="checkbox" 
+                            <input
+                              type="checkbox"
                               checked={selectedLinks.includes(link.id)}
                               onChange={(e) => {
                                 if (e.target.checked) {
                                   setSelectedLinks([...selectedLinks, link.id]);
                                 } else {
-                                  setSelectedLinks(selectedLinks.filter(id => id !== link.id));
+                                  setSelectedLinks(
+                                    selectedLinks.filter(
+                                      (id) => id !== link.id,
+                                    ),
+                                  );
                                 }
                               }}
                             />
                           </TableCell>
                           <TableCell>
                             <div>
-                              <div className="font-medium truncate max-w-[200px]" title={link.sourceUrl}>
+                              <div
+                                className="font-medium truncate max-w-[200px]"
+                                title={link.sourceUrl}
+                              >
                                 {link.sourceUrl}
                               </div>
                               {link.pageTitle && (
@@ -522,7 +594,10 @@ export default function BrokenLinksPage() {
                           </TableCell>
                           <TableCell>
                             <div>
-                              <div className="font-medium truncate max-w-[200px]" title={link.targetUrl}>
+                              <div
+                                className="font-medium truncate max-w-[200px]"
+                                title={link.targetUrl}
+                              >
                                 {link.targetUrl}
                               </div>
                               <div className="text-sm text-muted-foreground truncate max-w-[200px]">
@@ -548,7 +623,7 @@ export default function BrokenLinksPage() {
                           <TableCell>
                             <div className="flex items-center">
                               {getStatusIcon(link.status)}
-                              <Badge 
+                              <Badge
                                 variant={getStatusBadgeVariant(link.status)}
                                 className="ml-2"
                               >
@@ -566,10 +641,18 @@ export default function BrokenLinksPage() {
                           </TableCell>
                           <TableCell>
                             <div className="flex space-x-1">
-                              <Button size="sm" variant="ghost" title="View Details">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="View Details"
+                              >
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="ghost" title="Edit Link">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="Edit Link"
+                              >
                                 <Edit className="h-4 w-4" />
                               </Button>
                               <Button size="sm" variant="ghost" title="Recheck">
@@ -587,24 +670,36 @@ export default function BrokenLinksPage() {
                 </div>
 
                 {/* Suggested Fixes */}
-                {filteredLinks.filter(l => l.suggestedFix).length > 0 && (
+                {filteredLinks.filter((l) => l.suggestedFix).length > 0 && (
                   <div className="mt-6">
-                    <h4 className="text-sm font-medium mb-3">Suggested Fixes</h4>
+                    <h4 className="text-sm font-medium mb-3">
+                      Suggested Fixes
+                    </h4>
                     <div className="space-y-2">
-                      {filteredLinks.filter(l => l.suggestedFix).map((link) => (
-                        <Alert key={link.id}>
-                          <Target className="h-4 w-4" />
-                          <AlertDescription>
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm">
-                                Replace <code className="text-xs bg-muted px-1 rounded">{link.targetUrl}</code> with{" "}
-                                <code className="text-xs bg-muted px-1 rounded">{link.suggestedFix}</code>
-                              </span>
-                              <Button size="sm" variant="outline">Apply Fix</Button>
-                            </div>
-                          </AlertDescription>
-                        </Alert>
-                      ))}
+                      {filteredLinks
+                        .filter((l) => l.suggestedFix)
+                        .map((link) => (
+                          <Alert key={link.id}>
+                            <Target className="h-4 w-4" />
+                            <AlertDescription>
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm">
+                                  Replace{" "}
+                                  <code className="text-xs bg-muted px-1 rounded">
+                                    {link.targetUrl}
+                                  </code>{" "}
+                                  with{" "}
+                                  <code className="text-xs bg-muted px-1 rounded">
+                                    {link.suggestedFix}
+                                  </code>
+                                </span>
+                                <Button size="sm" variant="outline">
+                                  Apply Fix
+                                </Button>
+                              </div>
+                            </AlertDescription>
+                          </Alert>
+                        ))}
                     </div>
                   </div>
                 )}
@@ -616,26 +711,37 @@ export default function BrokenLinksPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Recently Fixed Links</CardTitle>
-                <CardDescription>Links that have been successfully resolved</CardDescription>
+                <CardDescription>
+                  Links that have been successfully resolved
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {brokenLinks.filter(l => l.status === "fixed").map((link) => (
-                    <div key={link.id} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex-1">
-                        <div className="font-medium">{link.sourceUrl}</div>
-                        <div className="text-sm text-muted-foreground">{link.targetUrl}</div>
-                        <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                          <span>Fixed on: {link.lastChecked}</span>
-                          <span>Traffic saved: {link.traffic.toLocaleString()}</span>
+                  {brokenLinks
+                    .filter((l) => l.status === "fixed")
+                    .map((link) => (
+                      <div
+                        key={link.id}
+                        className="flex items-center justify-between p-4 border rounded-lg"
+                      >
+                        <div className="flex-1">
+                          <div className="font-medium">{link.sourceUrl}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {link.targetUrl}
+                          </div>
+                          <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                            <span>Fixed on: {link.lastChecked}</span>
+                            <span>
+                              Traffic saved: {link.traffic.toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="h-5 w-5 text-green-500" />
+                          <Badge variant="success">Fixed</Badge>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="h-5 w-5 text-green-500" />
-                        <Badge variant="success">Fixed</Badge>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </CardContent>
             </Card>
@@ -645,12 +751,16 @@ export default function BrokenLinksPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Bulk Link Replacement</CardTitle>
-                <CardDescription>Replace multiple broken links at once using patterns</CardDescription>
+                <CardDescription>
+                  Replace multiple broken links at once using patterns
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium">Find URLs containing:</label>
+                    <label className="text-sm font-medium">
+                      Find URLs containing:
+                    </label>
                     <Input placeholder="e.g., old-domain.com" />
                   </div>
                   <div>
@@ -659,11 +769,13 @@ export default function BrokenLinksPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium">Preview Changes:</label>
-                  <Textarea 
-                    className="mt-2" 
+                  <label className="text-sm font-medium">
+                    Preview Changes:
+                  </label>
+                  <Textarea
+                    className="mt-2"
                     placeholder="Changes will be previewed here..."
-                    readOnly 
+                    readOnly
                   />
                 </div>
                 <div className="flex gap-2">
@@ -676,7 +788,9 @@ export default function BrokenLinksPage() {
             <Card>
               <CardHeader>
                 <CardTitle>URL Pattern Fixes</CardTitle>
-                <CardDescription>Common patterns for bulk fixing broken links</CardDescription>
+                <CardDescription>
+                  Common patterns for bulk fixing broken links
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -686,32 +800,39 @@ export default function BrokenLinksPage() {
                       description: "Convert all HTTP links to HTTPS",
                       pattern: "http://",
                       replacement: "https://",
-                      affected: 12
+                      affected: 12,
                     },
                     {
                       name: "Domain Migration",
                       description: "Update links to new domain",
                       pattern: "old-site.com",
                       replacement: "new-site.com",
-                      affected: 8
+                      affected: 8,
                     },
                     {
                       name: "Remove WWW",
                       description: "Remove www prefix from URLs",
                       pattern: "www.",
                       replacement: "",
-                      affected: 5
-                    }
+                      affected: 5,
+                    },
                   ].map((pattern, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
                       <div className="flex-1">
                         <div className="font-medium">{pattern.name}</div>
-                        <div className="text-sm text-muted-foreground">{pattern.description}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {pattern.description}
+                        </div>
                         <div className="text-xs text-muted-foreground mt-1">
                           {pattern.affected} links affected
                         </div>
                       </div>
-                      <Button size="sm" variant="outline">Apply Pattern</Button>
+                      <Button size="sm" variant="outline">
+                        Apply Pattern
+                      </Button>
                     </div>
                   ))}
                 </div>
@@ -723,13 +844,17 @@ export default function BrokenLinksPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Scan Configuration</CardTitle>
-                <CardDescription>Configure how broken link scans are performed</CardDescription>
+                <CardDescription>
+                  Configure how broken link scans are performed
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium">Scan Frequency</label>
+                      <label className="text-sm font-medium">
+                        Scan Frequency
+                      </label>
                       <Select defaultValue="weekly">
                         <SelectTrigger className="mt-2">
                           <SelectValue />
@@ -743,7 +868,9 @@ export default function BrokenLinksPage() {
                       </Select>
                     </div>
                     <div>
-                      <label className="text-sm font-medium">Timeout (seconds)</label>
+                      <label className="text-sm font-medium">
+                        Timeout (seconds)
+                      </label>
                       <Input type="number" defaultValue="30" className="mt-2" />
                     </div>
                     <div>
@@ -753,24 +880,36 @@ export default function BrokenLinksPage() {
                   </div>
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium">Check External Links</label>
+                      <label className="text-sm font-medium">
+                        Check External Links
+                      </label>
                       <div className="flex items-center space-x-2 mt-2">
                         <input type="checkbox" defaultChecked />
-                        <span className="text-sm">Include external links in scans</span>
+                        <span className="text-sm">
+                          Include external links in scans
+                        </span>
                       </div>
                     </div>
                     <div>
-                      <label className="text-sm font-medium">Follow Redirects</label>
+                      <label className="text-sm font-medium">
+                        Follow Redirects
+                      </label>
                       <div className="flex items-center space-x-2 mt-2">
                         <input type="checkbox" defaultChecked />
-                        <span className="text-sm">Follow up to 5 redirects</span>
+                        <span className="text-sm">
+                          Follow up to 5 redirects
+                        </span>
                       </div>
                     </div>
                     <div>
-                      <label className="text-sm font-medium">Email Notifications</label>
+                      <label className="text-sm font-medium">
+                        Email Notifications
+                      </label>
                       <div className="flex items-center space-x-2 mt-2">
                         <input type="checkbox" defaultChecked />
-                        <span className="text-sm">Send alerts for new broken links</span>
+                        <span className="text-sm">
+                          Send alerts for new broken links
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -782,11 +921,13 @@ export default function BrokenLinksPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Exclusion Rules</CardTitle>
-                <CardDescription>URLs or patterns to exclude from broken link scanning</CardDescription>
+                <CardDescription>
+                  URLs or patterns to exclude from broken link scanning
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <Textarea 
+                  <Textarea
                     placeholder="Enter URLs or patterns to exclude (one per line)&#10;e.g., /admin/*&#10;mailto:*&#10;tel:*"
                     className="min-h-[100px]"
                   />

@@ -11,18 +11,18 @@ export default function HreflangManagerPage() {
         {
           title: "Multi-Language SEO",
           href: "/multi-language-seo",
-          description: "Optimize content for multiple languages"
+          description: "Optimize content for multiple languages",
         },
         {
           title: "Local SEO",
           href: "/international/local",
-          description: "Optimize for local search results"
+          description: "Optimize for local search results",
         },
         {
           title: "Market Analysis",
           href: "/market-opportunities",
-          description: "Analyze international market opportunities"
-        }
+          description: "Analyze international market opportunities",
+        },
       ]}
     />
   );

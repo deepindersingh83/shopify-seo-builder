@@ -1,13 +1,37 @@
 import { Layout } from "../components/Layout";
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { Progress } from "../components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs";
 import { Input } from "../components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../components/ui/table";
 import { Alert, AlertDescription } from "../components/ui/alert";
 import {
   TrendingUp,
@@ -28,7 +52,7 @@ import {
   Shield,
   ArrowUpRight,
   ArrowDownRight,
-  Minus
+  Minus,
 } from "lucide-react";
 
 interface Backlink {
@@ -79,8 +103,8 @@ export default function BacklinkMonitorPage() {
     monthlyChange: {
       backlinks: 23,
       domains: 8,
-      authority: 2
-    }
+      authority: 2,
+    },
   };
 
   const backlinks: Backlink[] = [
@@ -98,7 +122,7 @@ export default function BacklinkMonitorPage() {
       lastSeen: "2024-01-20",
       traffic: 1250,
       category: "Technology",
-      spamScore: 1
+      spamScore: 1,
     },
     {
       id: "2",
@@ -114,7 +138,7 @@ export default function BacklinkMonitorPage() {
       lastSeen: "2024-01-19",
       traffic: 2100,
       category: "E-commerce",
-      spamScore: 0
+      spamScore: 0,
     },
     {
       id: "3",
@@ -130,7 +154,7 @@ export default function BacklinkMonitorPage() {
       lastSeen: "2024-01-01",
       traffic: 120,
       category: "Blog",
-      spamScore: 15
+      spamScore: 15,
     },
     {
       id: "4",
@@ -146,7 +170,7 @@ export default function BacklinkMonitorPage() {
       lastSeen: "2024-01-20",
       traffic: 580,
       category: "News",
-      spamScore: 3
+      spamScore: 3,
     },
     {
       id: "5",
@@ -162,18 +186,21 @@ export default function BacklinkMonitorPage() {
       lastSeen: "2023-12-10",
       traffic: 250,
       category: "Resources",
-      spamScore: 8
-    }
+      spamScore: 8,
+    },
   ];
 
-  const filteredBacklinks = backlinks.filter(backlink => {
-    const matchesSearch = searchTerm === "" || 
+  const filteredBacklinks = backlinks.filter((backlink) => {
+    const matchesSearch =
+      searchTerm === "" ||
       backlink.sourceDomain.toLowerCase().includes(searchTerm.toLowerCase()) ||
       backlink.anchorText.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = filterStatus === "all" || backlink.status === filterStatus;
-    const matchesType = filterType === "all" || backlink.linkType === filterType;
-    
+
+    const matchesStatus =
+      filterStatus === "all" || backlink.status === filterStatus;
+    const matchesType =
+      filterType === "all" || backlink.linkType === filterType;
+
     return matchesSearch && matchesStatus && matchesType;
   });
 
@@ -221,7 +248,8 @@ export default function BacklinkMonitorPage() {
           <div>
             <h1 className="text-3xl font-bold">Backlink Monitor</h1>
             <p className="text-muted-foreground mt-2">
-              Track and analyze your backlink profile to improve domain authority and search rankings
+              Track and analyze your backlink profile to improve domain
+              authority and search rankings
             </p>
           </div>
           <div className="flex gap-3">
@@ -240,15 +268,19 @@ export default function BacklinkMonitorPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Backlinks</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Backlinks
+              </CardTitle>
               <ExternalLink className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{domainMetrics.totalBacklinks.toLocaleString()}</div>
+              <div className="text-2xl font-bold">
+                {domainMetrics.totalBacklinks.toLocaleString()}
+              </div>
               <div className="flex items-center text-xs text-muted-foreground">
                 {getTrendIcon(domainMetrics.monthlyChange.backlinks)}
                 <span className="ml-1">
-                  {domainMetrics.monthlyChange.backlinks > 0 ? '+' : ''}
+                  {domainMetrics.monthlyChange.backlinks > 0 ? "+" : ""}
                   {domainMetrics.monthlyChange.backlinks} this month
                 </span>
               </div>
@@ -257,15 +289,19 @@ export default function BacklinkMonitorPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Referring Domains</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Referring Domains
+              </CardTitle>
               <Globe className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{domainMetrics.referringDomains}</div>
+              <div className="text-2xl font-bold">
+                {domainMetrics.referringDomains}
+              </div>
               <div className="flex items-center text-xs text-muted-foreground">
                 {getTrendIcon(domainMetrics.monthlyChange.domains)}
                 <span className="ml-1">
-                  {domainMetrics.monthlyChange.domains > 0 ? '+' : ''}
+                  {domainMetrics.monthlyChange.domains > 0 ? "+" : ""}
                   {domainMetrics.monthlyChange.domains} this month
                 </span>
               </div>
@@ -274,15 +310,19 @@ export default function BacklinkMonitorPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Domain Authority</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Domain Authority
+              </CardTitle>
               <Shield className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{domainMetrics.domainAuthority}</div>
+              <div className="text-2xl font-bold">
+                {domainMetrics.domainAuthority}
+              </div>
               <div className="flex items-center text-xs text-muted-foreground">
                 {getTrendIcon(domainMetrics.monthlyChange.authority)}
                 <span className="ml-1">
-                  {domainMetrics.monthlyChange.authority > 0 ? '+' : ''}
+                  {domainMetrics.monthlyChange.authority > 0 ? "+" : ""}
                   {domainMetrics.monthlyChange.authority} this month
                 </span>
               </div>
@@ -291,12 +331,18 @@ export default function BacklinkMonitorPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Organic Traffic</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Organic Traffic
+              </CardTitle>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{domainMetrics.organicTraffic.toLocaleString()}</div>
-              <div className="text-xs text-muted-foreground">Monthly visitors</div>
+              <div className="text-2xl font-bold">
+                {domainMetrics.organicTraffic.toLocaleString()}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Monthly visitors
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -306,20 +352,26 @@ export default function BacklinkMonitorPage() {
           <Card>
             <CardHeader>
               <CardTitle>Trust & Citation Flow</CardTitle>
-              <CardDescription>Domain trust and citation flow metrics</CardDescription>
+              <CardDescription>
+                Domain trust and citation flow metrics
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span>Trust Flow</span>
-                  <span className="font-medium">{domainMetrics.trustFlow}/100</span>
+                  <span className="font-medium">
+                    {domainMetrics.trustFlow}/100
+                  </span>
                 </div>
                 <Progress value={domainMetrics.trustFlow} className="h-2" />
               </div>
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span>Citation Flow</span>
-                  <span className="font-medium">{domainMetrics.citationFlow}/100</span>
+                  <span className="font-medium">
+                    {domainMetrics.citationFlow}/100
+                  </span>
                 </div>
                 <Progress value={domainMetrics.citationFlow} className="h-2" />
               </div>
@@ -329,7 +381,9 @@ export default function BacklinkMonitorPage() {
           <Card>
             <CardHeader>
               <CardTitle>Link Status Distribution</CardTitle>
-              <CardDescription>Current status of your backlinks</CardDescription>
+              <CardDescription>
+                Current status of your backlinks
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -339,7 +393,7 @@ export default function BacklinkMonitorPage() {
                     <span className="text-sm">Active Links</span>
                   </div>
                   <span className="text-sm font-medium">
-                    {backlinks.filter(b => b.status === "active").length}
+                    {backlinks.filter((b) => b.status === "active").length}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
@@ -348,7 +402,7 @@ export default function BacklinkMonitorPage() {
                     <span className="text-sm">New Links</span>
                   </div>
                   <span className="text-sm font-medium">
-                    {backlinks.filter(b => b.status === "new").length}
+                    {backlinks.filter((b) => b.status === "new").length}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
@@ -357,7 +411,7 @@ export default function BacklinkMonitorPage() {
                     <span className="text-sm">Lost Links</span>
                   </div>
                   <span className="text-sm font-medium">
-                    {backlinks.filter(b => b.status === "lost").length}
+                    {backlinks.filter((b) => b.status === "lost").length}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
@@ -366,7 +420,7 @@ export default function BacklinkMonitorPage() {
                     <span className="text-sm">Broken Links</span>
                   </div>
                   <span className="text-sm font-medium">
-                    {backlinks.filter(b => b.status === "broken").length}
+                    {backlinks.filter((b) => b.status === "broken").length}
                   </span>
                 </div>
               </div>
@@ -424,7 +478,10 @@ export default function BacklinkMonitorPage() {
                       <SelectItem value="nofollow">Nofollow</SelectItem>
                     </SelectContent>
                   </Select>
-                  <Select value={selectedTimeframe} onValueChange={setSelectedTimeframe}>
+                  <Select
+                    value={selectedTimeframe}
+                    onValueChange={setSelectedTimeframe}
+                  >
                     <SelectTrigger className="w-[150px]">
                       <SelectValue placeholder="Timeframe" />
                     </SelectTrigger>
@@ -442,7 +499,9 @@ export default function BacklinkMonitorPage() {
             {/* Backlinks Table */}
             <Card>
               <CardHeader>
-                <CardTitle>Backlink Portfolio ({filteredBacklinks.length})</CardTitle>
+                <CardTitle>
+                  Backlink Portfolio ({filteredBacklinks.length})
+                </CardTitle>
                 <CardDescription>
                   Comprehensive view of your backlink profile and link metrics
                 </CardDescription>
@@ -468,32 +527,45 @@ export default function BacklinkMonitorPage() {
                         <TableRow key={backlink.id}>
                           <TableCell>
                             <div>
-                              <div className="font-medium">{backlink.sourceDomain}</div>
+                              <div className="font-medium">
+                                {backlink.sourceDomain}
+                              </div>
                               <div className="text-sm text-muted-foreground truncate max-w-[200px]">
                                 {backlink.sourceUrl}
                               </div>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="max-w-[150px] truncate" title={backlink.anchorText}>
+                            <div
+                              className="max-w-[150px] truncate"
+                              title={backlink.anchorText}
+                            >
                               {backlink.anchorText}
                             </div>
                           </TableCell>
                           <TableCell>
                             <div className="text-sm">
                               <div>DA: {backlink.domainAuthority}</div>
-                              <div className="text-muted-foreground">PA: {backlink.pageAuthority}</div>
+                              <div className="text-muted-foreground">
+                                PA: {backlink.pageAuthority}
+                              </div>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Badge variant={backlink.linkType === "dofollow" ? "default" : "secondary"}>
+                            <Badge
+                              variant={
+                                backlink.linkType === "dofollow"
+                                  ? "default"
+                                  : "secondary"
+                              }
+                            >
                               {backlink.linkType}
                             </Badge>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center">
                               {getStatusIcon(backlink.status)}
-                              <Badge 
+                              <Badge
                                 variant={getStatusBadgeVariant(backlink.status)}
                                 className="ml-2"
                               >
@@ -507,9 +579,14 @@ export default function BacklinkMonitorPage() {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Badge 
-                              variant={backlink.spamScore <= 5 ? "success" : 
-                                     backlink.spamScore <= 15 ? "secondary" : "destructive"}
+                            <Badge
+                              variant={
+                                backlink.spamScore <= 5
+                                  ? "success"
+                                  : backlink.spamScore <= 15
+                                    ? "secondary"
+                                    : "destructive"
+                              }
                             >
                               {backlink.spamScore}%
                             </Badge>
@@ -540,35 +617,51 @@ export default function BacklinkMonitorPage() {
             <Alert>
               <Zap className="h-4 w-4" />
               <AlertDescription>
-                You have {backlinks.filter(b => b.status === "new").length} new backlinks discovered in the last 30 days.
-                Review these links to ensure they're beneficial for your SEO strategy.
+                You have {backlinks.filter((b) => b.status === "new").length}{" "}
+                new backlinks discovered in the last 30 days. Review these links
+                to ensure they're beneficial for your SEO strategy.
               </AlertDescription>
             </Alert>
 
             <Card>
               <CardHeader>
                 <CardTitle>Recently Discovered Backlinks</CardTitle>
-                <CardDescription>New backlinks found in the last {selectedTimeframe}</CardDescription>
+                <CardDescription>
+                  New backlinks found in the last {selectedTimeframe}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {backlinks.filter(b => b.status === "new").map((backlink) => (
-                    <div key={backlink.id} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex-1">
-                        <div className="font-medium">{backlink.sourceDomain}</div>
-                        <div className="text-sm text-muted-foreground">{backlink.anchorText}</div>
-                        <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                          <span>DA: {backlink.domainAuthority}</span>
-                          <span>Traffic: {backlink.traffic.toLocaleString()}</span>
-                          <span>First seen: {backlink.firstSeen}</span>
+                  {backlinks
+                    .filter((b) => b.status === "new")
+                    .map((backlink) => (
+                      <div
+                        key={backlink.id}
+                        className="flex items-center justify-between p-4 border rounded-lg"
+                      >
+                        <div className="flex-1">
+                          <div className="font-medium">
+                            {backlink.sourceDomain}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {backlink.anchorText}
+                          </div>
+                          <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                            <span>DA: {backlink.domainAuthority}</span>
+                            <span>
+                              Traffic: {backlink.traffic.toLocaleString()}
+                            </span>
+                            <span>First seen: {backlink.firstSeen}</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="default">New</Badge>
+                          <Button size="sm" variant="outline">
+                            Review
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="default">New</Badge>
-                        <Button size="sm" variant="outline">Review</Button>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </CardContent>
             </Card>
@@ -578,35 +671,52 @@ export default function BacklinkMonitorPage() {
             <Alert>
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                You have {backlinks.filter(b => b.status === "lost").length} lost backlinks.
-                Consider reaching out to these domains to restore the links or find alternatives.
+                You have {backlinks.filter((b) => b.status === "lost").length}{" "}
+                lost backlinks. Consider reaching out to these domains to
+                restore the links or find alternatives.
               </AlertDescription>
             </Alert>
 
             <Card>
               <CardHeader>
                 <CardTitle>Lost Backlinks</CardTitle>
-                <CardDescription>Backlinks that are no longer active</CardDescription>
+                <CardDescription>
+                  Backlinks that are no longer active
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {backlinks.filter(b => b.status === "lost").map((backlink) => (
-                    <div key={backlink.id} className="flex items-center justify-between p-4 border rounded-lg">
-                      <div className="flex-1">
-                        <div className="font-medium">{backlink.sourceDomain}</div>
-                        <div className="text-sm text-muted-foreground">{backlink.anchorText}</div>
-                        <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                          <span>DA: {backlink.domainAuthority}</span>
-                          <span>Was bringing: {backlink.traffic.toLocaleString()} traffic</span>
-                          <span>Lost on: {backlink.lastSeen}</span>
+                  {backlinks
+                    .filter((b) => b.status === "lost")
+                    .map((backlink) => (
+                      <div
+                        key={backlink.id}
+                        className="flex items-center justify-between p-4 border rounded-lg"
+                      >
+                        <div className="flex-1">
+                          <div className="font-medium">
+                            {backlink.sourceDomain}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {backlink.anchorText}
+                          </div>
+                          <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                            <span>DA: {backlink.domainAuthority}</span>
+                            <span>
+                              Was bringing: {backlink.traffic.toLocaleString()}{" "}
+                              traffic
+                            </span>
+                            <span>Lost on: {backlink.lastSeen}</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="destructive">Lost</Badge>
+                          <Button size="sm" variant="outline">
+                            Reclaim
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="destructive">Lost</Badge>
-                        <Button size="sm" variant="outline">Reclaim</Button>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </CardContent>
             </Card>
@@ -616,14 +726,18 @@ export default function BacklinkMonitorPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Link Building Opportunities</CardTitle>
-                <CardDescription>Potential domains and strategies for new backlinks</CardDescription>
+                <CardDescription>
+                  Potential domains and strategies for new backlinks
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg">Competitor Backlinks</CardTitle>
+                        <CardTitle className="text-lg">
+                          Competitor Backlinks
+                        </CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-3">
@@ -632,7 +746,9 @@ export default function BacklinkMonitorPage() {
                             <Badge>47 opportunities</Badge>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm">Industry publications</span>
+                            <span className="text-sm">
+                              Industry publications
+                            </span>
                             <Badge>23 opportunities</Badge>
                           </div>
                           <div className="flex justify-between items-center">
@@ -645,12 +761,16 @@ export default function BacklinkMonitorPage() {
 
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg">Broken Link Building</CardTitle>
+                        <CardTitle className="text-lg">
+                          Broken Link Building
+                        </CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-3">
                           <div className="flex justify-between items-center">
-                            <span className="text-sm">Broken external links</span>
+                            <span className="text-sm">
+                              Broken external links
+                            </span>
                             <Badge>12 opportunities</Badge>
                           </div>
                           <div className="flex justify-between items-center">
@@ -668,7 +788,9 @@ export default function BacklinkMonitorPage() {
 
                   <Card>
                     <CardHeader>
-                      <CardTitle className="text-lg">Recommended Outreach Targets</CardTitle>
+                      <CardTitle className="text-lg">
+                        Recommended Outreach Targets
+                      </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
@@ -678,39 +800,53 @@ export default function BacklinkMonitorPage() {
                             da: 72,
                             traffic: 450000,
                             opportunity: "Guest post about automation trends",
-                            difficulty: "Medium"
+                            difficulty: "Medium",
                           },
                           {
                             domain: "shopifypartners.com",
                             da: 88,
                             traffic: 1200000,
                             opportunity: "App directory listing",
-                            difficulty: "Easy"
+                            difficulty: "Easy",
                           },
                           {
                             domain: "seo-news.org",
                             da: 65,
                             traffic: 230000,
                             opportunity: "Tool review and mention",
-                            difficulty: "Hard"
-                          }
+                            difficulty: "Hard",
+                          },
                         ].map((target, index) => (
-                          <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                          <div
+                            key={index}
+                            className="flex items-center justify-between p-4 border rounded-lg"
+                          >
                             <div className="flex-1">
                               <div className="font-medium">{target.domain}</div>
-                              <div className="text-sm text-muted-foreground">{target.opportunity}</div>
+                              <div className="text-sm text-muted-foreground">
+                                {target.opportunity}
+                              </div>
                               <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
                                 <span>DA: {target.da}</span>
-                                <span>Traffic: {target.traffic.toLocaleString()}</span>
-                                <Badge variant={
-                                  target.difficulty === "Easy" ? "success" :
-                                  target.difficulty === "Medium" ? "secondary" : "destructive"
-                                }>
+                                <span>
+                                  Traffic: {target.traffic.toLocaleString()}
+                                </span>
+                                <Badge
+                                  variant={
+                                    target.difficulty === "Easy"
+                                      ? "success"
+                                      : target.difficulty === "Medium"
+                                        ? "secondary"
+                                        : "destructive"
+                                  }
+                                >
                                   {target.difficulty}
                                 </Badge>
                               </div>
                             </div>
-                            <Button size="sm" variant="outline">Start Outreach</Button>
+                            <Button size="sm" variant="outline">
+                              Start Outreach
+                            </Button>
                           </div>
                         ))}
                       </div>
