@@ -78,7 +78,14 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface APIIntegration {
   id: string;
@@ -148,7 +155,8 @@ export default function SettingsPage() {
     enableSitemap: true,
     enableRobotsTxt: true,
     defaultMetaTitle: "{{product_name}} | {{store_name}}",
-    defaultMetaDescription: "{{product_description}} - Buy now at {{store_name}}",
+    defaultMetaDescription:
+      "{{product_description}} - Buy now at {{store_name}}",
     focusKeywordDensity: 2.5,
     maxTitleLength: 60,
     maxDescriptionLength: 160,
@@ -234,7 +242,10 @@ export default function SettingsPage() {
       status: "connected",
       icon: Building,
       category: "E-commerce",
-      config: { storeDomain: "mystore.myshopify.com", accessToken: "shpat_..." },
+      config: {
+        storeDomain: "mystore.myshopify.com",
+        accessToken: "shpat_...",
+      },
       lastSync: new Date(Date.now() - 600000).toISOString(),
       rateLimits: { daily: 40000, used: 3200, reset: "2024-01-01T00:00:00Z" },
     },
@@ -298,7 +309,9 @@ export default function SettingsPage() {
     },
   ]);
 
-  const [performanceProfiles, setPerformanceProfiles] = useState<PerformanceProfile[]>([
+  const [performanceProfiles, setPerformanceProfiles] = useState<
+    PerformanceProfile[]
+  >([
     {
       id: "1",
       name: "Standard (Up to 10K Products)",
@@ -498,18 +511,27 @@ export default function SettingsPage() {
               <Select
                 value={generalSettings.dataCenterRegion}
                 onValueChange={(value) =>
-                  setGeneralSettings((prev) => ({ ...prev, dataCenterRegion: value }))
+                  setGeneralSettings((prev) => ({
+                    ...prev,
+                    dataCenterRegion: value,
+                  }))
                 }
               >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="us-east-1">US East (N. Virginia)</SelectItem>
+                  <SelectItem value="us-east-1">
+                    US East (N. Virginia)
+                  </SelectItem>
                   <SelectItem value="us-west-2">US West (Oregon)</SelectItem>
                   <SelectItem value="eu-west-1">Europe (Ireland)</SelectItem>
-                  <SelectItem value="ap-southeast-1">Asia Pacific (Singapore)</SelectItem>
-                  <SelectItem value="ap-northeast-1">Asia Pacific (Tokyo)</SelectItem>
+                  <SelectItem value="ap-southeast-1">
+                    Asia Pacific (Singapore)
+                  </SelectItem>
+                  <SelectItem value="ap-northeast-1">
+                    Asia Pacific (Tokyo)
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -622,7 +644,10 @@ export default function SettingsPage() {
                 <Switch
                   checked={seoSettings.autoOptimize}
                   onCheckedChange={(checked) =>
-                    setSeoSettings((prev) => ({ ...prev, autoOptimize: checked }))
+                    setSeoSettings((prev) => ({
+                      ...prev,
+                      autoOptimize: checked,
+                    }))
                   }
                 />
               </div>
@@ -636,7 +661,10 @@ export default function SettingsPage() {
                 <Switch
                   checked={seoSettings.enableAIOptimization}
                   onCheckedChange={(checked) =>
-                    setSeoSettings((prev) => ({ ...prev, enableAIOptimization: checked }))
+                    setSeoSettings((prev) => ({
+                      ...prev,
+                      enableAIOptimization: checked,
+                    }))
                   }
                 />
               </div>
@@ -667,7 +695,10 @@ export default function SettingsPage() {
                 <Switch
                   checked={seoSettings.contentScoring}
                   onCheckedChange={(checked) =>
-                    setSeoSettings((prev) => ({ ...prev, contentScoring: checked }))
+                    setSeoSettings((prev) => ({
+                      ...prev,
+                      contentScoring: checked,
+                    }))
                   }
                 />
               </div>
@@ -698,7 +729,10 @@ export default function SettingsPage() {
                 <Switch
                   checked={seoSettings.autoAltText}
                   onCheckedChange={(checked) =>
-                    setSeoSettings((prev) => ({ ...prev, autoAltText: checked }))
+                    setSeoSettings((prev) => ({
+                      ...prev,
+                      autoAltText: checked,
+                    }))
                   }
                 />
               </div>
@@ -779,9 +813,13 @@ export default function SettingsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h5 className="font-medium">{profile.name}</h5>
-                      <p className="text-sm text-muted-foreground">{profile.description}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {profile.description}
+                      </p>
                       <div className="flex gap-4 mt-2 text-xs text-muted-foreground">
-                        <span>Max Products: {profile.maxProducts.toLocaleString()}</span>
+                        <span>
+                          Max Products: {profile.maxProducts.toLocaleString()}
+                        </span>
                         <span>Batch Size: {profile.batchSize}</span>
                         <span>Cache: {profile.cacheStrategy}</span>
                       </div>
@@ -855,7 +893,9 @@ export default function SettingsPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="maxConcurrentRequests">Max Concurrent Requests</Label>
+                <Label htmlFor="maxConcurrentRequests">
+                  Max Concurrent Requests
+                </Label>
                 <Input
                   id="maxConcurrentRequests"
                   type="number"
@@ -1143,10 +1183,19 @@ export default function SettingsPage() {
         <CardContent>
           <div className="space-y-6">
             {/* Group by category */}
-            {["Search Analytics", "Analytics", "SEO Tools", "E-commerce", "Communication", "Automation"].map((category) => {
-              const categoryAPIs = apiIntegrations.filter(api => api.category === category);
+            {[
+              "Search Analytics",
+              "Analytics",
+              "SEO Tools",
+              "E-commerce",
+              "Communication",
+              "Automation",
+            ].map((category) => {
+              const categoryAPIs = apiIntegrations.filter(
+                (api) => api.category === category,
+              );
               if (categoryAPIs.length === 0) return null;
-              
+
               return (
                 <div key={category}>
                   <h4 className="font-medium mb-3">{category}</h4>
@@ -1167,18 +1216,24 @@ export default function SettingsPage() {
                             </p>
                             {api.lastSync && (
                               <p className="text-xs text-muted-foreground">
-                                Last sync: {new Date(api.lastSync).toLocaleString()}
+                                Last sync:{" "}
+                                {new Date(api.lastSync).toLocaleString()}
                               </p>
                             )}
                             {api.rateLimits && (
                               <div className="mt-2">
                                 <div className="flex items-center gap-2">
                                   <span className="text-xs text-muted-foreground">
-                                    API Usage: {api.rateLimits.used} / {api.rateLimits.daily}
+                                    API Usage: {api.rateLimits.used} /{" "}
+                                    {api.rateLimits.daily}
                                   </span>
                                 </div>
-                                <Progress 
-                                  value={(api.rateLimits.used / api.rateLimits.daily) * 100} 
+                                <Progress
+                                  value={
+                                    (api.rateLimits.used /
+                                      api.rateLimits.daily) *
+                                    100
+                                  }
                                   className="h-1 mt-1"
                                 />
                               </div>
@@ -1215,7 +1270,10 @@ export default function SettingsPage() {
                               </Button>
                             </div>
                           ) : (
-                            <Button size="sm" onClick={() => handleAPIConnect(api)}>
+                            <Button
+                              size="sm"
+                              onClick={() => handleAPIConnect(api)}
+                            >
                               {api.status === "error" ? "Reconnect" : "Connect"}
                             </Button>
                           )}
@@ -1363,8 +1421,8 @@ export default function SettingsPage() {
               <Key className="h-4 w-4" />
               <AlertTitle>API Key Management</AlertTitle>
               <AlertDescription>
-                Your API keys are encrypted and stored securely. Never share your
-                API keys publicly.
+                Your API keys are encrypted and stored securely. Never share
+                your API keys publicly.
               </AlertDescription>
             </Alert>
             <div className="space-y-3">
@@ -1515,10 +1573,7 @@ export default function SettingsPage() {
               <Database className="h-4 w-4" />
               <span>APIs</span>
             </TabsTrigger>
-            <TabsTrigger
-              value="team"
-              className="flex items-center space-x-2"
-            >
+            <TabsTrigger value="team" className="flex items-center space-x-2">
               <Users className="h-4 w-4" />
               <span>Team</span>
             </TabsTrigger>
@@ -1533,7 +1588,9 @@ export default function SettingsPage() {
 
           <TabsContent value="general">{renderGeneralSettings()}</TabsContent>
           <TabsContent value="seo">{renderSEOSettings()}</TabsContent>
-          <TabsContent value="performance">{renderPerformanceSettings()}</TabsContent>
+          <TabsContent value="performance">
+            {renderPerformanceSettings()}
+          </TabsContent>
           <TabsContent value="notifications">
             {renderNotifications()}
           </TabsContent>
@@ -1617,9 +1674,7 @@ export default function SettingsPage() {
                 <>
                   <div>
                     <Label>Webhook URL</Label>
-                    <Input
-                      placeholder="https://hooks.slack.com/services/..."
-                    />
+                    <Input placeholder="https://hooks.slack.com/services/..." />
                   </div>
                   <div>
                     <Label>Default Channel</Label>

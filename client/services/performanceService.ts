@@ -46,25 +46,28 @@ interface LazyLoadConfig {
 }
 
 class PerformanceService {
-  private cache = new Map<string, { data: any; timestamp: number; accessCount: number }>();
+  private cache = new Map<
+    string,
+    { data: any; timestamp: number; accessCount: number }
+  >();
   private cacheConfig: CacheConfig = {
     ttl: 300000, // 5 minutes
     maxSize: 10000,
-    strategy: "lru"
+    strategy: "lru",
   };
-  
+
   private batchConfig: BatchConfig = {
     batchSize: 200,
     maxConcurrentRequests: 10,
     retryAttempts: 3,
-    retryDelay: 1000
+    retryDelay: 1000,
   };
 
   private paginationConfig: PaginationConfig = {
     pageSize: 50,
     virtualScrolling: true,
     preloadPages: 2,
-    bufferSize: 100
+    bufferSize: 100,
   };
 
   private metrics: PerformanceMetrics = {
@@ -72,13 +75,13 @@ class PerformanceService {
     memoryUsage: 0,
     cacheHitRate: 0,
     throughput: 0,
-    errorRate: 0
+    errorRate: 0,
   };
 
   // Cache Management
   setCache(key: string, data: any, customTtl?: number): void {
     const ttl = customTtl || this.cacheConfig.ttl;
-    
+
     // Clean expired entries if cache is at max size
     if (this.cache.size >= this.cacheConfig.maxSize) {
       this.evictCache();
@@ -87,13 +90,13 @@ class PerformanceService {
     this.cache.set(key, {
       data,
       timestamp: Date.now(),
-      accessCount: 0
+      accessCount: 0,
     });
   }
 
   getCache(key: string): any | null {
     const entry = this.cache.get(key);
-    
+
     if (!entry) {
       return null;
     }
@@ -112,7 +115,7 @@ class PerformanceService {
   private evictCache(): void {
     const now = Date.now();
     let evicted = 0;
-    
+
     // First, remove expired entries
     for (const [key, entry] of this.cache.entries()) {
       if (now - entry.timestamp > this.cacheConfig.ttl) {
@@ -124,7 +127,7 @@ class PerformanceService {
     // If still at capacity, use eviction strategy
     if (this.cache.size >= this.cacheConfig.maxSize) {
       const entries = Array.from(this.cache.entries());
-      
+
       switch (this.cacheConfig.strategy) {
         case "lru":
           entries.sort((a, b) => a[1].timestamp - b[1].timestamp);
@@ -154,7 +157,7 @@ class PerformanceService {
     return {
       size: this.cache.size,
       hitRate: this.metrics.cacheHitRate,
-      memoryUsage: this.estimateCacheMemoryUsage()
+      memoryUsage: this.estimateCacheMemoryUsage(),
     };
   }
 
@@ -174,7 +177,7 @@ class PerformanceService {
     dataSource: string,
     page: number,
     filters?: any,
-    sorting?: { field: string; direction: "asc" | "desc" }
+    sorting?: { field: string; direction: "asc" | "desc" },
   ): Promise<{
     data: T[];
     totalCount: number;
@@ -188,19 +191,25 @@ class PerformanceService {
       visibleItems: number;
     };
   }> {
-    const cacheKey = this.generateCacheKey("paginated", dataSource, page, filters, sorting);
+    const cacheKey = this.generateCacheKey(
+      "paginated",
+      dataSource,
+      page,
+      filters,
+      sorting,
+    );
     const cached = this.getCache(cacheKey);
-    
+
     if (cached) {
       this.updateMetrics("cacheHit");
       return cached;
     }
 
     const startTime = performance.now();
-    
+
     try {
       const offset = (page - 1) * this.paginationConfig.pageSize;
-      
+
       const response = await fetch("/api/products/paginated", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -209,8 +218,8 @@ class PerformanceService {
           limit: this.paginationConfig.pageSize,
           filters,
           sorting,
-          enableVirtualScrolling: this.paginationConfig.virtualScrolling
-        })
+          enableVirtualScrolling: this.paginationConfig.virtualScrolling,
+        }),
       });
 
       if (!response.ok) {
@@ -218,13 +227,12 @@ class PerformanceService {
       }
 
       const result = await response.json();
-      
+
       // Cache the result
       this.setCache(cacheKey, result);
-      
+
       this.updateMetrics("querySuccess", performance.now() - startTime);
       return result;
-      
     } catch (error) {
       this.updateMetrics("queryError", performance.now() - startTime);
       throw error;
@@ -236,7 +244,7 @@ class PerformanceService {
     totalItems: number,
     containerHeight: number,
     itemHeight: number,
-    scrollTop: number
+    scrollTop: number,
   ): {
     startIndex: number;
     endIndex: number;
@@ -245,14 +253,17 @@ class PerformanceService {
   } {
     const startIndex = Math.floor(scrollTop / itemHeight);
     const visibleItems = Math.ceil(containerHeight / itemHeight);
-    const endIndex = Math.min(startIndex + visibleItems + this.paginationConfig.bufferSize, totalItems - 1);
+    const endIndex = Math.min(
+      startIndex + visibleItems + this.paginationConfig.bufferSize,
+      totalItems - 1,
+    );
     const offsetY = startIndex * itemHeight;
 
     return {
       startIndex: Math.max(0, startIndex - this.paginationConfig.bufferSize),
       endIndex,
       offsetY,
-      visibleItems
+      visibleItems,
     };
   }
 
@@ -260,7 +271,7 @@ class PerformanceService {
   async processBatch<T, R>(
     items: T[],
     processor: (batch: T[]) => Promise<R[]>,
-    onProgress?: (progress: number, completed: number, total: number) => void
+    onProgress?: (progress: number, completed: number, total: number) => void,
   ): Promise<R[]> {
     const results: R[] = [];
     const totalBatches = Math.ceil(items.length / this.batchConfig.batchSize);
@@ -274,24 +285,24 @@ class PerformanceService {
 
     // Process batches with concurrency control
     const semaphore = new Semaphore(this.batchConfig.maxConcurrentRequests);
-    
+
     const batchPromises = batches.map(async (batch, index) => {
       await semaphore.acquire();
-      
+
       try {
         const batchResult = await this.retryOperation(
           () => processor(batch),
           this.batchConfig.retryAttempts,
-          this.batchConfig.retryDelay
+          this.batchConfig.retryDelay,
         );
-        
+
         completedBatches++;
         const progress = (completedBatches / totalBatches) * 100;
-        
+
         if (onProgress) {
           onProgress(progress, completedBatches, totalBatches);
         }
-        
+
         return batchResult;
       } finally {
         semaphore.release();
@@ -299,7 +310,7 @@ class PerformanceService {
     });
 
     const batchResults = await Promise.all(batchPromises);
-    
+
     // Flatten results
     for (const batchResult of batchResults) {
       results.push(...batchResult);
@@ -312,7 +323,7 @@ class PerformanceService {
   private async retryOperation<T>(
     operation: () => Promise<T>,
     maxRetries: number,
-    baseDelay: number
+    baseDelay: number,
   ): Promise<T> {
     let lastError: Error;
 
@@ -321,14 +332,14 @@ class PerformanceService {
         return await operation();
       } catch (error) {
         lastError = error as Error;
-        
+
         if (attempt === maxRetries) {
           break;
         }
 
         // Exponential backoff with jitter
         const delay = baseDelay * Math.pow(2, attempt) + Math.random() * 1000;
-        await new Promise(resolve => setTimeout(resolve, delay));
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
 
@@ -336,21 +347,23 @@ class PerformanceService {
   }
 
   // Lazy Loading Implementation
-  createLazyLoader(config: LazyLoadConfig = {
-    threshold: 200,
-    rootMargin: "50px",
-    loadBatchSize: 20
-  }): {
+  createLazyLoader(
+    config: LazyLoadConfig = {
+      threshold: 200,
+      rootMargin: "50px",
+      loadBatchSize: 20,
+    },
+  ): {
     observer: IntersectionObserver;
     loadItems: (startIndex: number, count: number) => Promise<any[]>;
   } {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const element = entry.target as HTMLElement;
             const index = parseInt(element.dataset.index || "0");
-            
+
             // Trigger loading of next batch
             this.loadLazyBatch(index, config.loadBatchSize);
           }
@@ -358,21 +371,24 @@ class PerformanceService {
       },
       {
         rootMargin: config.rootMargin,
-        threshold: 0.1
-      }
+        threshold: 0.1,
+      },
     );
 
     return {
       observer,
-      loadItems: (startIndex: number, count: number) => 
-        this.loadLazyBatch(startIndex, count)
+      loadItems: (startIndex: number, count: number) =>
+        this.loadLazyBatch(startIndex, count),
     };
   }
 
-  private async loadLazyBatch(startIndex: number, count: number): Promise<any[]> {
+  private async loadLazyBatch(
+    startIndex: number,
+    count: number,
+  ): Promise<any[]> {
     const cacheKey = `lazy_batch_${startIndex}_${count}`;
     const cached = this.getCache(cacheKey);
-    
+
     if (cached) {
       return cached;
     }
@@ -381,12 +397,12 @@ class PerformanceService {
       const response = await fetch("/api/products/lazy-load", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ startIndex, count })
+        body: JSON.stringify({ startIndex, count }),
       });
 
       const items = await response.json();
       this.setCache(cacheKey, items, 60000); // Cache for 1 minute
-      
+
       return items;
     } catch (error) {
       console.error("Failed to load lazy batch:", error);
@@ -397,11 +413,11 @@ class PerformanceService {
   // Search Optimization with Debouncing
   createOptimizedSearch(
     searchFunction: (query: string, filters?: any) => Promise<any[]>,
-    debounceMs: number = 300
+    debounceMs: number = 300,
   ): (query: string, filters?: any) => Promise<any[]> {
     let timeoutId: NodeJS.Timeout;
     let lastQuery = "";
-    
+
     return (query: string, filters?: any) => {
       return new Promise((resolve, reject) => {
         // Clear previous timeout
@@ -412,7 +428,7 @@ class PerformanceService {
         // If query hasn't changed, return cached result
         const cacheKey = this.generateCacheKey("search", query, filters);
         const cached = this.getCache(cacheKey);
-        
+
         if (cached && query === lastQuery) {
           resolve(cached);
           return;
@@ -452,7 +468,10 @@ class PerformanceService {
   }
 
   // Performance Monitoring
-  private updateMetrics(type: "cacheHit" | "querySuccess" | "queryError", queryTime?: number): void {
+  private updateMetrics(
+    type: "cacheHit" | "querySuccess" | "queryError",
+    queryTime?: number,
+  ): void {
     switch (type) {
       case "cacheHit":
         // Update cache hit rate
@@ -474,9 +493,11 @@ class PerformanceService {
 
   // Utility Functions
   private generateCacheKey(...parts: any[]): string {
-    return parts.map(part => 
-      typeof part === "object" ? JSON.stringify(part) : String(part)
-    ).join(":");
+    return parts
+      .map((part) =>
+        typeof part === "object" ? JSON.stringify(part) : String(part),
+      )
+      .join(":");
   }
 
   // Configuration Management
@@ -497,16 +518,25 @@ class PerformanceService {
     const suggestions: string[] = [];
 
     if (queryMetrics.executionTime > 1000) {
-      suggestions.push("Consider adding database indexes for frequently queried fields");
-      suggestions.push("Implement query result caching for expensive operations");
+      suggestions.push(
+        "Consider adding database indexes for frequently queried fields",
+      );
+      suggestions.push(
+        "Implement query result caching for expensive operations",
+      );
     }
 
     if (queryMetrics.scannedRows > queryMetrics.returnedRows * 10) {
-      suggestions.push("Query is scanning too many rows - consider adding more selective filters");
+      suggestions.push(
+        "Query is scanning too many rows - consider adding more selective filters",
+      );
     }
 
-    if (queryMetrics.memoryUsage > 100 * 1024 * 1024) { // 100MB
-      suggestions.push("Query is using excessive memory - consider pagination or result limiting");
+    if (queryMetrics.memoryUsage > 100 * 1024 * 1024) {
+      // 100MB
+      suggestions.push(
+        "Query is using excessive memory - consider pagination or result limiting",
+      );
     }
 
     return suggestions;
@@ -544,4 +574,11 @@ class Semaphore {
 }
 
 export const performanceService = new PerformanceService();
-export type { CacheConfig, PaginationConfig, BatchConfig, PerformanceMetrics, VirtualScrollItem, LazyLoadConfig };
+export type {
+  CacheConfig,
+  PaginationConfig,
+  BatchConfig,
+  PerformanceMetrics,
+  VirtualScrollItem,
+  LazyLoadConfig,
+};

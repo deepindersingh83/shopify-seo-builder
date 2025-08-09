@@ -91,7 +91,12 @@ const navigationItems: NavItem[] = [
         badge: "Pro",
       },
       { title: "Content Optimization", href: "/seo/content", icon: Bot },
-      { title: "Collection SEO", href: "/seo/collections", icon: Tag, badge: "New" },
+      {
+        title: "Collection SEO",
+        href: "/seo/collections",
+        icon: Tag,
+        badge: "New",
+      },
     ],
   },
   {
@@ -164,7 +169,12 @@ const navigationItems: NavItem[] = [
         href: "/multi-channel-listings",
         icon: Package,
       },
-      { title: "Social Media Auto-post", href: "/social-media-autopost", icon: Share2, badge: "New" },
+      {
+        title: "Social Media Auto-post",
+        href: "/social-media-autopost",
+        icon: Share2,
+        badge: "New",
+      },
       { title: "SEO Rules", href: "/automation/rules", icon: Settings },
       {
         title: "Scheduled Audits",

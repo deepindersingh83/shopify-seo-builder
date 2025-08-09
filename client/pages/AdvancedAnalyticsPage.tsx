@@ -1,13 +1,37 @@
 import { Layout } from "../components/Layout";
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { Progress } from "../components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs";
 import { Input } from "../components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../components/ui/table";
 import { Alert, AlertDescription } from "../components/ui/alert";
 import {
   BarChart3,
@@ -38,7 +62,7 @@ import {
   Shopping,
   Star,
   Clock,
-  Percent
+  Percent,
 } from "lucide-react";
 
 interface ProductPerformance {
@@ -82,7 +106,13 @@ interface KeywordCannibalization {
 
 interface ROIAttribution {
   id: string;
-  channel: "organic_search" | "paid_search" | "social" | "email" | "direct" | "referral";
+  channel:
+    | "organic_search"
+    | "paid_search"
+    | "social"
+    | "email"
+    | "direct"
+    | "referral";
   productId: string;
   productName: string;
   investment: number;
@@ -133,10 +163,14 @@ export default function AdvancedAnalyticsPage() {
       ctr: 6.8,
       seoScore: 94,
       keywordCount: 47,
-      topKeywords: ["wireless headphones", "noise cancelling headphones", "premium audio"],
+      topKeywords: [
+        "wireless headphones",
+        "noise cancelling headphones",
+        "premium audio",
+      ],
       monthlyTrend: "up",
       revenueGrowth: 23.5,
-      trafficGrowth: 18.2
+      trafficGrowth: 18.2,
     },
     {
       id: "2",
@@ -156,7 +190,7 @@ export default function AdvancedAnalyticsPage() {
       topKeywords: ["ergonomic chair", "office chair", "desk chair"],
       monthlyTrend: "down",
       revenueGrowth: -8.3,
-      trafficGrowth: -12.1
+      trafficGrowth: -12.1,
     },
     {
       id: "3",
@@ -173,11 +207,15 @@ export default function AdvancedAnalyticsPage() {
       ctr: 8.6,
       seoScore: 91,
       keywordCount: 28,
-      topKeywords: ["eco water bottle", "sustainable bottle", "reusable water bottle"],
+      topKeywords: [
+        "eco water bottle",
+        "sustainable bottle",
+        "reusable water bottle",
+      ],
       monthlyTrend: "up",
       revenueGrowth: 34.7,
-      trafficGrowth: 28.9
-    }
+      trafficGrowth: 28.9,
+    },
   ];
 
   // Mock keyword cannibalization data
@@ -194,7 +232,7 @@ export default function AdvancedAnalyticsPage() {
           currentPosition: 3,
           url: "/products/premium-wireless-headphones",
           clicks: 3200,
-          impressions: 58000
+          impressions: 58000,
         },
         {
           productId: "4",
@@ -202,7 +240,7 @@ export default function AdvancedAnalyticsPage() {
           currentPosition: 8,
           url: "/products/sports-wireless-earbuds",
           clicks: 1100,
-          impressions: 32000
+          impressions: 32000,
         },
         {
           productId: "7",
@@ -210,12 +248,12 @@ export default function AdvancedAnalyticsPage() {
           currentPosition: 12,
           url: "/products/budget-wireless-headphones",
           clicks: 450,
-          impressions: 18000
-        }
+          impressions: 18000,
+        },
       ],
       recommendedAction: "differentiate",
       impactScore: 85,
-      potentialTrafficGain: 2800
+      potentialTrafficGain: 2800,
     },
     {
       id: "2",
@@ -229,7 +267,7 @@ export default function AdvancedAnalyticsPage() {
           currentPosition: 5,
           url: "/products/ergonomic-office-chair",
           clicks: 2400,
-          impressions: 42000
+          impressions: 42000,
         },
         {
           productId: "5",
@@ -237,13 +275,13 @@ export default function AdvancedAnalyticsPage() {
           currentPosition: 9,
           url: "/products/executive-office-chair",
           clicks: 980,
-          impressions: 25000
-        }
+          impressions: 25000,
+        },
       ],
       recommendedAction: "consolidate",
       impactScore: 78,
-      potentialTrafficGain: 1850
-    }
+      potentialTrafficGain: 1850,
+    },
   ];
 
   // Mock ROI attribution data
@@ -258,9 +296,9 @@ export default function AdvancedAnalyticsPage() {
       roi: 395.7,
       conversions: 144,
       averageOrderValue: 199.65,
-      customerLifetimeValue: 485.20,
+      customerLifetimeValue: 485.2,
       attributionModel: "last_click",
-      timeFrame: "Last 30 days"
+      timeFrame: "Last 30 days",
     },
     {
       id: "2",
@@ -271,10 +309,10 @@ export default function AdvancedAnalyticsPage() {
       revenue: 35600,
       roi: 187.1,
       conversions: 178,
-      averageOrderValue: 200.00,
-      customerLifetimeValue: 485.20,
+      averageOrderValue: 200.0,
+      customerLifetimeValue: 485.2,
       attributionModel: "first_click",
-      timeFrame: "Last 30 days"
+      timeFrame: "Last 30 days",
     },
     {
       id: "3",
@@ -285,11 +323,11 @@ export default function AdvancedAnalyticsPage() {
       revenue: 18750,
       roi: 681.3,
       conversions: 750,
-      averageOrderValue: 25.00,
-      customerLifetimeValue: 78.50,
+      averageOrderValue: 25.0,
+      customerLifetimeValue: 78.5,
       attributionModel: "linear",
-      timeFrame: "Last 30 days"
-    }
+      timeFrame: "Last 30 days",
+    },
   ];
 
   // Mock competitor data
@@ -306,7 +344,7 @@ export default function AdvancedAnalyticsPage() {
       competitorTraffic: 12500,
       marketShare: 15.3,
       priceAdvantage: "lower",
-      positionAdvantage: "worse"
+      positionAdvantage: "worse",
     },
     {
       id: "2",
@@ -320,8 +358,8 @@ export default function AdvancedAnalyticsPage() {
       competitorTraffic: 8900,
       marketShare: 22.1,
       priceAdvantage: "higher",
-      positionAdvantage: "worse"
-    }
+      positionAdvantage: "worse",
+    },
   ];
 
   const getTrendIcon = (trend: string, growth?: number) => {
@@ -382,13 +420,15 @@ export default function AdvancedAnalyticsPage() {
     }
   };
 
-  const filteredProducts = productPerformance.filter(product => {
-    const matchesSearch = searchTerm === "" || 
+  const filteredProducts = productPerformance.filter((product) => {
+    const matchesSearch =
+      searchTerm === "" ||
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.sku.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesCategory = filterCategory === "all" || product.category === filterCategory;
-    
+
+    const matchesCategory =
+      filterCategory === "all" || product.category === filterCategory;
+
     return matchesSearch && matchesCategory;
   });
 
@@ -398,9 +438,12 @@ export default function AdvancedAnalyticsPage() {
         {/* Header */}
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-3xl font-bold">Advanced Analytics & Insights</h1>
+            <h1 className="text-3xl font-bold">
+              Advanced Analytics & Insights
+            </h1>
             <p className="text-muted-foreground mt-2">
-              Deep dive into product performance, keyword cannibalization, and ROI attribution
+              Deep dive into product performance, keyword cannibalization, and
+              ROI attribution
             </p>
           </div>
           <div className="flex gap-3">
@@ -430,12 +473,17 @@ export default function AdvancedAnalyticsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Organic Revenue</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Organic Revenue
+              </CardTitle>
               <DollarSign className="h-4 w-4 text-green-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                ${productPerformance.reduce((sum, p) => sum + p.organicRevenue, 0).toLocaleString()}
+                $
+                {productPerformance
+                  .reduce((sum, p) => sum + p.organicRevenue, 0)
+                  .toLocaleString()}
               </div>
               <div className="flex items-center text-xs text-muted-foreground">
                 <ArrowUpRight className="h-3 w-3 text-green-500 mr-1" />
@@ -446,12 +494,16 @@ export default function AdvancedAnalyticsPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Organic Traffic</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Organic Traffic
+              </CardTitle>
               <Users className="h-4 w-4 text-blue-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {productPerformance.reduce((sum, p) => sum + p.organicTraffic, 0).toLocaleString()}
+                {productPerformance
+                  .reduce((sum, p) => sum + p.organicTraffic, 0)
+                  .toLocaleString()}
               </div>
               <div className="flex items-center text-xs text-muted-foreground">
                 <ArrowUpRight className="h-3 w-3 text-green-500 mr-1" />
@@ -462,12 +514,17 @@ export default function AdvancedAnalyticsPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Average SEO Score</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Average SEO Score
+              </CardTitle>
               <Target className="h-4 w-4 text-purple-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {Math.round(productPerformance.reduce((sum, p) => sum + p.seoScore, 0) / productPerformance.length)}
+                {Math.round(
+                  productPerformance.reduce((sum, p) => sum + p.seoScore, 0) /
+                    productPerformance.length,
+                )}
               </div>
               <div className="flex items-center text-xs text-muted-foreground">
                 <ArrowUpRight className="h-3 w-3 text-green-500 mr-1" />
@@ -478,14 +535,18 @@ export default function AdvancedAnalyticsPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Cannibalization Issues</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Cannibalization Issues
+              </CardTitle>
               <AlertTriangle className="h-4 w-4 text-orange-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{cannibalizationIssues.length}</div>
+              <div className="text-2xl font-bold">
+                {cannibalizationIssues.length}
+              </div>
               <div className="flex items-center text-xs text-muted-foreground">
-                <ArrowDownRight className="h-3 w-3 text-red-500 mr-1" />
-                2 resolved this month
+                <ArrowDownRight className="h-3 w-3 text-red-500 mr-1" />2
+                resolved this month
               </div>
             </CardContent>
           </Card>
@@ -498,30 +559,42 @@ export default function AdvancedAnalyticsPage() {
               <Zap className="h-5 w-5 mr-2 text-yellow-500" />
               Key Insights & Recommendations
             </CardTitle>
-            <CardDescription>AI-powered insights to optimize your product performance</CardDescription>
+            <CardDescription>
+              AI-powered insights to optimize your product performance
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="p-4 bg-green-50 rounded-lg border border-green-200">
                 <div className="flex items-center mb-2">
                   <Crown className="h-4 w-4 text-green-600 mr-2" />
-                  <span className="font-medium text-green-900">Top Performer</span>
+                  <span className="font-medium text-green-900">
+                    Top Performer
+                  </span>
                 </div>
                 <div className="text-sm text-green-800 mb-2">
-                  "Sustainable Water Bottle" has the highest ROI at 681%. Consider expanding this product line.
+                  "Sustainable Water Bottle" has the highest ROI at 681%.
+                  Consider expanding this product line.
                 </div>
-                <Button size="sm" variant="outline">View Details</Button>
+                <Button size="sm" variant="outline">
+                  View Details
+                </Button>
               </div>
-              
+
               <div className="p-4 bg-red-50 rounded-lg border border-red-200">
                 <div className="flex items-center mb-2">
                   <AlertTriangle className="h-4 w-4 text-red-600 mr-2" />
-                  <span className="font-medium text-red-900">Needs Attention</span>
+                  <span className="font-medium text-red-900">
+                    Needs Attention
+                  </span>
                 </div>
                 <div className="text-sm text-red-800 mb-2">
-                  "Office Chair" traffic down 12%. Check for technical SEO issues or increased competition.
+                  "Office Chair" traffic down 12%. Check for technical SEO
+                  issues or increased competition.
                 </div>
-                <Button size="sm" variant="outline">Investigate</Button>
+                <Button size="sm" variant="outline">
+                  Investigate
+                </Button>
               </div>
 
               <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
@@ -530,9 +603,12 @@ export default function AdvancedAnalyticsPage() {
                   <span className="font-medium text-blue-900">Opportunity</span>
                 </div>
                 <div className="text-sm text-blue-800 mb-2">
-                  Resolve "wireless headphones" cannibalization to gain an estimated 2,800 additional clicks.
+                  Resolve "wireless headphones" cannibalization to gain an
+                  estimated 2,800 additional clicks.
                 </div>
-                <Button size="sm" variant="outline">Fix Now</Button>
+                <Button size="sm" variant="outline">
+                  Fix Now
+                </Button>
               </div>
             </div>
           </CardContent>
@@ -541,10 +617,16 @@ export default function AdvancedAnalyticsPage() {
         {/* Main Content */}
         <Tabs defaultValue="product-performance" className="space-y-6">
           <TabsList>
-            <TabsTrigger value="product-performance">Product Performance</TabsTrigger>
-            <TabsTrigger value="cannibalization">Keyword Cannibalization</TabsTrigger>
+            <TabsTrigger value="product-performance">
+              Product Performance
+            </TabsTrigger>
+            <TabsTrigger value="cannibalization">
+              Keyword Cannibalization
+            </TabsTrigger>
             <TabsTrigger value="roi-attribution">ROI Attribution</TabsTrigger>
-            <TabsTrigger value="competitor-analysis">Competitor Tracking</TabsTrigger>
+            <TabsTrigger value="competitor-analysis">
+              Competitor Tracking
+            </TabsTrigger>
             <TabsTrigger value="forecasting">Revenue Forecasting</TabsTrigger>
           </TabsList>
 
@@ -553,7 +635,9 @@ export default function AdvancedAnalyticsPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Product Performance Analytics</CardTitle>
-                <CardDescription>Track organic traffic, revenue, and conversions by product</CardDescription>
+                <CardDescription>
+                  Track organic traffic, revenue, and conversions by product
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-4 mb-6">
@@ -568,7 +652,10 @@ export default function AdvancedAnalyticsPage() {
                       />
                     </div>
                   </div>
-                  <Select value={filterCategory} onValueChange={setFilterCategory}>
+                  <Select
+                    value={filterCategory}
+                    onValueChange={setFilterCategory}
+                  >
                     <SelectTrigger className="w-[150px]">
                       <SelectValue placeholder="Category" />
                     </SelectTrigger>
@@ -604,14 +691,19 @@ export default function AdvancedAnalyticsPage() {
                               <div className="text-sm text-muted-foreground">
                                 {product.sku} • ${product.price}
                               </div>
-                              <Badge variant="outline">{product.category}</Badge>
+                              <Badge variant="outline">
+                                {product.category}
+                              </Badge>
                             </div>
                           </TableCell>
                           <TableCell>
                             <div className="text-sm">
-                              <div className="font-medium">{product.organicTraffic.toLocaleString()}</div>
+                              <div className="font-medium">
+                                {product.organicTraffic.toLocaleString()}
+                              </div>
                               <div className="text-muted-foreground">
-                                {product.impressions.toLocaleString()} impressions
+                                {product.impressions.toLocaleString()}{" "}
+                                impressions
                               </div>
                               <div className="text-muted-foreground">
                                 {product.ctr}% CTR
@@ -630,39 +722,71 @@ export default function AdvancedAnalyticsPage() {
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center">
-                              <span className="text-sm font-medium mr-2">{product.conversionRate}%</span>
-                              <Progress value={product.conversionRate} className="w-16 h-2" />
+                              <span className="text-sm font-medium mr-2">
+                                {product.conversionRate}%
+                              </span>
+                              <Progress
+                                value={product.conversionRate}
+                                className="w-16 h-2"
+                              />
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="text-sm font-medium">{product.averagePosition.toFixed(1)}</div>
+                            <div className="text-sm font-medium">
+                              {product.averagePosition.toFixed(1)}
+                            </div>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center">
-                              <span className="text-sm font-medium mr-2">{product.seoScore}</span>
-                              <Progress value={product.seoScore} className="w-16 h-2" />
+                              <span className="text-sm font-medium mr-2">
+                                {product.seoScore}
+                              </span>
+                              <Progress
+                                value={product.seoScore}
+                                className="w-16 h-2"
+                              />
                             </div>
                           </TableCell>
                           <TableCell>
                             <div className="text-sm space-y-1">
                               <div className="flex items-center">
-                                {getTrendIcon(product.monthlyTrend, product.trafficGrowth)}
-                                <span className={`ml-1 ${product.trafficGrowth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                  {product.trafficGrowth >= 0 ? '+' : ''}{product.trafficGrowth.toFixed(1)}%
+                                {getTrendIcon(
+                                  product.monthlyTrend,
+                                  product.trafficGrowth,
+                                )}
+                                <span
+                                  className={`ml-1 ${product.trafficGrowth >= 0 ? "text-green-600" : "text-red-600"}`}
+                                >
+                                  {product.trafficGrowth >= 0 ? "+" : ""}
+                                  {product.trafficGrowth.toFixed(1)}%
                                 </span>
                               </div>
-                              <div className="text-muted-foreground">Traffic</div>
+                              <div className="text-muted-foreground">
+                                Traffic
+                              </div>
                             </div>
                           </TableCell>
                           <TableCell>
                             <div className="flex space-x-1">
-                              <Button size="sm" variant="ghost" title="View Details">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="View Details"
+                              >
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="ghost" title="Optimize">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="Optimize"
+                              >
                                 <Target className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="ghost" title="Keywords">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="Keywords"
+                              >
                                 <Search className="h-4 w-4" />
                               </Button>
                             </div>
@@ -680,14 +804,18 @@ export default function AdvancedAnalyticsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Revenue Trends</CardTitle>
-                  <CardDescription>Organic revenue performance over time</CardDescription>
+                  <CardDescription>
+                    Organic revenue performance over time
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="h-64 flex items-center justify-center text-muted-foreground">
                     <LineChart className="h-16 w-16 mr-4" />
                     <div>
                       <div className="font-medium">Revenue Chart</div>
-                      <div className="text-sm">Interactive chart would be rendered here</div>
+                      <div className="text-sm">
+                        Interactive chart would be rendered here
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -696,14 +824,18 @@ export default function AdvancedAnalyticsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Traffic Distribution</CardTitle>
-                  <CardDescription>Organic traffic by product category</CardDescription>
+                  <CardDescription>
+                    Organic traffic by product category
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="h-64 flex items-center justify-center text-muted-foreground">
                     <PieChart className="h-16 w-16 mr-4" />
                     <div>
                       <div className="font-medium">Traffic Distribution</div>
-                      <div className="text-sm">Pie chart would be rendered here</div>
+                      <div className="text-sm">
+                        Pie chart would be rendered here
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -715,8 +847,13 @@ export default function AdvancedAnalyticsPage() {
             <Alert>
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                Found {cannibalizationIssues.length} keyword cannibalization issues that could be affecting your search performance.
-                Resolving these could increase traffic by up to {cannibalizationIssues.reduce((sum, issue) => sum + issue.potentialTrafficGain, 0).toLocaleString()} clicks per month.
+                Found {cannibalizationIssues.length} keyword cannibalization
+                issues that could be affecting your search performance.
+                Resolving these could increase traffic by up to{" "}
+                {cannibalizationIssues
+                  .reduce((sum, issue) => sum + issue.potentialTrafficGain, 0)
+                  .toLocaleString()}{" "}
+                clicks per month.
               </AlertDescription>
             </Alert>
 
@@ -724,25 +861,36 @@ export default function AdvancedAnalyticsPage() {
               <CardHeader>
                 <CardTitle>Keyword Cannibalization Detection</CardTitle>
                 <CardDescription>
-                  Identify products competing for the same keywords and optimize your content strategy
+                  Identify products competing for the same keywords and optimize
+                  your content strategy
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
                   {cannibalizationIssues.map((issue) => (
-                    <div key={issue.id} className="p-6 border rounded-lg space-y-4">
+                    <div
+                      key={issue.id}
+                      className="p-6 border rounded-lg space-y-4"
+                    >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
-                            <h3 className="text-lg font-semibold">"{issue.keyword}"</h3>
-                            <Badge className={getActionColor(issue.recommendedAction)}>
+                            <h3 className="text-lg font-semibold">
+                              "{issue.keyword}"
+                            </h3>
+                            <Badge
+                              className={getActionColor(
+                                issue.recommendedAction,
+                              )}
+                            >
                               {issue.recommendedAction.replace("_", " ")}
                             </Badge>
                           </div>
                           <div className="flex items-center gap-6 text-sm text-muted-foreground mb-3">
                             <span>
                               <Search className="h-4 w-4 inline mr-1" />
-                              {issue.searchVolume.toLocaleString()} monthly searches
+                              {issue.searchVolume.toLocaleString()} monthly
+                              searches
                             </span>
                             <span>
                               <Target className="h-4 w-4 inline mr-1" />
@@ -758,20 +906,31 @@ export default function AdvancedAnalyticsPage() {
                           <div className="text-lg font-bold text-green-600">
                             +{issue.potentialTrafficGain.toLocaleString()}
                           </div>
-                          <div className="text-sm text-muted-foreground">Potential clicks</div>
+                          <div className="text-sm text-muted-foreground">
+                            Potential clicks
+                          </div>
                         </div>
                       </div>
 
                       <div className="space-y-3">
                         <h4 className="font-medium">Competing Products:</h4>
                         {issue.competingProducts.map((product, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                          <div
+                            key={index}
+                            className="flex items-center justify-between p-3 bg-gray-50 rounded"
+                          >
                             <div className="flex-1">
-                              <div className="font-medium">{product.productName}</div>
-                              <div className="text-sm text-muted-foreground">{product.url}</div>
+                              <div className="font-medium">
+                                {product.productName}
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                {product.url}
+                              </div>
                             </div>
                             <div className="text-right text-sm">
-                              <div className="font-medium">Position #{product.currentPosition}</div>
+                              <div className="font-medium">
+                                Position #{product.currentPosition}
+                              </div>
                               <div className="text-muted-foreground">
                                 {product.clicks.toLocaleString()} clicks
                               </div>
@@ -782,10 +941,15 @@ export default function AdvancedAnalyticsPage() {
 
                       <div className="flex justify-between items-center pt-4 border-t">
                         <div className="text-sm text-muted-foreground">
-                          Recommended Action: <strong className="capitalize">{issue.recommendedAction.replace("_", " ")}</strong>
+                          Recommended Action:{" "}
+                          <strong className="capitalize">
+                            {issue.recommendedAction.replace("_", " ")}
+                          </strong>
                         </div>
                         <div className="flex gap-2">
-                          <Button size="sm" variant="outline">View Details</Button>
+                          <Button size="sm" variant="outline">
+                            View Details
+                          </Button>
                           <Button size="sm">Apply Fix</Button>
                         </div>
                       </div>
@@ -801,7 +965,8 @@ export default function AdvancedAnalyticsPage() {
               <CardHeader>
                 <CardTitle>ROI Attribution Analysis</CardTitle>
                 <CardDescription>
-                  Track revenue attribution across different marketing channels and attribution models
+                  Track revenue attribution across different marketing channels
+                  and attribution models
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -826,13 +991,18 @@ export default function AdvancedAnalyticsPage() {
                           <TableCell>
                             <div className="flex items-center">
                               {getChannelIcon(attribution.channel)}
-                              <Badge variant="outline" className="ml-2 capitalize">
+                              <Badge
+                                variant="outline"
+                                className="ml-2 capitalize"
+                              >
                                 {attribution.channel.replace("_", " ")}
                               </Badge>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="font-medium">{attribution.productName}</div>
+                            <div className="font-medium">
+                              {attribution.productName}
+                            </div>
                           </TableCell>
                           <TableCell>
                             <div className="text-sm font-medium text-red-600">
@@ -846,19 +1016,27 @@ export default function AdvancedAnalyticsPage() {
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center">
-                              <span className={`text-sm font-bold ${attribution.roi >= 200 ? 'text-green-600' : attribution.roi >= 100 ? 'text-yellow-600' : 'text-red-600'}`}>
+                              <span
+                                className={`text-sm font-bold ${attribution.roi >= 200 ? "text-green-600" : attribution.roi >= 100 ? "text-yellow-600" : "text-red-600"}`}
+                              >
                                 {attribution.roi.toFixed(1)}%
                               </span>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="text-sm font-medium">{attribution.conversions}</div>
+                            <div className="text-sm font-medium">
+                              {attribution.conversions}
+                            </div>
                           </TableCell>
                           <TableCell>
-                            <div className="text-sm">${attribution.averageOrderValue.toFixed(2)}</div>
+                            <div className="text-sm">
+                              ${attribution.averageOrderValue.toFixed(2)}
+                            </div>
                           </TableCell>
                           <TableCell>
-                            <div className="text-sm">${attribution.customerLifetimeValue.toFixed(2)}</div>
+                            <div className="text-sm">
+                              ${attribution.customerLifetimeValue.toFixed(2)}
+                            </div>
                           </TableCell>
                           <TableCell>
                             <Badge variant="secondary" className="capitalize">
@@ -877,29 +1055,44 @@ export default function AdvancedAnalyticsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Channel ROI Comparison</CardTitle>
-                  <CardDescription>Return on investment by channel</CardDescription>
+                  <CardDescription>
+                    Return on investment by channel
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {["organic_search", "paid_search", "social", "email"].map((channel) => {
-                      const channelData = roiAttribution.filter(r => r.channel === channel);
-                      const avgROI = channelData.length > 0 
-                        ? channelData.reduce((sum, r) => sum + r.roi, 0) / channelData.length 
-                        : 0;
-                      
-                      return (
-                        <div key={channel} className="space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <div className="flex items-center">
-                              {getChannelIcon(channel)}
-                              <span className="ml-2 capitalize">{channel.replace("_", " ")}</span>
+                    {["organic_search", "paid_search", "social", "email"].map(
+                      (channel) => {
+                        const channelData = roiAttribution.filter(
+                          (r) => r.channel === channel,
+                        );
+                        const avgROI =
+                          channelData.length > 0
+                            ? channelData.reduce((sum, r) => sum + r.roi, 0) /
+                              channelData.length
+                            : 0;
+
+                        return (
+                          <div key={channel} className="space-y-2">
+                            <div className="flex justify-between text-sm">
+                              <div className="flex items-center">
+                                {getChannelIcon(channel)}
+                                <span className="ml-2 capitalize">
+                                  {channel.replace("_", " ")}
+                                </span>
+                              </div>
+                              <span className="font-medium">
+                                {avgROI.toFixed(1)}% ROI
+                              </span>
                             </div>
-                            <span className="font-medium">{avgROI.toFixed(1)}% ROI</span>
+                            <Progress
+                              value={Math.min(avgROI / 5, 100)}
+                              className="h-2"
+                            />
                           </div>
-                          <Progress value={Math.min(avgROI / 5, 100)} className="h-2" />
-                        </div>
-                      );
-                    })}
+                        );
+                      },
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -907,24 +1100,42 @@ export default function AdvancedAnalyticsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Attribution Models</CardTitle>
-                  <CardDescription>Compare different attribution approaches</CardDescription>
+                  <CardDescription>
+                    Compare different attribution approaches
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {["first_click", "last_click", "linear", "time_decay"].map((model) => {
-                      const modelData = roiAttribution.filter(r => r.attributionModel === model);
-                      const totalRevenue = modelData.reduce((sum, r) => sum + r.revenue, 0);
-                      
-                      return (
-                        <div key={model} className="flex items-center justify-between">
-                          <span className="text-sm capitalize">{model.replace("_", " ")}</span>
-                          <div className="text-right">
-                            <div className="font-medium">${totalRevenue.toLocaleString()}</div>
-                            <div className="text-xs text-muted-foreground">{modelData.length} products</div>
+                    {["first_click", "last_click", "linear", "time_decay"].map(
+                      (model) => {
+                        const modelData = roiAttribution.filter(
+                          (r) => r.attributionModel === model,
+                        );
+                        const totalRevenue = modelData.reduce(
+                          (sum, r) => sum + r.revenue,
+                          0,
+                        );
+
+                        return (
+                          <div
+                            key={model}
+                            className="flex items-center justify-between"
+                          >
+                            <span className="text-sm capitalize">
+                              {model.replace("_", " ")}
+                            </span>
+                            <div className="text-right">
+                              <div className="font-medium">
+                                ${totalRevenue.toLocaleString()}
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                {modelData.length} products
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      },
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -938,21 +1149,40 @@ export default function AdvancedAnalyticsPage() {
                   <div className="space-y-4">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-green-600">
-                        {Math.round(roiAttribution.reduce((sum, r) => sum + r.roi, 0) / roiAttribution.length)}%
+                        {Math.round(
+                          roiAttribution.reduce((sum, r) => sum + r.roi, 0) /
+                            roiAttribution.length,
+                        )}
+                        %
                       </div>
-                      <div className="text-sm text-muted-foreground">Average ROI</div>
+                      <div className="text-sm text-muted-foreground">
+                        Average ROI
+                      </div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-blue-600">
-                        ${Math.round(roiAttribution.reduce((sum, r) => sum + r.averageOrderValue, 0) / roiAttribution.length)}
+                        $
+                        {Math.round(
+                          roiAttribution.reduce(
+                            (sum, r) => sum + r.averageOrderValue,
+                            0,
+                          ) / roiAttribution.length,
+                        )}
                       </div>
-                      <div className="text-sm text-muted-foreground">Average Order Value</div>
+                      <div className="text-sm text-muted-foreground">
+                        Average Order Value
+                      </div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-purple-600">
-                        {roiAttribution.reduce((sum, r) => sum + r.conversions, 0)}
+                        {roiAttribution.reduce(
+                          (sum, r) => sum + r.conversions,
+                          0,
+                        )}
                       </div>
-                      <div className="text-sm text-muted-foreground">Total Conversions</div>
+                      <div className="text-sm text-muted-foreground">
+                        Total Conversions
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -965,7 +1195,8 @@ export default function AdvancedAnalyticsPage() {
               <CardHeader>
                 <CardTitle>Competitor Product Tracking</CardTitle>
                 <CardDescription>
-                  Monitor competitor pricing, rankings, and market share for your key products
+                  Monitor competitor pricing, rankings, and market share for
+                  your key products
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -987,25 +1218,43 @@ export default function AdvancedAnalyticsPage() {
                       {competitorProducts.map((competitor) => (
                         <TableRow key={competitor.id}>
                           <TableCell>
-                            <div className="font-medium">{competitor.productName}</div>
+                            <div className="font-medium">
+                              {competitor.productName}
+                            </div>
                           </TableCell>
                           <TableCell>
-                            <div className="font-medium">{competitor.competitorName}</div>
+                            <div className="font-medium">
+                              {competitor.competitorName}
+                            </div>
                             <div className="text-sm text-muted-foreground">
-                              {competitor.competitorTraffic.toLocaleString()} traffic
+                              {competitor.competitorTraffic.toLocaleString()}{" "}
+                              traffic
                             </div>
                           </TableCell>
                           <TableCell>
                             <div className="text-sm space-y-1">
                               <div className="flex items-center">
-                                <span className="text-muted-foreground mr-2">Theirs:</span>
-                                <span className="font-medium">${competitor.competitorPrice}</span>
+                                <span className="text-muted-foreground mr-2">
+                                  Theirs:
+                                </span>
+                                <span className="font-medium">
+                                  ${competitor.competitorPrice}
+                                </span>
                               </div>
                               <div className="flex items-center">
-                                <span className="text-muted-foreground mr-2">Yours:</span>
-                                <span className="font-medium">${competitor.yourPrice}</span>
+                                <span className="text-muted-foreground mr-2">
+                                  Yours:
+                                </span>
+                                <span className="font-medium">
+                                  ${competitor.yourPrice}
+                                </span>
                               </div>
-                              <Badge className={getAdvantageColor(competitor.priceAdvantage)} variant="outline">
+                              <Badge
+                                className={getAdvantageColor(
+                                  competitor.priceAdvantage,
+                                )}
+                                variant="outline"
+                              >
                                 {competitor.priceAdvantage}
                               </Badge>
                             </div>
@@ -1013,36 +1262,66 @@ export default function AdvancedAnalyticsPage() {
                           <TableCell>
                             <div className="text-sm space-y-1">
                               <div className="flex items-center">
-                                <span className="text-muted-foreground mr-2">Theirs:</span>
-                                <span className="font-medium">#{competitor.competitorPosition}</span>
+                                <span className="text-muted-foreground mr-2">
+                                  Theirs:
+                                </span>
+                                <span className="font-medium">
+                                  #{competitor.competitorPosition}
+                                </span>
                               </div>
                               <div className="flex items-center">
-                                <span className="text-muted-foreground mr-2">Yours:</span>
-                                <span className="font-medium">#{competitor.yourPosition}</span>
+                                <span className="text-muted-foreground mr-2">
+                                  Yours:
+                                </span>
+                                <span className="font-medium">
+                                  #{competitor.yourPosition}
+                                </span>
                               </div>
-                              <Badge className={getAdvantageColor(competitor.positionAdvantage)} variant="outline">
+                              <Badge
+                                className={getAdvantageColor(
+                                  competitor.positionAdvantage,
+                                )}
+                                variant="outline"
+                              >
                                 {competitor.positionAdvantage}
                               </Badge>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="text-sm font-medium">{competitor.sharedKeywords}</div>
+                            <div className="text-sm font-medium">
+                              {competitor.sharedKeywords}
+                            </div>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center">
-                              <span className="text-sm font-medium mr-2">{competitor.marketShare}%</span>
-                              <Progress value={competitor.marketShare} className="w-16 h-2" />
+                              <span className="text-sm font-medium mr-2">
+                                {competitor.marketShare}%
+                              </span>
+                              <Progress
+                                value={competitor.marketShare}
+                                className="w-16 h-2"
+                              />
                             </div>
                           </TableCell>
                           <TableCell>
                             <div className="text-sm">
                               <div className="flex items-center gap-1">
-                                <Badge className={getAdvantageColor(competitor.priceAdvantage)} variant="outline">
+                                <Badge
+                                  className={getAdvantageColor(
+                                    competitor.priceAdvantage,
+                                  )}
+                                  variant="outline"
+                                >
                                   Price {competitor.priceAdvantage}
                                 </Badge>
                               </div>
                               <div className="flex items-center gap-1 mt-1">
-                                <Badge className={getAdvantageColor(competitor.positionAdvantage)} variant="outline">
+                                <Badge
+                                  className={getAdvantageColor(
+                                    competitor.positionAdvantage,
+                                  )}
+                                  variant="outline"
+                                >
                                   Rank {competitor.positionAdvantage}
                                 </Badge>
                               </div>
@@ -1050,13 +1329,25 @@ export default function AdvancedAnalyticsPage() {
                           </TableCell>
                           <TableCell>
                             <div className="flex space-x-1">
-                              <Button size="sm" variant="ghost" title="View Analysis">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="View Analysis"
+                              >
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="ghost" title="Price Alert">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="Price Alert"
+                              >
                                 <DollarSign className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="ghost" title="Track Keywords">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="Track Keywords"
+                              >
                                 <Search className="h-4 w-4" />
                               </Button>
                             </div>
@@ -1075,7 +1366,8 @@ export default function AdvancedAnalyticsPage() {
               <CardHeader>
                 <CardTitle>Revenue Forecasting</CardTitle>
                 <CardDescription>
-                  AI-powered predictions for product performance and revenue growth
+                  AI-powered predictions for product performance and revenue
+                  growth
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -1085,14 +1377,19 @@ export default function AdvancedAnalyticsPage() {
                     <div className="space-y-3">
                       {productPerformance.slice(0, 3).map((product) => {
                         const forecastGrowth = product.revenueGrowth * 0.8; // Conservative forecast
-                        const forecastRevenue = product.organicRevenue * (1 + forecastGrowth / 100);
-                        
+                        const forecastRevenue =
+                          product.organicRevenue * (1 + forecastGrowth / 100);
+
                         return (
-                          <div key={product.id} className="flex items-center justify-between p-3 border rounded">
+                          <div
+                            key={product.id}
+                            className="flex items-center justify-between p-3 border rounded"
+                          >
                             <div className="flex-1">
                               <div className="font-medium">{product.name}</div>
                               <div className="text-sm text-muted-foreground">
-                                Current: ${product.organicRevenue.toLocaleString()}/month
+                                Current: $
+                                {product.organicRevenue.toLocaleString()}/month
                               </div>
                             </div>
                             <div className="text-right">
@@ -1100,7 +1397,8 @@ export default function AdvancedAnalyticsPage() {
                                 ${forecastRevenue.toLocaleString()}
                               </div>
                               <div className="text-sm text-muted-foreground">
-                                {forecastGrowth >= 0 ? '+' : ''}{forecastGrowth.toFixed(1)}%
+                                {forecastGrowth >= 0 ? "+" : ""}
+                                {forecastGrowth.toFixed(1)}%
                               </div>
                             </div>
                           </div>
@@ -1113,16 +1411,28 @@ export default function AdvancedAnalyticsPage() {
                     <h4 className="font-medium">Growth Opportunities</h4>
                     <div className="space-y-3">
                       <div className="p-3 bg-blue-50 border border-blue-200 rounded">
-                        <div className="font-medium text-blue-900">Keyword Optimization</div>
-                        <div className="text-sm text-blue-800">Potential +$15,400/month revenue</div>
+                        <div className="font-medium text-blue-900">
+                          Keyword Optimization
+                        </div>
+                        <div className="text-sm text-blue-800">
+                          Potential +$15,400/month revenue
+                        </div>
                       </div>
                       <div className="p-3 bg-green-50 border border-green-200 rounded">
-                        <div className="font-medium text-green-900">Content Enhancement</div>
-                        <div className="text-sm text-green-800">Potential +$8,200/month revenue</div>
+                        <div className="font-medium text-green-900">
+                          Content Enhancement
+                        </div>
+                        <div className="text-sm text-green-800">
+                          Potential +$8,200/month revenue
+                        </div>
                       </div>
                       <div className="p-3 bg-purple-50 border border-purple-200 rounded">
-                        <div className="font-medium text-purple-900">Technical SEO</div>
-                        <div className="text-sm text-purple-800">Potential +$5,900/month revenue</div>
+                        <div className="font-medium text-purple-900">
+                          Technical SEO
+                        </div>
+                        <div className="text-sm text-purple-800">
+                          Potential +$5,900/month revenue
+                        </div>
                       </div>
                     </div>
                   </div>

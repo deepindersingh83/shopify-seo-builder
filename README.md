@@ -9,6 +9,7 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 ## 🚀 Features
 
 ### Core SEO Features
+
 - **Advanced SEO Analysis** - Comprehensive SEO scoring and optimization suggestions
 - **AI-Powered Content Generation** - Meta titles, descriptions, and alt text generation
 - **Bulk Operations** - Process thousands of products efficiently
@@ -17,6 +18,7 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 - **Competitor Analysis** - Track and analyze competitor strategies
 
 ### Performance & Scale
+
 - **500K+ Product Support** - Enterprise-scale performance optimization
 - **Virtual Scrolling** - Efficient rendering of large product lists
 - **Advanced Caching** - Multi-layer caching with configurable strategies
@@ -24,6 +26,7 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 - **Memory Optimization** - Automatic memory management and cleanup
 
 ### Advanced Features
+
 - **Multi-Store Management** - Centralized SEO management for multiple Shopify stores
 - **Advanced Analytics** - Product performance, ROI attribution, and keyword cannibalization detection
 - **Landing Page Builder** - SEO-optimized landing pages with A/B testing
@@ -31,6 +34,7 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 - **Microsoft Integration** - Clarity, Advertising, Azure Insights, and LinkedIn Ads
 
 ### Automation & Workflows
+
 - **SEO Automation Rules** - Automated optimization based on custom criteria
 - **Scheduled Audits** - Regular SEO health checks and reporting
 - **Workflow Builder** - Visual workflow creation for complex automation
@@ -39,18 +43,21 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 ## 📋 Requirements
 
 ### System Requirements
+
 - **Node.js**: 18.0.0 or higher
 - **npm**: 8.0.0 or higher (or yarn 1.22.0+)
 - **Memory**: Minimum 4GB RAM (8GB+ recommended for enterprise usage)
 - **Storage**: 10GB free space minimum
 
 ### Browser Support
+
 - Chrome 90+
 - Firefox 88+
 - Safari 14+
 - Edge 90+
 
 ### Shopify Requirements
+
 - Shopify store with Admin API access
 - Private app or custom app with required permissions:
   - `read_products`, `write_products`
@@ -63,12 +70,14 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 ### Option 1: Standard Installation
 
 1. **Clone the Repository**
+
    ```bash
    git clone https://github.com/your-org/shopify-seo-manager.git
    cd shopify-seo-manager
    ```
 
 2. **Install Dependencies**
+
    ```bash
    npm install
    # or
@@ -76,40 +85,42 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
    ```
 
 3. **Environment Configuration**
+
    ```bash
    cp .env.example .env
    ```
 
 4. **Configure Environment Variables**
    Edit `.env` file with your settings:
+
    ```env
    # Application Settings
    PORT=3000
    NODE_ENV=production
-   
+
    # Database Configuration
    DATABASE_URL=postgresql://username:password@localhost:5432/seo_manager
    REDIS_URL=redis://localhost:6379
-   
+
    # Shopify Configuration
    SHOPIFY_API_KEY=your_shopify_api_key
    SHOPIFY_API_SECRET=your_shopify_api_secret
    SHOPIFY_WEBHOOK_SECRET=your_webhook_secret
-   
+
    # Third-Party API Keys
    GOOGLE_SEARCH_CONSOLE_KEY=your_gsc_key
    GOOGLE_ANALYTICS_KEY=your_ga_key
    SEMRUSH_API_KEY=your_semrush_key
    AHREFS_API_KEY=your_ahrefs_key
-   
+
    # AI/ML Services
    OPENAI_API_KEY=your_openai_key
    ANTHROPIC_API_KEY=your_anthropic_key
-   
+
    # Security
    JWT_SECRET=your_jwt_secret_key
    ENCRYPTION_KEY=your_encryption_key
-   
+
    # Performance Settings
    CACHE_TTL=300000
    MAX_BATCH_SIZE=500
@@ -117,16 +128,18 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
    ```
 
 5. **Database Setup**
+
    ```bash
    # PostgreSQL setup
    npm run db:migrate
    npm run db:seed
-   
+
    # Redis setup (if using separate Redis instance)
    redis-server --daemonize yes
    ```
 
 6. **Build the Application**
+
    ```bash
    npm run build
    ```
@@ -139,6 +152,7 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 ### Option 2: Docker Installation
 
 1. **Using Docker Compose**
+
    ```bash
    git clone https://github.com/your-org/shopify-seo-manager.git
    cd shopify-seo-manager
@@ -148,8 +162,9 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
    ```
 
 2. **Docker Compose Configuration** (`docker-compose.yml`)
+
    ```yaml
-   version: '3.8'
+   version: "3.8"
    services:
      app:
        build: .
@@ -162,7 +177,7 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
        depends_on:
          - postgres
          - redis
-   
+
      postgres:
        image: postgres:15
        environment:
@@ -171,13 +186,13 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
          POSTGRES_PASSWORD: secure_password
        volumes:
          - postgres_data:/var/lib/postgresql/data
-   
+
      redis:
        image: redis:7
        command: redis-server --appendonly yes
        volumes:
          - redis_data:/data
-   
+
    volumes:
      postgres_data:
      redis_data:
@@ -189,19 +204,20 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 
 1. **Build Configuration**
    Create `netlify.toml`:
+
    ```toml
    [build]
      publish = "dist/spa"
      command = "npm run build"
-   
+
    [build.environment]
      NODE_VERSION = "18"
-   
+
    [[redirects]]
      from = "/api/*"
      to = "/.netlify/functions/api/:splat"
      status = 200
-   
+
    [[redirects]]
      from = "/*"
      to = "/index.html"
@@ -209,13 +225,14 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
    ```
 
 2. **Deploy to Netlify**
+
    ```bash
    # Install Netlify CLI
    npm install -g netlify-cli
-   
+
    # Login to Netlify
    netlify login
-   
+
    # Deploy
    netlify deploy --prod
    ```
@@ -227,11 +244,13 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 ### Option 2: Vercel Deployment
 
 1. **Install Vercel CLI**
+
    ```bash
    npm install -g vercel
    ```
 
 2. **Deploy to Vercel**
+
    ```bash
    vercel --prod
    ```
@@ -266,52 +285,55 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 ### Option 3: AWS Deployment
 
 1. **Using AWS Amplify**
+
    ```bash
    # Install AWS CLI and Amplify CLI
    npm install -g @aws-amplify/cli
-   
+
    # Initialize Amplify
    amplify init
-   
+
    # Add hosting
    amplify add hosting
-   
+
    # Deploy
    amplify publish
    ```
 
 2. **Using AWS EC2**
+
    ```bash
    # Connect to EC2 instance
    ssh -i your-key.pem ubuntu@your-ec2-instance
-   
+
    # Install Node.js
    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
    sudo apt-get install -y nodejs
-   
+
    # Clone and setup application
    git clone https://github.com/your-org/shopify-seo-manager.git
    cd shopify-seo-manager
    npm install
    npm run build
-   
+
    # Setup PM2 for process management
    npm install -g pm2
    pm2 start npm --name "seo-manager" -- start
    pm2 startup
    pm2 save
-   
+
    # Setup Nginx reverse proxy
    sudo apt install nginx
    sudo nano /etc/nginx/sites-available/seo-manager
    ```
 
    Nginx configuration:
+
    ```nginx
    server {
        listen 80;
        server_name your-domain.com;
-   
+
        location / {
            proxy_pass http://localhost:3000;
            proxy_http_version 1.1;
@@ -329,14 +351,15 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 ### Option 4: Google Cloud Platform
 
 1. **Using Google App Engine**
+
    ```yaml
    # app.yaml
    runtime: nodejs18
-   
+
    env_variables:
      NODE_ENV: production
      DATABASE_URL: your_database_url
-   
+
    automatic_scaling:
      min_instances: 1
      max_instances: 10
@@ -364,13 +387,13 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
            app: seo-manager
        spec:
          containers:
-         - name: seo-manager
-           image: gcr.io/your-project/seo-manager:latest
-           ports:
-           - containerPort: 3000
-           env:
-           - name: NODE_ENV
-             value: "production"
+           - name: seo-manager
+             image: gcr.io/your-project/seo-manager:latest
+             ports:
+               - containerPort: 3000
+             env:
+               - name: NODE_ENV
+                 value: "production"
    ```
 
 ## 🔧 Service Integrations
@@ -378,6 +401,7 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 ### Shopify Integration
 
 1. **Create Private App**
+
    - Go to Shopify Admin > Apps > App and sales channel settings
    - Click "Develop apps" > "Create an app"
    - Configure Admin API access tokens with required scopes
@@ -387,23 +411,24 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
    // Webhook endpoints to configure in Shopify
    const webhooks = [
      {
-       topic: 'products/create',
-       endpoint: 'https://your-domain.com/api/webhooks/products/create'
+       topic: "products/create",
+       endpoint: "https://your-domain.com/api/webhooks/products/create",
      },
      {
-       topic: 'products/update',
-       endpoint: 'https://your-domain.com/api/webhooks/products/update'
+       topic: "products/update",
+       endpoint: "https://your-domain.com/api/webhooks/products/update",
      },
      {
-       topic: 'products/delete',
-       endpoint: 'https://your-domain.com/api/webhooks/products/delete'
-     }
+       topic: "products/delete",
+       endpoint: "https://your-domain.com/api/webhooks/products/delete",
+     },
    ];
    ```
 
 ### Google Services Integration
 
 1. **Google Search Console**
+
    ```bash
    # Enable APIs in Google Cloud Console
    # - Google Search Console API
@@ -412,6 +437,7 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
    ```
 
 2. **Service Account Setup**
+
    - Create service account in Google Cloud Console
    - Download JSON key file
    - Grant access to your Search Console properties
@@ -421,19 +447,20 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
    // Google services configuration
    const googleConfig = {
      searchConsole: {
-       keyFile: './google-service-account.json',
-       scopes: ['https://www.googleapis.com/auth/webmasters.readonly']
+       keyFile: "./google-service-account.json",
+       scopes: ["https://www.googleapis.com/auth/webmasters.readonly"],
      },
      analytics: {
-       keyFile: './google-service-account.json',
-       scopes: ['https://www.googleapis.com/auth/analytics.readonly']
-     }
+       keyFile: "./google-service-account.json",
+       scopes: ["https://www.googleapis.com/auth/analytics.readonly"],
+     },
    };
    ```
 
 ### Third-Party SEO Tools
 
 1. **Semrush API**
+
    ```bash
    # Get API key from Semrush account
    # Add to environment variables
@@ -441,6 +468,7 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
    ```
 
 2. **Ahrefs API**
+
    ```bash
    # Get API key from Ahrefs account
    # Add to environment variables
@@ -448,18 +476,19 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
    ```
 
 3. **Microsoft Services**
+
    ```javascript
    // Microsoft Clarity integration
    const clarityConfig = {
-     projectId: 'your_clarity_project_id',
-     apiKey: 'your_clarity_api_key'
+     projectId: "your_clarity_project_id",
+     apiKey: "your_clarity_api_key",
    };
-   
+
    // Microsoft Advertising API
    const microsoftAdsConfig = {
-     customerId: 'your_customer_id',
-     accountId: 'your_account_id',
-     developerToken: 'your_developer_token'
+     customerId: "your_customer_id",
+     accountId: "your_account_id",
+     developerToken: "your_developer_token",
    };
    ```
 
@@ -468,33 +497,36 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 ### PostgreSQL Setup
 
 1. **Install PostgreSQL**
+
    ```bash
    # Ubuntu/Debian
    sudo apt update
    sudo apt install postgresql postgresql-contrib
-   
+
    # macOS
    brew install postgresql
-   
+
    # Windows
    # Download from https://www.postgresql.org/download/windows/
    ```
 
 2. **Create Database**
+
    ```sql
    -- Connect to PostgreSQL
    sudo -u postgres psql
-   
+
    -- Create database and user
    CREATE DATABASE seo_manager;
    CREATE USER seo_user WITH ENCRYPTED PASSWORD 'secure_password';
    GRANT ALL PRIVILEGES ON DATABASE seo_manager TO seo_user;
-   
+
    -- Grant additional permissions
    GRANT CREATE ON SCHEMA public TO seo_user;
    ```
 
 3. **Database Schema**
+
    ```sql
    -- Products table with SEO data
    CREATE TABLE products (
@@ -511,14 +543,14 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
    );
-   
+
    -- Indexes for performance
    CREATE INDEX idx_products_shopify_id ON products(shopify_id);
    CREATE INDEX idx_products_status ON products(status);
    CREATE INDEX idx_products_seo_score ON products(seo_score);
    CREATE INDEX idx_products_updated_at ON products(updated_at);
    CREATE INDEX idx_products_tags ON products USING GIN(tags);
-   
+
    -- Full-text search index
    CREATE INDEX idx_products_search ON products USING GIN(
      to_tsvector('english', title || ' ' || COALESCE(description, ''))
@@ -528,14 +560,15 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 ### Redis Setup
 
 1. **Install Redis**
+
    ```bash
    # Ubuntu/Debian
    sudo apt update
    sudo apt install redis-server
-   
+
    # macOS
    brew install redis
-   
+
    # Windows
    # Use Windows Subsystem for Linux or Docker
    ```
@@ -555,31 +588,33 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 ### SSL/TLS Setup
 
 1. **Using Let's Encrypt**
+
    ```bash
    # Install Certbot
    sudo apt install certbot python3-certbot-nginx
-   
+
    # Obtain certificate
    sudo certbot --nginx -d your-domain.com
-   
+
    # Auto-renewal
    sudo crontab -e
    # Add: 0 12 * * * /usr/bin/certbot renew --quiet
    ```
 
 2. **Nginx SSL Configuration**
+
    ```nginx
    server {
        listen 443 ssl http2;
        server_name your-domain.com;
-   
+
        ssl_certificate /etc/letsencrypt/live/your-domain.com/fullchain.pem;
        ssl_certificate_key /etc/letsencrypt/live/your-domain.com/privkey.pem;
-       
+
        ssl_protocols TLSv1.2 TLSv1.3;
        ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512:DHE-RSA-AES256-GCM-SHA512;
        ssl_prefer_server_ciphers off;
-   
+
        location / {
            proxy_pass http://localhost:3000;
            proxy_set_header Host $host;
@@ -593,26 +628,28 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 ### Environment Security
 
 1. **Secure Environment Variables**
+
    ```bash
    # Use a secrets management service
    # AWS Secrets Manager, Azure Key Vault, etc.
-   
+
    # For local development, use dotenv
    npm install dotenv
    ```
 
 2. **API Rate Limiting**
+
    ```javascript
    // Express rate limiting
-   const rateLimit = require('express-rate-limit');
-   
+   const rateLimit = require("express-rate-limit");
+
    const limiter = rateLimit({
      windowMs: 15 * 60 * 1000, // 15 minutes
      max: 100, // limit each IP to 100 requests per windowMs
-     message: 'Too many requests from this IP'
+     message: "Too many requests from this IP",
    });
-   
-   app.use('/api/', limiter);
+
+   app.use("/api/", limiter);
    ```
 
 ## 📈 Performance Optimization
@@ -620,19 +657,20 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 ### Caching Strategy
 
 1. **Application-Level Caching**
+
    ```javascript
    // Cache configuration
    const cacheConfig = {
      standard: {
        ttl: 300000, // 5 minutes
        maxSize: 1000,
-       strategy: 'lru'
+       strategy: "lru",
      },
      enterprise: {
        ttl: 600000, // 10 minutes
        maxSize: 10000,
-       strategy: 'lru'
-     }
+       strategy: "lru",
+     },
    };
    ```
 
@@ -641,30 +679,31 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
    // CloudFlare settings
    const cdnSettings = {
      caching: {
-       'static-assets': '1y',
-       'api-responses': '5m',
-       'product-images': '30d'
+       "static-assets": "1y",
+       "api-responses": "5m",
+       "product-images": "30d",
      },
      minification: {
        html: true,
        css: true,
-       js: true
+       js: true,
      },
      compression: {
        gzip: true,
-       brotli: true
-     }
+       brotli: true,
+     },
    };
    ```
 
 ### Database Optimization
 
 1. **Indexing Strategy**
+
    ```sql
    -- Composite indexes for common queries
    CREATE INDEX idx_products_status_score ON products(status, seo_score);
    CREATE INDEX idx_products_vendor_type ON products(vendor, product_type);
-   
+
    -- Partial indexes for better performance
    CREATE INDEX idx_active_products ON products(seo_score) WHERE status = 'active';
    ```
@@ -672,10 +711,10 @@ A comprehensive, enterprise-grade SEO management platform for Shopify stores, ca
 2. **Query Optimization**
    ```sql
    -- Use EXPLAIN ANALYZE to optimize queries
-   EXPLAIN ANALYZE SELECT * FROM products 
-   WHERE status = 'active' 
-   AND seo_score < 60 
-   ORDER BY updated_at DESC 
+   EXPLAIN ANALYZE SELECT * FROM products
+   WHERE status = 'active'
+   AND seo_score < 60
+   ORDER BY updated_at DESC
    LIMIT 50;
    ```
 
@@ -707,10 +746,11 @@ artillery run load-test-config.yml
 ```
 
 Load test configuration:
+
 ```yaml
 # load-test-config.yml
 config:
-  target: 'https://your-domain.com'
+  target: "https://your-domain.com"
   phases:
     - duration: 60
       arrivalRate: 10
@@ -728,6 +768,7 @@ scenarios:
 ### Application Monitoring
 
 1. **Using PM2 with Monitoring**
+
    ```bash
    pm2 install pm2-server-monit
    pm2 monitor
@@ -740,26 +781,30 @@ scenarios:
      responseTime: [],
      memoryUsage: process.memoryUsage(),
      activeConnections: 0,
-     errorRate: 0
+     errorRate: 0,
    };
    ```
 
 ### Log Management
 
 1. **Winston Logger Configuration**
+
    ```javascript
-   const winston = require('winston');
-   
+   const winston = require("winston");
+
    const logger = winston.createLogger({
-     level: 'info',
+     level: "info",
      format: winston.format.combine(
        winston.format.timestamp(),
-       winston.format.json()
+       winston.format.json(),
      ),
      transports: [
-       new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-       new winston.transports.File({ filename: 'logs/app.log' })
-     ]
+       new winston.transports.File({
+         filename: "logs/error.log",
+         level: "error",
+       }),
+       new winston.transports.File({ filename: "logs/app.log" }),
+     ],
    });
    ```
 
@@ -768,28 +813,31 @@ scenarios:
 ### Common Issues
 
 1. **Memory Issues with Large Catalogs**
+
    ```bash
    # Increase Node.js memory limit
    node --max-old-space-size=8192 dist/server/index.js
-   
+
    # Or set environment variable
    export NODE_OPTIONS="--max-old-space-size=8192"
    ```
 
 2. **Database Connection Issues**
+
    ```bash
    # Check PostgreSQL status
    sudo systemctl status postgresql
-   
+
    # Check connections
    sudo -u postgres psql -c "SELECT count(*) FROM pg_stat_activity;"
    ```
 
 3. **Redis Connection Issues**
+
    ```bash
    # Check Redis status
    redis-cli ping
-   
+
    # Check memory usage
    redis-cli info memory
    ```
@@ -797,6 +845,7 @@ scenarios:
 ### Performance Issues
 
 1. **Slow Product Loading**
+
    - Enable virtualization in performance settings
    - Increase cache size
    - Check database indexes

@@ -1,15 +1,47 @@
 import { Layout } from "../components/Layout";
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { Progress } from "../components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs";
 import { Input } from "../components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../components/ui/table";
 import { Alert, AlertDescription } from "../components/ui/alert";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../components/ui/dialog";
 import { Label } from "../components/ui/label";
 import {
   Store,
@@ -40,7 +72,7 @@ import {
   Clock,
   Shield,
   Award,
-  Activity
+  Activity,
 } from "lucide-react";
 
 interface ShopifyStore {
@@ -118,10 +150,10 @@ export default function MultiStoreSEOPage() {
       productsCount: 1247,
       ordersCount: 890,
       conversionRate: 3.2,
-      avgOrderValue: 140.50,
+      avgOrderValue: 140.5,
       topKeywords: ["wireless headphones", "gaming laptop", "tech accessories"],
       connectedAt: "2023-12-01",
-      isConnected: true
+      isConnected: true,
     },
     {
       id: "2",
@@ -139,10 +171,14 @@ export default function MultiStoreSEOPage() {
       productsCount: 856,
       ordersCount: 1123,
       conversionRate: 4.1,
-      avgOrderValue: 79.30,
-      topKeywords: ["women's fashion", "sustainable clothing", "trendy outfits"],
+      avgOrderValue: 79.3,
+      topKeywords: [
+        "women's fashion",
+        "sustainable clothing",
+        "trendy outfits",
+      ],
       connectedAt: "2024-01-05",
-      isConnected: true
+      isConnected: true,
     },
     {
       id: "3",
@@ -160,10 +196,10 @@ export default function MultiStoreSEOPage() {
       productsCount: 423,
       ordersCount: 267,
       conversionRate: 2.8,
-      avgOrderValue: 127.40,
+      avgOrderValue: 127.4,
       topKeywords: ["home decor", "kitchen essentials", "storage solutions"],
       connectedAt: "2024-01-15",
-      isConnected: false
+      isConnected: false,
     },
     {
       id: "4",
@@ -181,11 +217,15 @@ export default function MultiStoreSEOPage() {
       productsCount: 189,
       ordersCount: 156,
       conversionRate: 2.9,
-      avgOrderValue: 134.60,
-      topKeywords: ["organic skincare", "natural beauty", "cruelty-free cosmetics"],
+      avgOrderValue: 134.6,
+      topKeywords: [
+        "organic skincare",
+        "natural beauty",
+        "cruelty-free cosmetics",
+      ],
       connectedAt: "2023-11-20",
-      isConnected: true
-    }
+      isConnected: true,
+    },
   ];
 
   // Mock metrics
@@ -193,11 +233,13 @@ export default function MultiStoreSEOPage() {
     totalStores: stores.length,
     totalRevenue: stores.reduce((sum, store) => sum + store.monthlyRevenue, 0),
     totalTraffic: stores.reduce((sum, store) => sum + store.monthlyTraffic, 0),
-    averageSEOScore: Math.round(stores.reduce((sum, store) => sum + store.seoScore, 0) / stores.length),
+    averageSEOScore: Math.round(
+      stores.reduce((sum, store) => sum + store.seoScore, 0) / stores.length,
+    ),
     totalProducts: stores.reduce((sum, store) => sum + store.productsCount, 0),
     totalOrders: stores.reduce((sum, store) => sum + store.ordersCount, 0),
     bestPerformingStore: "TechGear Pro",
-    worstPerformingStore: "Home Essentials"
+    worstPerformingStore: "Home Essentials",
   };
 
   // Mock SEO campaigns
@@ -205,7 +247,8 @@ export default function MultiStoreSEOPage() {
     {
       id: "1",
       name: "Holiday Season Optimization",
-      description: "Optimize all stores for holiday shopping keywords and seasonal trends",
+      description:
+        "Optimize all stores for holiday shopping keywords and seasonal trends",
       targetStores: ["1", "2", "4"],
       status: "active",
       startDate: "2024-01-01",
@@ -214,13 +257,14 @@ export default function MultiStoreSEOPage() {
       results: {
         keywordImprovements: 245,
         trafficIncrease: 23,
-        revenueIncrease: 18
-      }
+        revenueIncrease: 18,
+      },
     },
     {
       id: "2",
       name: "Mobile SEO Enhancement",
-      description: "Improve mobile search performance across all connected stores",
+      description:
+        "Improve mobile search performance across all connected stores",
       targetStores: ["1", "2", "3", "4"],
       status: "completed",
       startDate: "2023-12-01",
@@ -229,13 +273,14 @@ export default function MultiStoreSEOPage() {
       results: {
         keywordImprovements: 178,
         trafficIncrease: 31,
-        revenueIncrease: 24
-      }
+        revenueIncrease: 24,
+      },
     },
     {
       id: "3",
       name: "Local SEO Expansion",
-      description: "Implement local SEO strategies for region-specific targeting",
+      description:
+        "Implement local SEO strategies for region-specific targeting",
       targetStores: ["2", "3"],
       status: "scheduled",
       startDate: "2024-02-01",
@@ -243,19 +288,21 @@ export default function MultiStoreSEOPage() {
       results: {
         keywordImprovements: 0,
         trafficIncrease: 0,
-        revenueIncrease: 0
-      }
-    }
+        revenueIncrease: 0,
+      },
+    },
   ];
 
-  const filteredStores = stores.filter(store => {
-    const matchesSearch = searchTerm === "" || 
+  const filteredStores = stores.filter((store) => {
+    const matchesSearch =
+      searchTerm === "" ||
       store.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       store.domain.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = filterStatus === "all" || store.status === filterStatus;
+
+    const matchesStatus =
+      filterStatus === "all" || store.status === filterStatus;
     const matchesPlan = filterPlan === "all" || store.plan === filterPlan;
-    
+
     return matchesSearch && matchesStatus && matchesPlan;
   });
 
@@ -346,7 +393,8 @@ export default function MultiStoreSEOPage() {
           <div>
             <h1 className="text-3xl font-bold">Multi-Store SEO Management</h1>
             <p className="text-muted-foreground mt-2">
-              Centralized SEO management and optimization for all your Shopify stores
+              Centralized SEO management and optimization for all your Shopify
+              stores
             </p>
           </div>
           <div className="flex gap-3">
@@ -354,7 +402,10 @@ export default function MultiStoreSEOPage() {
               <Download className="h-4 w-4 mr-2" />
               Export Dashboard
             </Button>
-            <Dialog open={isCampaignDialogOpen} onOpenChange={setIsCampaignDialogOpen}>
+            <Dialog
+              open={isCampaignDialogOpen}
+              onOpenChange={setIsCampaignDialogOpen}
+            >
               <DialogTrigger asChild>
                 <Button variant="outline">
                   <Target className="h-4 w-4 mr-2" />
@@ -372,7 +423,10 @@ export default function MultiStoreSEOPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="campaign-name">Campaign Name</Label>
-                      <Input id="campaign-name" placeholder="Q1 2024 Optimization" />
+                      <Input
+                        id="campaign-name"
+                        placeholder="Q1 2024 Optimization"
+                      />
                     </div>
                     <div>
                       <Label htmlFor="campaign-type">Campaign Type</Label>
@@ -381,9 +435,15 @@ export default function MultiStoreSEOPage() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="keyword">Keyword Optimization</SelectItem>
-                          <SelectItem value="technical">Technical SEO</SelectItem>
-                          <SelectItem value="content">Content Enhancement</SelectItem>
+                          <SelectItem value="keyword">
+                            Keyword Optimization
+                          </SelectItem>
+                          <SelectItem value="technical">
+                            Technical SEO
+                          </SelectItem>
+                          <SelectItem value="content">
+                            Content Enhancement
+                          </SelectItem>
                           <SelectItem value="local">Local SEO</SelectItem>
                         </SelectContent>
                       </Select>
@@ -391,7 +451,10 @@ export default function MultiStoreSEOPage() {
                   </div>
                   <div>
                     <Label htmlFor="description">Description</Label>
-                    <Input id="description" placeholder="Campaign description and objectives" />
+                    <Input
+                      id="description"
+                      placeholder="Campaign description and objectives"
+                    />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -406,22 +469,37 @@ export default function MultiStoreSEOPage() {
                   <div>
                     <Label>Target Stores</Label>
                     <div className="mt-2 space-y-2">
-                      {stores.filter(s => s.isConnected).map((store) => (
-                        <div key={store.id} className="flex items-center space-x-2">
-                          <input type="checkbox" defaultChecked />
-                          <span className="text-sm">{store.name}</span>
-                        </div>
-                      ))}
+                      {stores
+                        .filter((s) => s.isConnected)
+                        .map((store) => (
+                          <div
+                            key={store.id}
+                            className="flex items-center space-x-2"
+                          >
+                            <input type="checkbox" defaultChecked />
+                            <span className="text-sm">{store.name}</span>
+                          </div>
+                        ))}
                     </div>
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsCampaignDialogOpen(false)}>Cancel</Button>
-                  <Button onClick={() => setIsCampaignDialogOpen(false)}>Create Campaign</Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsCampaignDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button onClick={() => setIsCampaignDialogOpen(false)}>
+                    Create Campaign
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-            <Dialog open={isAddStoreDialogOpen} onOpenChange={setIsAddStoreDialogOpen}>
+            <Dialog
+              open={isAddStoreDialogOpen}
+              onOpenChange={setIsAddStoreDialogOpen}
+            >
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
@@ -438,22 +516,39 @@ export default function MultiStoreSEOPage() {
                 <div className="grid gap-4 py-4">
                   <div>
                     <Label htmlFor="store-url">Store URL</Label>
-                    <Input id="store-url" placeholder="yourstore.myshopify.com" />
+                    <Input
+                      id="store-url"
+                      placeholder="yourstore.myshopify.com"
+                    />
                   </div>
                   <div>
-                    <Label htmlFor="access-token">Private App Access Token</Label>
-                    <Input id="access-token" type="password" placeholder="shpat_..." />
+                    <Label htmlFor="access-token">
+                      Private App Access Token
+                    </Label>
+                    <Input
+                      id="access-token"
+                      type="password"
+                      placeholder="shpat_..."
+                    />
                   </div>
                   <Alert>
                     <Shield className="h-4 w-4" />
                     <AlertDescription>
-                      We use secure OAuth 2.0 authentication to connect to your store. Your credentials are encrypted and never stored.
+                      We use secure OAuth 2.0 authentication to connect to your
+                      store. Your credentials are encrypted and never stored.
                     </AlertDescription>
                   </Alert>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsAddStoreDialogOpen(false)}>Cancel</Button>
-                  <Button onClick={() => setIsAddStoreDialogOpen(false)}>Connect Store</Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsAddStoreDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button onClick={() => setIsAddStoreDialogOpen(false)}>
+                    Connect Store
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -464,24 +559,30 @@ export default function MultiStoreSEOPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Connected Stores</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Connected Stores
+              </CardTitle>
               <Store className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{metrics.totalStores}</div>
               <div className="text-xs text-muted-foreground">
-                {stores.filter(s => s.isConnected).length} active connections
+                {stores.filter((s) => s.isConnected).length} active connections
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Revenue
+              </CardTitle>
               <DollarSign className="h-4 w-4 text-green-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">${metrics.totalRevenue.toLocaleString()}</div>
+              <div className="text-2xl font-bold">
+                ${metrics.totalRevenue.toLocaleString()}
+              </div>
               <div className="text-xs text-muted-foreground">
                 Monthly across all stores
               </div>
@@ -490,11 +591,15 @@ export default function MultiStoreSEOPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Traffic</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Traffic
+              </CardTitle>
               <Users className="h-4 w-4 text-blue-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{metrics.totalTraffic.toLocaleString()}</div>
+              <div className="text-2xl font-bold">
+                {metrics.totalTraffic.toLocaleString()}
+              </div>
               <div className="text-xs text-muted-foreground">
                 Monthly organic visitors
               </div>
@@ -503,11 +608,15 @@ export default function MultiStoreSEOPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Average SEO Score</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Average SEO Score
+              </CardTitle>
               <BarChart3 className="h-4 w-4 text-purple-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{metrics.averageSEOScore}</div>
+              <div className="text-2xl font-bold">
+                {metrics.averageSEOScore}
+              </div>
               <div className="text-xs text-muted-foreground">
                 Across all connected stores
               </div>
@@ -519,36 +628,58 @@ export default function MultiStoreSEOPage() {
         <Card>
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Common multi-store SEO management tasks</CardDescription>
+            <CardDescription>
+              Common multi-store SEO management tasks
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Button variant="outline" className="h-auto p-4 flex flex-col items-start">
+              <Button
+                variant="outline"
+                className="h-auto p-4 flex flex-col items-start"
+              >
                 <RefreshCw className="h-5 w-5 mb-2" />
                 <div className="text-left">
                   <div className="font-medium">Sync All Stores</div>
-                  <div className="text-sm text-muted-foreground">Update data from all stores</div>
+                  <div className="text-sm text-muted-foreground">
+                    Update data from all stores
+                  </div>
                 </div>
               </Button>
-              <Button variant="outline" className="h-auto p-4 flex flex-col items-start">
+              <Button
+                variant="outline"
+                className="h-auto p-4 flex flex-col items-start"
+              >
                 <Target className="h-5 w-5 mb-2" />
                 <div className="text-left">
                   <div className="font-medium">Bulk Optimization</div>
-                  <div className="text-sm text-muted-foreground">Apply SEO fixes to all stores</div>
+                  <div className="text-sm text-muted-foreground">
+                    Apply SEO fixes to all stores
+                  </div>
                 </div>
               </Button>
-              <Button variant="outline" className="h-auto p-4 flex flex-col items-start">
+              <Button
+                variant="outline"
+                className="h-auto p-4 flex flex-col items-start"
+              >
                 <BarChart3 className="h-5 w-5 mb-2" />
                 <div className="text-left">
                   <div className="font-medium">Performance Report</div>
-                  <div className="text-sm text-muted-foreground">Generate cross-store analytics</div>
+                  <div className="text-sm text-muted-foreground">
+                    Generate cross-store analytics
+                  </div>
                 </div>
               </Button>
-              <Button variant="outline" className="h-auto p-4 flex flex-col items-start">
+              <Button
+                variant="outline"
+                className="h-auto p-4 flex flex-col items-start"
+              >
                 <Zap className="h-5 w-5 mb-2" />
                 <div className="text-left">
                   <div className="font-medium">Auto-Pilot Mode</div>
-                  <div className="text-sm text-muted-foreground">Enable automated SEO</div>
+                  <div className="text-sm text-muted-foreground">
+                    Enable automated SEO
+                  </div>
                 </div>
               </Button>
             </div>
@@ -621,13 +752,24 @@ export default function MultiStoreSEOPage() {
                       {selectedStores.length} store(s) selected
                     </span>
                     <div className="flex gap-2">
-                      <Button size="sm" variant="outline" onClick={() => handleBulkAction("sync")}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleBulkAction("sync")}
+                      >
                         Sync Selected
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => handleBulkAction("optimize")}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleBulkAction("optimize")}
+                      >
                         Bulk Optimize
                       </Button>
-                      <Button size="sm" onClick={() => handleBulkAction("campaign")}>
+                      <Button
+                        size="sm"
+                        onClick={() => handleBulkAction("campaign")}
+                      >
                         Create Campaign
                       </Button>
                     </div>
@@ -650,11 +792,13 @@ export default function MultiStoreSEOPage() {
                     <TableHeader>
                       <TableRow>
                         <TableHead className="w-[50px]">
-                          <input 
-                            type="checkbox" 
+                          <input
+                            type="checkbox"
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setSelectedStores(filteredStores.map(s => s.id));
+                                setSelectedStores(
+                                  filteredStores.map((s) => s.id),
+                                );
                               } else {
                                 setSelectedStores([]);
                               }
@@ -674,14 +818,21 @@ export default function MultiStoreSEOPage() {
                       {filteredStores.map((store) => (
                         <TableRow key={store.id}>
                           <TableCell>
-                            <input 
-                              type="checkbox" 
+                            <input
+                              type="checkbox"
                               checked={selectedStores.includes(store.id)}
                               onChange={(e) => {
                                 if (e.target.checked) {
-                                  setSelectedStores([...selectedStores, store.id]);
+                                  setSelectedStores([
+                                    ...selectedStores,
+                                    store.id,
+                                  ]);
                                 } else {
-                                  setSelectedStores(selectedStores.filter(id => id !== store.id));
+                                  setSelectedStores(
+                                    selectedStores.filter(
+                                      (id) => id !== store.id,
+                                    ),
+                                  );
                                 }
                               }}
                             />
@@ -691,12 +842,17 @@ export default function MultiStoreSEOPage() {
                               <div className="font-medium flex items-center">
                                 {store.name}
                                 {!store.isConnected && (
-                                  <Badge variant="destructive" className="ml-2 text-xs">
+                                  <Badge
+                                    variant="destructive"
+                                    className="ml-2 text-xs"
+                                  >
                                     Disconnected
                                   </Badge>
                                 )}
                               </div>
-                              <div className="text-sm text-muted-foreground">{store.domain}</div>
+                              <div className="text-sm text-muted-foreground">
+                                {store.domain}
+                              </div>
                               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                 <MapPin className="h-3 w-3" />
                                 {store.country} • {store.currency}
@@ -707,13 +863,18 @@ export default function MultiStoreSEOPage() {
                             <div className="space-y-2">
                               <div className="flex items-center">
                                 {getPlanIcon(store.plan)}
-                                <Badge className={getPlanColor(store.plan) + " ml-2"}>
+                                <Badge
+                                  className={getPlanColor(store.plan) + " ml-2"}
+                                >
                                   {store.plan.toUpperCase()}
                                 </Badge>
                               </div>
                               <div className="flex items-center">
                                 {getStatusIcon(store.status)}
-                                <Badge variant={getStatusBadgeVariant(store.status)} className="ml-2">
+                                <Badge
+                                  variant={getStatusBadgeVariant(store.status)}
+                                  className="ml-2"
+                                >
                                   {store.status}
                                 </Badge>
                               </div>
@@ -721,8 +882,13 @@ export default function MultiStoreSEOPage() {
                           </TableCell>
                           <TableCell>
                             <div className="space-y-2">
-                              <div className="text-lg font-bold">{store.seoScore}</div>
-                              <Progress value={store.seoScore} className="h-2 w-16" />
+                              <div className="text-lg font-bold">
+                                {store.seoScore}
+                              </div>
+                              <Progress
+                                value={store.seoScore}
+                                className="h-2 w-16"
+                              />
                             </div>
                           </TableCell>
                           <TableCell>
@@ -758,16 +924,32 @@ export default function MultiStoreSEOPage() {
                           </TableCell>
                           <TableCell>
                             <div className="flex space-x-1">
-                              <Button size="sm" variant="ghost" title="View Dashboard">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="View Dashboard"
+                              >
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="ghost" title="Store Settings">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="Store Settings"
+                              >
                                 <Settings className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="ghost" title="Sync Now">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="Sync Now"
+                              >
                                 <RefreshCw className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="ghost" title="Open Store">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                title="Open Store"
+                              >
                                 <ExternalLink className="h-4 w-4" />
                               </Button>
                             </div>
@@ -785,25 +967,39 @@ export default function MultiStoreSEOPage() {
             <Card>
               <CardHeader>
                 <CardTitle>SEO Campaigns</CardTitle>
-                <CardDescription>Coordinate SEO efforts across multiple stores</CardDescription>
+                <CardDescription>
+                  Coordinate SEO efforts across multiple stores
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
                   {campaigns.map((campaign) => (
-                    <div key={campaign.id} className="p-6 border rounded-lg space-y-4">
+                    <div
+                      key={campaign.id}
+                      className="p-6 border rounded-lg space-y-4"
+                    >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
-                            <h3 className="text-lg font-semibold">{campaign.name}</h3>
-                            <Badge className={getCampaignStatusColor(campaign.status)}>
+                            <h3 className="text-lg font-semibold">
+                              {campaign.name}
+                            </h3>
+                            <Badge
+                              className={getCampaignStatusColor(
+                                campaign.status,
+                              )}
+                            >
                               {campaign.status}
                             </Badge>
                           </div>
-                          <p className="text-muted-foreground mb-3">{campaign.description}</p>
+                          <p className="text-muted-foreground mb-3">
+                            {campaign.description}
+                          </p>
                           <div className="flex items-center gap-6 text-sm text-muted-foreground">
                             <span>
                               <Calendar className="h-4 w-4 inline mr-1" />
-                              {campaign.startDate} - {campaign.endDate || "Ongoing"}
+                              {campaign.startDate} -{" "}
+                              {campaign.endDate || "Ongoing"}
                             </span>
                             <span>
                               <Store className="h-4 w-4 inline mr-1" />
@@ -812,11 +1008,15 @@ export default function MultiStoreSEOPage() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-2xl font-bold">{campaign.progress}%</div>
-                          <div className="text-sm text-muted-foreground">Complete</div>
+                          <div className="text-2xl font-bold">
+                            {campaign.progress}%
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            Complete
+                          </div>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span>Progress</span>
@@ -830,32 +1030,43 @@ export default function MultiStoreSEOPage() {
                           <div className="text-lg font-bold text-blue-600">
                             +{campaign.results.keywordImprovements}
                           </div>
-                          <div className="text-sm text-muted-foreground">Keyword Improvements</div>
+                          <div className="text-sm text-muted-foreground">
+                            Keyword Improvements
+                          </div>
                         </div>
                         <div className="text-center p-3 bg-green-50 rounded-lg">
                           <div className="text-lg font-bold text-green-600">
                             +{campaign.results.trafficIncrease}%
                           </div>
-                          <div className="text-sm text-muted-foreground">Traffic Increase</div>
+                          <div className="text-sm text-muted-foreground">
+                            Traffic Increase
+                          </div>
                         </div>
                         <div className="text-center p-3 bg-purple-50 rounded-lg">
                           <div className="text-lg font-bold text-purple-600">
                             +{campaign.results.revenueIncrease}%
                           </div>
-                          <div className="text-sm text-muted-foreground">Revenue Increase</div>
+                          <div className="text-sm text-muted-foreground">
+                            Revenue Increase
+                          </div>
                         </div>
                       </div>
 
                       <div className="flex justify-between items-center pt-4 border-t">
                         <div className="text-sm text-muted-foreground">
-                          Target stores: {campaign.targetStores.map(id => 
-                            stores.find(s => s.id === id)?.name
-                          ).join(", ")}
+                          Target stores:{" "}
+                          {campaign.targetStores
+                            .map((id) => stores.find((s) => s.id === id)?.name)
+                            .join(", ")}
                         </div>
                         <div className="flex gap-2">
-                          <Button size="sm" variant="outline">View Details</Button>
+                          <Button size="sm" variant="outline">
+                            View Details
+                          </Button>
                           {campaign.status === "active" && (
-                            <Button size="sm" variant="outline">Pause Campaign</Button>
+                            <Button size="sm" variant="outline">
+                              Pause Campaign
+                            </Button>
                           )}
                           {campaign.status === "paused" && (
                             <Button size="sm">Resume Campaign</Button>
@@ -879,12 +1090,16 @@ export default function MultiStoreSEOPage() {
                 <CardContent>
                   <div className="space-y-4">
                     {stores.map((store) => {
-                      const percentage = (store.monthlyRevenue / metrics.totalRevenue) * 100;
+                      const percentage =
+                        (store.monthlyRevenue / metrics.totalRevenue) * 100;
                       return (
                         <div key={store.id} className="space-y-2">
                           <div className="flex justify-between text-sm">
                             <span className="font-medium">{store.name}</span>
-                            <span>${store.monthlyRevenue.toLocaleString()} ({percentage.toFixed(1)}%)</span>
+                            <span>
+                              ${store.monthlyRevenue.toLocaleString()} (
+                              {percentage.toFixed(1)}%)
+                            </span>
                           </div>
                           <Progress value={percentage} className="h-2" />
                         </div>
@@ -902,7 +1117,10 @@ export default function MultiStoreSEOPage() {
                 <CardContent>
                   <div className="space-y-4">
                     {stores.map((store) => (
-                      <div key={store.id} className="flex items-center justify-between p-3 border rounded">
+                      <div
+                        key={store.id}
+                        className="flex items-center justify-between p-3 border rounded"
+                      >
                         <div className="flex items-center gap-3">
                           <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
                           <span className="font-medium">{store.name}</span>
@@ -925,26 +1143,49 @@ export default function MultiStoreSEOPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Cross-Store Performance Insights</CardTitle>
-                <CardDescription>Key insights across your store portfolio</CardDescription>
+                <CardDescription>
+                  Key insights across your store portfolio
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-green-600">{metrics.bestPerformingStore}</div>
-                    <div className="text-sm text-muted-foreground">Best Performing Store</div>
-                    <div className="text-xs text-muted-foreground mt-1">Highest SEO score and revenue</div>
+                    <div className="text-3xl font-bold text-green-600">
+                      {metrics.bestPerformingStore}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Best Performing Store
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      Highest SEO score and revenue
+                    </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-orange-600">{metrics.worstPerformingStore}</div>
-                    <div className="text-sm text-muted-foreground">Needs Attention</div>
-                    <div className="text-xs text-muted-foreground mt-1">Lowest performance metrics</div>
+                    <div className="text-3xl font-bold text-orange-600">
+                      {metrics.worstPerformingStore}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Needs Attention
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      Lowest performance metrics
+                    </div>
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-blue-600">
-                      {Math.round((stores.filter(s => s.seoScore >= 80).length / stores.length) * 100)}%
+                      {Math.round(
+                        (stores.filter((s) => s.seoScore >= 80).length /
+                          stores.length) *
+                          100,
+                      )}
+                      %
                     </div>
-                    <div className="text-sm text-muted-foreground">High Performing Stores</div>
-                    <div className="text-xs text-muted-foreground mt-1">SEO score 80 or above</div>
+                    <div className="text-sm text-muted-foreground">
+                      High Performing Stores
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      SEO score 80 or above
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -955,46 +1196,58 @@ export default function MultiStoreSEOPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Automation Rules</CardTitle>
-                <CardDescription>Set up automated SEO tasks across all stores</CardDescription>
+                <CardDescription>
+                  Set up automated SEO tasks across all stores
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {[
                     {
                       name: "Auto-optimize new products",
-                      description: "Automatically generate SEO-optimized meta titles and descriptions for new products",
+                      description:
+                        "Automatically generate SEO-optimized meta titles and descriptions for new products",
                       enabled: true,
-                      stores: 4
+                      stores: 4,
                     },
                     {
                       name: "Weekly SEO health checks",
-                      description: "Perform automated SEO audits and generate reports every week",
+                      description:
+                        "Perform automated SEO audits and generate reports every week",
                       enabled: true,
-                      stores: 4
+                      stores: 4,
                     },
                     {
                       name: "Seasonal keyword updates",
-                      description: "Automatically update product keywords based on seasonal trends",
+                      description:
+                        "Automatically update product keywords based on seasonal trends",
                       enabled: false,
-                      stores: 2
+                      stores: 2,
                     },
                     {
                       name: "Broken link monitoring",
-                      description: "Daily scan for broken links and automatic redirect suggestions",
+                      description:
+                        "Daily scan for broken links and automatic redirect suggestions",
                       enabled: true,
-                      stores: 3
+                      stores: 3,
                     },
                     {
                       name: "Schema markup validation",
-                      description: "Weekly validation and auto-fixing of structured data",
+                      description:
+                        "Weekly validation and auto-fixing of structured data",
                       enabled: false,
-                      stores: 4
-                    }
+                      stores: 4,
+                    },
                   ].map((rule, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
                       <div className="flex-1">
                         <div className="font-medium">{rule.name}</div>
-                        <div className="text-sm text-muted-foreground">{rule.description}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {rule.description}
+                        </div>
                         <div className="text-xs text-muted-foreground mt-1">
                           Applied to {rule.stores} store(s)
                         </div>
@@ -1016,13 +1269,19 @@ export default function MultiStoreSEOPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Create New Automation Rule</CardTitle>
-                <CardDescription>Set up a new automated SEO task</CardDescription>
+                <CardDescription>
+                  Set up a new automated SEO task
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <Label htmlFor="rule-name">Rule Name</Label>
-                    <Input id="rule-name" placeholder="My automation rule" className="mt-2" />
+                    <Input
+                      id="rule-name"
+                      placeholder="My automation rule"
+                      className="mt-2"
+                    />
                   </div>
                   <div>
                     <Label htmlFor="trigger">Trigger</Label>
@@ -1031,10 +1290,16 @@ export default function MultiStoreSEOPage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="new-product">New Product Added</SelectItem>
-                        <SelectItem value="inventory-change">Inventory Change</SelectItem>
+                        <SelectItem value="new-product">
+                          New Product Added
+                        </SelectItem>
+                        <SelectItem value="inventory-change">
+                          Inventory Change
+                        </SelectItem>
                         <SelectItem value="schedule">Scheduled</SelectItem>
-                        <SelectItem value="seo-score-drop">SEO Score Drop</SelectItem>
+                        <SelectItem value="seo-score-drop">
+                          SEO Score Drop
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -1045,9 +1310,15 @@ export default function MultiStoreSEOPage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="optimize-meta">Optimize Meta Tags</SelectItem>
-                        <SelectItem value="generate-schema">Generate Schema Markup</SelectItem>
-                        <SelectItem value="update-sitemaps">Update XML Sitemaps</SelectItem>
+                        <SelectItem value="optimize-meta">
+                          Optimize Meta Tags
+                        </SelectItem>
+                        <SelectItem value="generate-schema">
+                          Generate Schema Markup
+                        </SelectItem>
+                        <SelectItem value="update-sitemaps">
+                          Update XML Sitemaps
+                        </SelectItem>
                         <SelectItem value="send-alert">Send Alert</SelectItem>
                       </SelectContent>
                     </Select>
@@ -1055,12 +1326,17 @@ export default function MultiStoreSEOPage() {
                   <div className="md:col-span-2">
                     <Label>Target Stores</Label>
                     <div className="mt-2 grid grid-cols-2 gap-2">
-                      {stores.filter(s => s.isConnected).map((store) => (
-                        <div key={store.id} className="flex items-center space-x-2">
-                          <input type="checkbox" defaultChecked />
-                          <span className="text-sm">{store.name}</span>
-                        </div>
-                      ))}
+                      {stores
+                        .filter((s) => s.isConnected)
+                        .map((store) => (
+                          <div
+                            key={store.id}
+                            className="flex items-center space-x-2"
+                          >
+                            <input type="checkbox" defaultChecked />
+                            <span className="text-sm">{store.name}</span>
+                          </div>
+                        ))}
                     </div>
                   </div>
                   <div className="md:col-span-2">
@@ -1075,13 +1351,17 @@ export default function MultiStoreSEOPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Global SEO Settings</CardTitle>
-                <CardDescription>Settings that apply to all connected stores</CardDescription>
+                <CardDescription>
+                  Settings that apply to all connected stores
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="sync-frequency">Data Sync Frequency</Label>
+                      <Label htmlFor="sync-frequency">
+                        Data Sync Frequency
+                      </Label>
                       <Select defaultValue="hourly">
                         <SelectTrigger className="mt-2">
                           <SelectValue />
@@ -1118,11 +1398,15 @@ export default function MultiStoreSEOPage() {
                         </div>
                         <div className="flex items-center space-x-2">
                           <input type="checkbox" defaultChecked />
-                          <span className="text-sm">Campaign completion notifications</span>
+                          <span className="text-sm">
+                            Campaign completion notifications
+                          </span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <input type="checkbox" />
-                          <span className="text-sm">Weekly performance reports</span>
+                          <span className="text-sm">
+                            Weekly performance reports
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1135,30 +1419,42 @@ export default function MultiStoreSEOPage() {
             <Card>
               <CardHeader>
                 <CardTitle>API & Integrations</CardTitle>
-                <CardDescription>Manage external integrations and API access</CardDescription>
+                <CardDescription>
+                  Manage external integrations and API access
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-4 border rounded-lg">
                     <div>
                       <div className="font-medium">Shopify Partner API</div>
-                      <div className="text-sm text-muted-foreground">Enhanced store management capabilities</div>
+                      <div className="text-sm text-muted-foreground">
+                        Enhanced store management capabilities
+                      </div>
                     </div>
                     <Badge variant="success">Connected</Badge>
                   </div>
                   <div className="flex items-center justify-between p-4 border rounded-lg">
                     <div>
                       <div className="font-medium">Google Search Console</div>
-                      <div className="text-sm text-muted-foreground">Search performance data integration</div>
+                      <div className="text-sm text-muted-foreground">
+                        Search performance data integration
+                      </div>
                     </div>
-                    <Button size="sm" variant="outline">Connect</Button>
+                    <Button size="sm" variant="outline">
+                      Connect
+                    </Button>
                   </div>
                   <div className="flex items-center justify-between p-4 border rounded-lg">
                     <div>
                       <div className="font-medium">Google Analytics 4</div>
-                      <div className="text-sm text-muted-foreground">Enhanced analytics and conversion tracking</div>
+                      <div className="text-sm text-muted-foreground">
+                        Enhanced analytics and conversion tracking
+                      </div>
                     </div>
-                    <Button size="sm" variant="outline">Connect</Button>
+                    <Button size="sm" variant="outline">
+                      Connect
+                    </Button>
                   </div>
                 </div>
               </CardContent>

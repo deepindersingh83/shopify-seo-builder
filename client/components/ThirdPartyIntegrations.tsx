@@ -498,33 +498,25 @@ export function ThirdPartyIntegrations() {
                     <span className="text-xs text-muted-foreground">
                       Sessions
                     </span>
-                    <span className="text-sm font-medium">
-                      8,947
-                    </span>
+                    <span className="text-sm font-medium">8,947</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-xs text-muted-foreground">
                       Dead Clicks
                     </span>
-                    <span className="text-sm font-medium">
-                      234
-                    </span>
+                    <span className="text-sm font-medium">234</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-xs text-muted-foreground">
                       Rage Clicks
                     </span>
-                    <span className="text-sm font-medium">
-                      89
-                    </span>
+                    <span className="text-sm font-medium">89</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-xs text-muted-foreground">
                       Scroll Rate
                     </span>
-                    <span className="text-sm font-medium">
-                      73.2%
-                    </span>
+                    <span className="text-sm font-medium">73.2%</span>
                   </div>
                 </div>
               </CardContent>
@@ -544,31 +536,21 @@ export function ThirdPartyIntegrations() {
                     <span className="text-xs text-muted-foreground">
                       Impressions
                     </span>
-                    <span className="text-sm font-medium">
-                      142,567
-                    </span>
+                    <span className="text-sm font-medium">142,567</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-xs text-muted-foreground">
                       Clicks
                     </span>
-                    <span className="text-sm font-medium">
-                      3,892
-                    </span>
+                    <span className="text-sm font-medium">3,892</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-xs text-muted-foreground">CTR</span>
-                    <span className="text-sm font-medium">
-                      2.73%
-                    </span>
+                    <span className="text-sm font-medium">2.73%</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-xs text-muted-foreground">
-                      CPC
-                    </span>
-                    <span className="text-sm font-medium">
-                      $1.24
-                    </span>
+                    <span className="text-xs text-muted-foreground">CPC</span>
+                    <span className="text-sm font-medium">$1.24</span>
                   </div>
                 </div>
               </CardContent>
@@ -939,7 +921,9 @@ function ConnectServiceForm({
             <SelectItem value="google_analytics">Google Analytics 4</SelectItem>
             <SelectItem value="microsoft_clarity">Microsoft Clarity</SelectItem>
             <SelectItem value="microsoft_ads">Microsoft Advertising</SelectItem>
-            <SelectItem value="azure_insights">Azure Application Insights</SelectItem>
+            <SelectItem value="azure_insights">
+              Azure Application Insights
+            </SelectItem>
             <SelectItem value="linkedin_ads">LinkedIn Ads</SelectItem>
             <SelectItem value="semrush">SEMrush</SelectItem>
             <SelectItem value="ahrefs">Ahrefs</SelectItem>
@@ -982,8 +966,13 @@ function ConnectServiceForm({
           <div className="p-4 bg-muted/50 rounded-lg">
             <p className="text-sm text-muted-foreground">
               You'll be redirected to Microsoft to authenticate and grant
-              permissions to access your {service === "microsoft_clarity" ? "Clarity" :
-              service === "microsoft_ads" ? "Advertising" : "Azure"} data.
+              permissions to access your{" "}
+              {service === "microsoft_clarity"
+                ? "Clarity"
+                : service === "microsoft_ads"
+                  ? "Advertising"
+                  : "Azure"}{" "}
+              data.
             </p>
           </div>
         </div>
@@ -1004,7 +993,8 @@ function ConnectServiceForm({
           </div>
           <div className="p-4 bg-muted/50 rounded-lg">
             <p className="text-sm text-muted-foreground">
-              Get your access token from LinkedIn Developer Portal under Campaign Manager API.
+              Get your access token from LinkedIn Developer Portal under
+              Campaign Manager API.
             </p>
           </div>
         </div>
@@ -1031,9 +1021,11 @@ function ConnectServiceForm({
         <Button type="submit" disabled={!service}>
           {service === "google_search_console" || service === "google_analytics"
             ? "Authenticate with Google"
-            : service === "microsoft_clarity" || service === "microsoft_ads" || service === "azure_insights"
-            ? "Authenticate with Microsoft"
-            : "Connect Service"}
+            : service === "microsoft_clarity" ||
+                service === "microsoft_ads" ||
+                service === "azure_insights"
+              ? "Authenticate with Microsoft"
+              : "Connect Service"}
         </Button>
       </DialogFooter>
     </form>

@@ -1,8 +1,25 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { FixedSizeList as List, VariableSizeList, ListChildComponentProps } from "react-window";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
+import {
+  FixedSizeList as List,
+  VariableSizeList,
+  ListChildComponentProps,
+} from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
 import AutoSizer from "react-virtualized-auto-sizer";
-import { Search, Filter, Grid, Loader2, AlertCircle, RefreshCw } from "lucide-react";
+import {
+  Search,
+  Filter,
+  Grid,
+  Loader2,
+  AlertCircle,
+  RefreshCw,
+} from "lucide-react";
 import { performanceService } from "@/services/performanceService";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -73,7 +90,7 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [loadedRanges, setLoadedRanges] = useState<Set<string>>(new Set());
-  
+
   const listRef = useRef<any>(null);
   const loaderRef = useRef<InfiniteLoader>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -81,11 +98,14 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
   // Memoized search function with debouncing
   const debouncedSearch = useMemo(
     () => performanceService.createOptimizedSearch(loadProducts, 300),
-    [filters, sortBy]
+    [filters, sortBy],
   );
 
   // Load products function
-  async function loadProducts(query: string, currentFilters: any = filters): Promise<Product[]> {
+  async function loadProducts(
+    query: string,
+    currentFilters: any = filters,
+  ): Promise<Product[]> {
     try {
       const response = await fetch("/api/products/search", {
         method: "POST",
@@ -100,7 +120,7 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
       });
 
       if (!response.ok) throw new Error("Failed to load products");
-      
+
       const data = await response.json();
       return data.products || [];
     } catch (error) {
@@ -115,12 +135,12 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
   const loadRange = useCallback(
     async (startIndex: number, stopIndex: number) => {
       const rangeKey = `${startIndex}-${stopIndex}`;
-      
+
       if (loadedRanges.has(rangeKey)) {
         return; // Already loaded or loading
       }
 
-      setLoadedRanges(prev => new Set(prev).add(rangeKey));
+      setLoadedRanges((prev) => new Set(prev).add(rangeKey));
 
       try {
         // Cancel previous request
@@ -130,7 +150,7 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
         abortControllerRef.current = new AbortController();
 
         // Mark items as loading
-        setItems(prevItems => {
+        setItems((prevItems) => {
           const newItems = [...prevItems];
           for (let i = startIndex; i <= stopIndex; i++) {
             if (!newItems[i]) {
@@ -144,14 +164,14 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
           "products",
           Math.floor(startIndex / pageSize) + 1,
           { ...filters, query: searchQuery },
-          sortBy
+          sortBy,
         );
 
         // Update items with loaded data
-        setItems(prevItems => {
+        setItems((prevItems) => {
           const newItems = [...prevItems];
           const loadedProducts = response.data;
-          
+
           loadedProducts.forEach((product, index) => {
             const itemIndex = startIndex + index;
             if (itemIndex <= stopIndex) {
@@ -166,13 +186,12 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
         if (response.totalCount !== undefined) {
           setTotalCount(response.totalCount);
         }
-
       } catch (error) {
         if (error instanceof Error && error.name !== "AbortError") {
           console.error("Failed to load product range:", error);
-          
+
           // Mark items with error
-          setItems(prevItems => {
+          setItems((prevItems) => {
             const newItems = [...prevItems];
             for (let i = startIndex; i <= stopIndex; i++) {
               newItems[i] = { error: error.message };
@@ -182,7 +201,7 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
         }
       }
     },
-    [filters, searchQuery, sortBy, pageSize, loadedRanges]
+    [filters, searchQuery, sortBy, pageSize, loadedRanges],
   );
 
   // Check if item is loaded
@@ -190,7 +209,7 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
     (index: number): boolean => {
       return !!(items[index] && (items[index].product || items[index].error));
     },
-    [items]
+    [items],
   );
 
   // Initial load and search effect
@@ -200,25 +219,24 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
       setError(null);
       setItems([]);
       setLoadedRanges(new Set());
-      
+
       try {
         const results = await debouncedSearch(searchQuery, filters);
-        
+
         // Get total count from API
         const countResponse = await fetch("/api/products/count", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ query: searchQuery, filters }),
         });
-        
+
         if (countResponse.ok) {
           const { count } = await countResponse.json();
           setTotalCount(count);
-          
+
           // Initialize items array with placeholders
           setItems(new Array(count).fill(null).map(() => ({})));
         }
-        
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
@@ -234,7 +252,7 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
     (product: Product, selected: boolean) => {
       if (!enableSelection) return;
 
-      setSelectedItems(prev => {
+      setSelectedItems((prev) => {
         const newSelection = new Set(prev);
         if (selected) {
           newSelection.add(product.id);
@@ -248,7 +266,7 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
         onProductSelect(product);
       }
     },
-    [enableSelection, onProductSelect]
+    [enableSelection, onProductSelect],
   );
 
   // Handle select all
@@ -256,15 +274,17 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
     if (!enableBulkOperations) return;
 
     const allProductIds = items
-      .filter(item => item.product)
-      .map(item => item.product!.id);
-    
+      .filter((item) => item.product)
+      .map((item) => item.product!.id);
+
     setSelectedItems(new Set(allProductIds));
-    
+
     if (onBulkSelect) {
       const selectedProducts = items
-        .filter(item => item.product && allProductIds.includes(item.product.id))
-        .map(item => item.product!);
+        .filter(
+          (item) => item.product && allProductIds.includes(item.product.id),
+        )
+        .map((item) => item.product!);
       onBulkSelect(selectedProducts);
     }
   }, [items, enableBulkOperations, onBulkSelect]);
@@ -272,7 +292,9 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
   // Render list item
   const ListItem: React.FC<ListChildComponentProps> = ({ index, style }) => {
     const item = items[index];
-    const isSelected = item?.product ? selectedItems.has(item.product.id) : false;
+    const isSelected = item?.product
+      ? selectedItems.has(item.product.id)
+      : false;
 
     if (!item) {
       return (
@@ -339,46 +361,46 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
             className="mr-3"
           />
         )}
-        
+
         <img
           src={product.image || "/placeholder.svg"}
           alt={product.title}
           className="h-12 w-12 rounded object-cover"
           loading="lazy"
         />
-        
+
         <div className="ml-4 flex-1 min-w-0">
           <h3 className="font-medium truncate">{product.title}</h3>
           <p className="text-sm text-muted-foreground truncate">
             {product.vendor} • {product.productType}
           </p>
         </div>
-        
+
         <div className="flex items-center space-x-2">
           <Badge
             variant={
               product.status === "active"
                 ? "default"
                 : product.status === "draft"
-                ? "secondary"
-                : "outline"
+                  ? "secondary"
+                  : "outline"
             }
           >
             {product.status}
           </Badge>
-          
+
           <Badge
             variant={
               product.seoScore >= 80
                 ? "default"
                 : product.seoScore >= 60
-                ? "secondary"
-                : "destructive"
+                  ? "secondary"
+                  : "destructive"
             }
           >
             SEO: {product.seoScore}
           </Badge>
-          
+
           <span className="font-medium">${product.price}</span>
         </div>
       </div>
@@ -388,7 +410,9 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
   // Render grid item
   const GridItem: React.FC<ListChildComponentProps> = ({ index, style }) => {
     const item = items[index];
-    const isSelected = item?.product ? selectedItems.has(item.product.id) : false;
+    const isSelected = item?.product
+      ? selectedItems.has(item.product.id)
+      : false;
 
     if (!item?.product) {
       return (
@@ -421,27 +445,29 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
               className="h-32 w-full rounded object-cover mb-4"
               loading="lazy"
             />
-            
+
             <h3 className="font-medium truncate mb-2">{product.title}</h3>
             <p className="text-sm text-muted-foreground truncate mb-3">
               {product.vendor}
             </p>
-            
+
             <div className="flex items-center justify-between">
-              <Badge variant={product.status === "active" ? "default" : "secondary"}>
+              <Badge
+                variant={product.status === "active" ? "default" : "secondary"}
+              >
                 {product.status}
               </Badge>
               <span className="font-medium">${product.price}</span>
             </div>
-            
+
             <div className="mt-2">
               <Badge
                 variant={
                   product.seoScore >= 80
                     ? "default"
                     : product.seoScore >= 60
-                    ? "secondary"
-                    : "destructive"
+                      ? "secondary"
+                      : "destructive"
                 }
                 className="w-full justify-center"
               >
@@ -482,7 +508,11 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
             <span className="text-sm font-medium">
               {selectedItems.size} item(s) selected
             </span>
-            <Button size="sm" variant="outline" onClick={() => setSelectedItems(new Set())}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setSelectedItems(new Set())}
+            >
               Clear Selection
             </Button>
             <Button size="sm" onClick={handleSelectAll}>
@@ -490,7 +520,7 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
             </Button>
           </div>
         )}
-        
+
         <div className="flex items-center space-x-2 text-sm text-muted-foreground">
           <span>Total: {totalCount.toLocaleString()} products</span>
           {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -508,7 +538,7 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
               loadMoreItems={loadRange}
               threshold={OVERSCAN_COUNT}
             >
-              {({ onItemsRendered, ref }) => (
+              {({ onItemsRendered, ref }) =>
                 viewMode === "list" ? (
                   <List
                     ref={(list) => {
@@ -540,7 +570,7 @@ const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({
                     {GridItem}
                   </VariableSizeList>
                 )
-              )}
+              }
             </InfiniteLoader>
           )}
         </AutoSizer>

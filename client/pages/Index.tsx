@@ -146,9 +146,13 @@ export default function Index() {
   const [showFilters, setShowFilters] = useState(false);
   const [showPerformanceDialog, setShowPerformanceDialog] = useState(false);
   const [viewMode, setViewMode] = useState<"list" | "grid">("list");
-  const [performanceMode, setPerformanceMode] = useState<keyof typeof PERFORMANCE_MODES>("high");
-  const [sortBy, setSortBy] = useState({ field: "updatedAt", direction: "desc" as "asc" | "desc" });
-  
+  const [performanceMode, setPerformanceMode] =
+    useState<keyof typeof PERFORMANCE_MODES>("high");
+  const [sortBy, setSortBy] = useState({
+    field: "updatedAt",
+    direction: "desc" as "asc" | "desc",
+  });
+
   const [filters, setFilters] = useState<FilterState>({
     status: [],
     vendor: [],
@@ -193,13 +197,14 @@ export default function Index() {
     const updateMetrics = () => {
       const metrics = performanceService.getPerformanceMetrics();
       const cacheStats = performanceService.getCacheStats();
-      
-      setPerformanceMetrics(prev => ({
+
+      setPerformanceMetrics((prev) => ({
         ...prev,
         loadTime: metrics.queryTime,
         memoryUsage: cacheStats.memoryUsage,
         cacheHitRate: cacheStats.hitRate,
-        isOptimized: performanceMode === "enterprise" && cacheStats.hitRate > 0.8,
+        isOptimized:
+          performanceMode === "enterprise" && cacheStats.hitRate > 0.8,
       }));
     };
 
@@ -210,7 +215,7 @@ export default function Index() {
   // Apply performance configuration
   useEffect(() => {
     const config = PERFORMANCE_MODES[performanceMode];
-    
+
     performanceService.updateCacheConfig({
       maxSize: config.cacheSize,
       ttl: 300000, // 5 minutes
@@ -255,7 +260,7 @@ export default function Index() {
   }, []);
 
   const handleBulkSelect = useCallback((products: Product[]) => {
-    setSelectedProducts(products.map(p => p.id));
+    setSelectedProducts(products.map((p) => p.id));
   }, []);
 
   const handleBulkOperation = useCallback(async () => {
@@ -278,7 +283,7 @@ export default function Index() {
         },
         (progress) => {
           console.log(`Bulk operation progress: ${progress}%`);
-        }
+        },
       );
 
       setShowBulkDialog(false);
@@ -301,8 +306,8 @@ export default function Index() {
     // Refresh metrics
     const metrics = performanceService.getPerformanceMetrics();
     const cacheStats = performanceService.getCacheStats();
-    
-    setPerformanceMetrics(prev => ({
+
+    setPerformanceMetrics((prev) => ({
       ...prev,
       memoryUsage: cacheStats.memoryUsage,
       cacheHitRate: cacheStats.hitRate,
@@ -339,15 +344,21 @@ export default function Index() {
           <div>
             <h1 className="text-3xl font-bold">Products</h1>
             <p className="text-muted-foreground">
-              Manage and optimize your product catalog with enterprise-scale performance
+              Manage and optimize your product catalog with enterprise-scale
+              performance
             </p>
           </div>
-          
+
           <div className="flex items-center gap-2">
-            <Badge variant={performanceMetrics.isOptimized ? "default" : "secondary"}>
+            <Badge
+              variant={performanceMetrics.isOptimized ? "default" : "secondary"}
+            >
               {currentConfig.name}
             </Badge>
-            <Button variant="outline" onClick={() => setShowPerformanceDialog(true)}>
+            <Button
+              variant="outline"
+              onClick={() => setShowPerformanceDialog(true)}
+            >
               <Gauge className="h-4 w-4 mr-2" />
               Performance
             </Button>
@@ -362,55 +373,67 @@ export default function Index() {
                 <Database className="h-4 w-4 text-muted-foreground" />
                 <div>
                   <p className="text-sm font-medium">Products</p>
-                  <p className="text-2xl font-bold">{performanceMetrics.totalProducts.toLocaleString()}</p>
+                  <p className="text-2xl font-bold">
+                    {performanceMetrics.totalProducts.toLocaleString()}
+                  </p>
                 </div>
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
                 <Clock className="h-4 w-4 text-muted-foreground" />
                 <div>
                   <p className="text-sm font-medium">Load Time</p>
-                  <p className="text-2xl font-bold">{performanceMetrics.loadTime.toFixed(0)}ms</p>
+                  <p className="text-2xl font-bold">
+                    {performanceMetrics.loadTime.toFixed(0)}ms
+                  </p>
                 </div>
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
                 <HardDrive className="h-4 w-4 text-muted-foreground" />
                 <div>
                   <p className="text-sm font-medium">Memory</p>
-                  <p className="text-2xl font-bold">{formatBytes(performanceMetrics.memoryUsage)}</p>
+                  <p className="text-2xl font-bold">
+                    {formatBytes(performanceMetrics.memoryUsage)}
+                  </p>
                 </div>
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
                 <Target className="h-4 w-4 text-muted-foreground" />
                 <div>
                   <p className="text-sm font-medium">Cache Hit</p>
-                  <p className="text-2xl font-bold">{(performanceMetrics.cacheHitRate * 100).toFixed(1)}%</p>
+                  <p className="text-2xl font-bold">
+                    {(performanceMetrics.cacheHitRate * 100).toFixed(1)}%
+                  </p>
                 </div>
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
                 <Activity className="h-4 w-4 text-muted-foreground" />
                 <div>
                   <p className="text-sm font-medium">Status</p>
-                  <Badge variant={performanceMetrics.isOptimized ? "default" : "secondary"}>
+                  <Badge
+                    variant={
+                      performanceMetrics.isOptimized ? "default" : "secondary"
+                    }
+                  >
                     {performanceMetrics.isOptimized ? "Optimized" : "Standard"}
                   </Badge>
                 </div>
@@ -485,7 +508,9 @@ export default function Index() {
                 <SelectItem value="title-desc">Title Z-A</SelectItem>
                 <SelectItem value="price-asc">Price Low-High</SelectItem>
                 <SelectItem value="price-desc">Price High-Low</SelectItem>
-                <SelectItem value="seoScore-desc">SEO Score High-Low</SelectItem>
+                <SelectItem value="seoScore-desc">
+                  SEO Score High-Low
+                </SelectItem>
                 <SelectItem value="seoScore-asc">SEO Score Low-High</SelectItem>
               </SelectContent>
             </Select>
@@ -528,42 +553,63 @@ export default function Index() {
         </Card>
 
         {/* Performance Optimization Dialog */}
-        <Dialog open={showPerformanceDialog} onOpenChange={setShowPerformanceDialog}>
+        <Dialog
+          open={showPerformanceDialog}
+          onOpenChange={setShowPerformanceDialog}
+        >
           <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle>Performance Settings</DialogTitle>
               <DialogDescription>
-                Optimize app performance based on your catalog size and hardware capabilities
+                Optimize app performance based on your catalog size and hardware
+                capabilities
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-6">
               <div>
-                <Label className="text-base font-medium">Performance Mode</Label>
+                <Label className="text-base font-medium">
+                  Performance Mode
+                </Label>
                 <div className="space-y-3 mt-3">
                   {Object.entries(PERFORMANCE_MODES).map(([key, config]) => (
                     <div
                       key={key}
                       className={`border rounded-lg p-4 cursor-pointer transition-colors ${
-                        performanceMode === key ? "border-primary bg-primary/5" : "hover:bg-muted/50"
+                        performanceMode === key
+                          ? "border-primary bg-primary/5"
+                          : "hover:bg-muted/50"
                       }`}
-                      onClick={() => setPerformanceMode(key as keyof typeof PERFORMANCE_MODES)}
+                      onClick={() =>
+                        setPerformanceMode(
+                          key as keyof typeof PERFORMANCE_MODES,
+                        )
+                      }
                     >
                       <div className="flex items-center space-x-3">
                         <input
                           type="radio"
                           checked={performanceMode === key}
-                          onChange={() => setPerformanceMode(key as keyof typeof PERFORMANCE_MODES)}
+                          onChange={() =>
+                            setPerformanceMode(
+                              key as keyof typeof PERFORMANCE_MODES,
+                            )
+                          }
                           className="text-primary"
                         />
                         <div className="flex-1">
                           <h4 className="font-medium">{config.name}</h4>
-                          <p className="text-sm text-muted-foreground">{config.description}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {config.description}
+                          </p>
                           <div className="flex gap-4 mt-2 text-xs text-muted-foreground">
                             <span>Page Size: {config.pageSize}</span>
                             <span>Cache: {config.cacheSize} items</span>
                             <span>Batch: {config.batchSize}</span>
-                            <span>Virtual: {config.enableVirtualization ? "Yes" : "No"}</span>
+                            <span>
+                              Virtual:{" "}
+                              {config.enableVirtualization ? "Yes" : "No"}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -575,7 +621,9 @@ export default function Index() {
               <Separator />
 
               <div className="space-y-4">
-                <Label className="text-base font-medium">Memory Management</Label>
+                <Label className="text-base font-medium">
+                  Memory Management
+                </Label>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Current Memory Usage</p>
@@ -588,12 +636,13 @@ export default function Index() {
                     Optimize Memory
                   </Button>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Cache Hit Rate</p>
                     <p className="text-sm text-muted-foreground">
-                      {(performanceMetrics.cacheHitRate * 100).toFixed(1)}% efficiency
+                      {(performanceMetrics.cacheHitRate * 100).toFixed(1)}%
+                      efficiency
                     </p>
                   </div>
                   <Button
@@ -612,8 +661,9 @@ export default function Index() {
                   <Alert>
                     <Zap className="h-4 w-4" />
                     <AlertDescription>
-                      Enterprise mode is optimized for catalogs with 500K+ products. It uses advanced
-                      caching, virtualization, and batch processing for maximum performance.
+                      Enterprise mode is optimized for catalogs with 500K+
+                      products. It uses advanced caching, virtualization, and
+                      batch processing for maximum performance.
                     </AlertDescription>
                   </Alert>
                 </>
@@ -621,7 +671,10 @@ export default function Index() {
             </div>
 
             <DialogFooter>
-              <Button variant="outline" onClick={() => setShowPerformanceDialog(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowPerformanceDialog(false)}
+              >
                 Cancel
               </Button>
               <Button onClick={() => setShowPerformanceDialog(false)}>

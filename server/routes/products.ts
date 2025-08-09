@@ -22,10 +22,36 @@ interface Product {
 
 // Generate mock data for 500K+ products efficiently
 const generateMockProduct = (id: number): Product => {
-  const statuses: ("active" | "draft" | "archived")[] = ["active", "draft", "archived"];
-  const vendors = ["Nike", "Adidas", "Apple", "Samsung", "Sony", "Microsoft", "Amazon", "Google", "Dell", "HP"];
-  const productTypes = ["Electronics", "Clothing", "Shoes", "Accessories", "Home & Garden", "Sports", "Beauty", "Books", "Games", "Tools"];
-  
+  const statuses: ("active" | "draft" | "archived")[] = [
+    "active",
+    "draft",
+    "archived",
+  ];
+  const vendors = [
+    "Nike",
+    "Adidas",
+    "Apple",
+    "Samsung",
+    "Sony",
+    "Microsoft",
+    "Amazon",
+    "Google",
+    "Dell",
+    "HP",
+  ];
+  const productTypes = [
+    "Electronics",
+    "Clothing",
+    "Shoes",
+    "Accessories",
+    "Home & Garden",
+    "Sports",
+    "Beauty",
+    "Books",
+    "Games",
+    "Tools",
+  ];
+
   const descriptions = [
     "High-quality product designed for modern consumers with exceptional durability and style.",
     "Premium offering that combines functionality with aesthetic appeal for the discerning customer.",
@@ -35,7 +61,10 @@ const generateMockProduct = (id: number): Product => {
   ];
 
   const title = `Product ${id} - ${vendors[id % vendors.length]} ${productTypes[id % productTypes.length]}`;
-  const handle = title.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+  const handle = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "-")
+    .replace(/-+/g, "-");
   const seoScore = Math.floor(Math.random() * 100);
 
   return {
@@ -45,16 +74,28 @@ const generateMockProduct = (id: number): Product => {
     status: statuses[id % statuses.length],
     vendor: vendors[id % vendors.length],
     productType: productTypes[id % productTypes.length],
-    tags: [`tag-${Math.floor(id / 100)}`, `category-${id % 10}`, `featured-${id % 50}`],
+    tags: [
+      `tag-${Math.floor(id / 100)}`,
+      `category-${id % 10}`,
+      `featured-${id % 50}`,
+    ],
     price: Math.floor(Math.random() * 500) + 20,
-    compareAtPrice: Math.random() > 0.7 ? Math.floor(Math.random() * 100) + 100 : undefined,
+    compareAtPrice:
+      Math.random() > 0.7 ? Math.floor(Math.random() * 100) + 100 : undefined,
     inventory: Math.floor(Math.random() * 1000),
     image: `https://picsum.photos/200/200?random=${id}`,
-    createdAt: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString(),
-    updatedAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: new Date(
+      Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000,
+    ).toISOString(),
+    updatedAt: new Date(
+      Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
+    ).toISOString(),
     description: descriptions[id % descriptions.length],
     metaTitle: Math.random() > 0.3 ? `${title} | Best Quality` : undefined,
-    metaDescription: Math.random() > 0.2 ? `${descriptions[id % descriptions.length].substring(0, 150)}...` : undefined,
+    metaDescription:
+      Math.random() > 0.2
+        ? `${descriptions[id % descriptions.length].substring(0, 150)}...`
+        : undefined,
     seoScore,
   };
 };
@@ -72,24 +113,38 @@ export const getPaginatedProducts = (req: Request, res: Response) => {
 
     // Generate products for the requested range
     const products: Product[] = [];
-    for (let i = startIndex; i < Math.min(startIndex + pageSize, TOTAL_PRODUCTS); i++) {
+    for (
+      let i = startIndex;
+      i < Math.min(startIndex + pageSize, TOTAL_PRODUCTS);
+      i++
+    ) {
       const product = generateMockProduct(i + 1);
-      
+
       // Apply filters
-      if (filters.status && filters.status.length > 0 && !filters.status.includes(product.status)) {
+      if (
+        filters.status &&
+        filters.status.length > 0 &&
+        !filters.status.includes(product.status)
+      ) {
         continue;
       }
-      if (filters.vendor && filters.vendor.length > 0 && !filters.vendor.includes(product.vendor)) {
+      if (
+        filters.vendor &&
+        filters.vendor.length > 0 &&
+        !filters.vendor.includes(product.vendor)
+      ) {
         continue;
       }
       if (filters.query) {
         const query = filters.query.toLowerCase();
-        if (!product.title.toLowerCase().includes(query) && 
-            !product.description.toLowerCase().includes(query)) {
+        if (
+          !product.title.toLowerCase().includes(query) &&
+          !product.description.toLowerCase().includes(query)
+        ) {
           continue;
         }
       }
-      
+
       products.push(product);
     }
 
@@ -98,8 +153,8 @@ export const getPaginatedProducts = (req: Request, res: Response) => {
       products.sort((a, b) => {
         const aVal = a[sorting.field as keyof Product];
         const bVal = b[sorting.field as keyof Product];
-        
-        if (sorting.direction === 'desc') {
+
+        if (sorting.direction === "desc") {
           return aVal < bVal ? 1 : -1;
         }
         return aVal > bVal ? 1 : -1;
@@ -123,8 +178,8 @@ export const getPaginatedProducts = (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error('Error in getPaginatedProducts:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in getPaginatedProducts:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -141,25 +196,35 @@ export const searchProducts = (req: Request, res: Response) => {
     // Generate products to search through (simulate indexed search)
     for (let i = 1; i <= searchLimit; i++) {
       const product = generateMockProduct(i);
-      
+
       // Apply search query
       if (query) {
         const searchQuery = query.toLowerCase();
-        if (!product.title.toLowerCase().includes(searchQuery) && 
-            !product.description.toLowerCase().includes(searchQuery) &&
-            !product.vendor.toLowerCase().includes(searchQuery)) {
+        if (
+          !product.title.toLowerCase().includes(searchQuery) &&
+          !product.description.toLowerCase().includes(searchQuery) &&
+          !product.vendor.toLowerCase().includes(searchQuery)
+        ) {
           continue;
         }
       }
-      
+
       // Apply filters
-      if (filters.status && filters.status.length > 0 && !filters.status.includes(product.status)) {
+      if (
+        filters.status &&
+        filters.status.length > 0 &&
+        !filters.status.includes(product.status)
+      ) {
         continue;
       }
-      if (filters.vendor && filters.vendor.length > 0 && !filters.vendor.includes(product.vendor)) {
+      if (
+        filters.vendor &&
+        filters.vendor.length > 0 &&
+        !filters.vendor.includes(product.vendor)
+      ) {
         continue;
       }
-      
+
       products.push(product);
     }
 
@@ -168,8 +233,8 @@ export const searchProducts = (req: Request, res: Response) => {
       products.sort((a, b) => {
         const aVal = a[sortBy.field as keyof Product];
         const bVal = b[sortBy.field as keyof Product];
-        
-        if (sortBy.direction === 'desc') {
+
+        if (sortBy.direction === "desc") {
           return aVal < bVal ? 1 : -1;
         }
         return aVal > bVal ? 1 : -1;
@@ -184,8 +249,8 @@ export const searchProducts = (req: Request, res: Response) => {
       queryTime,
     });
   } catch (error) {
-    console.error('Error in searchProducts:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in searchProducts:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -193,22 +258,22 @@ export const searchProducts = (req: Request, res: Response) => {
 export const getProductCount = (req: Request, res: Response) => {
   try {
     const { query = "", filters = {} } = req.body;
-    
+
     // For demo purposes, return different counts based on filters
     let count = 500000; // Base count
-    
+
     if (query) {
       count = Math.floor(count * 0.1); // Search typically returns 10% of total
     }
-    
+
     if (filters.status && filters.status.length > 0) {
       count = Math.floor(count * (filters.status.length / 3)); // 3 total statuses
     }
-    
+
     res.json({ count });
   } catch (error) {
-    console.error('Error in getProductCount:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in getProductCount:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -224,8 +289,8 @@ export const lazyLoadProducts = (req: Request, res: Response) => {
 
     res.json(products);
   } catch (error) {
-    console.error('Error in lazyLoadProducts:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in lazyLoadProducts:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -233,13 +298,13 @@ export const lazyLoadProducts = (req: Request, res: Response) => {
 export const bulkUpdateProducts = (req: Request, res: Response) => {
   try {
     const { productIds, updates } = req.body;
-    
+
     // Simulate bulk update processing
     const results = productIds.map((id: string) => ({
       id,
       success: Math.random() > 0.1, // 90% success rate
       changes: updates,
-      error: Math.random() > 0.9 ? 'Failed to update product' : null,
+      error: Math.random() > 0.9 ? "Failed to update product" : null,
     }));
 
     res.json({
@@ -249,8 +314,8 @@ export const bulkUpdateProducts = (req: Request, res: Response) => {
       results,
     });
   } catch (error) {
-    console.error('Error in bulkUpdateProducts:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in bulkUpdateProducts:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -258,16 +323,16 @@ export const bulkUpdateProducts = (req: Request, res: Response) => {
 export const getProduct = (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const productId = parseInt(id.replace('product-', ''));
-    
+    const productId = parseInt(id.replace("product-", ""));
+
     if (isNaN(productId)) {
-      return res.status(404).json({ error: 'Product not found' });
+      return res.status(404).json({ error: "Product not found" });
     }
 
     const product = generateMockProduct(productId);
     res.json(product);
   } catch (error) {
-    console.error('Error in getProduct:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in getProduct:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
