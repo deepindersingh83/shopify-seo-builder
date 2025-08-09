@@ -191,12 +191,42 @@ const navigationItems: NavItem[] = [
         icon: BarChart3,
       },
       {
+        title: "Advanced Analytics",
+        href: "/analytics/advanced",
+        icon: Target,
+        badge: "New",
+      },
+      {
         title: "ROI Tracking",
         href: "/analytics/roi",
         icon: TrendingUp,
         badge: "Pro",
       },
     ],
+  },
+  {
+    title: "Content Management",
+    icon: FileText,
+    children: [
+      {
+        title: "Advanced Content",
+        href: "/content/advanced",
+        icon: Bot,
+        badge: "AI",
+      },
+      {
+        title: "Landing Page Builder",
+        href: "/content/landing-pages",
+        icon: Package,
+        badge: "New",
+      },
+    ],
+  },
+  {
+    title: "Multi-Store Management",
+    href: "/stores/multi-store",
+    icon: Package,
+    badge: "Enterprise",
   },
   {
     title: "Integrations",
