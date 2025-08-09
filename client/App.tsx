@@ -42,6 +42,10 @@ import MobileOptimizationPage from "./pages/MobileOptimizationPage";
 import LocalSEOPage from "./pages/LocalSEOPage";
 import KeywordRankingsPage from "./pages/KeywordRankingsPage";
 import TrafficAnalysisPage from "./pages/TrafficAnalysisPage";
+import SEORulesPage from "./pages/SEORulesPage";
+import ScheduledAuditsPage from "./pages/ScheduledAuditsPage";
+import AutomationBulkPage from "./pages/AutomationBulkPage";
+import AutomationTemplatesPage from "./pages/AutomationTemplatesPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
