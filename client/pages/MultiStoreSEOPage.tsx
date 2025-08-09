@@ -765,7 +765,7 @@ export default function MultiStoreSEOPage() {
                                 <Settings className="h-4 w-4" />
                               </Button>
                               <Button size="sm" variant="ghost" title="Sync Now">
-                                <Sync className="h-4 w-4" />
+                                <RefreshCw className="h-4 w-4" />
                               </Button>
                               <Button size="sm" variant="ghost" title="Open Store">
                                 <ExternalLink className="h-4 w-4" />
