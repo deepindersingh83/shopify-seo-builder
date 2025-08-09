@@ -383,7 +383,7 @@ export default function Index() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <Memory className="h-4 w-4 text-muted-foreground" />
+                <HardDrive className="h-4 w-4 text-muted-foreground" />
                 <div>
                   <p className="text-sm font-medium">Memory</p>
                   <p className="text-2xl font-bold">{formatBytes(performanceMetrics.memoryUsage)}</p>
