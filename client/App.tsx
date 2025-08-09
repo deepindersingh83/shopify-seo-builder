@@ -37,6 +37,7 @@ import SocialMediaAutopostPage from "./pages/SocialMediaAutopostPage";
 import CollectionSEOPage from "./pages/CollectionSEOPage";
 import HreflangManagerPage from "./pages/HreflangManagerPage";
 import BacklinkMonitorPage from "./pages/BacklinkMonitorPage";
+import RedirectManagerPage from "./pages/RedirectManagerPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
