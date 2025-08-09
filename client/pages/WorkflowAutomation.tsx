@@ -333,39 +333,34 @@ export default function WorkflowAutomation() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Zap className="h-8 w-8 text-primary" />
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">
-                  Workflow Automation
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Automate SEO optimization and manage integrations
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Button size="sm" variant="outline">
-                <Settings className="h-4 w-4 mr-2" />
-                Settings
-              </Button>
-              <Link to="/workflow-builder">
-                <Button size="sm">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Workflow Builder
-                </Button>
-              </Link>
+    <Layout>
+      <div className="container mx-auto px-6 py-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-4">
+            <Zap className="h-8 w-8 text-primary" />
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">
+                Workflow Automation
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Automate SEO optimization and manage integrations
+              </p>
             </div>
           </div>
+          <div className="flex items-center space-x-4">
+            <Button size="sm" variant="outline">
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
+            </Button>
+            <Link to="/workflow-builder">
+              <Button size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                Workflow Builder
+              </Button>
+            </Link>
+          </div>
         </div>
-      </header>
-
-      <div className="container mx-auto px-6 py-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
@@ -829,6 +824,6 @@ export default function WorkflowAutomation() {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </Layout>
   );
 }
