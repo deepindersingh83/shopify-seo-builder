@@ -139,6 +139,10 @@ const App = () => (
             path="/automation/templates"
             element={<AutomationTemplatesPage />}
           />
+          <Route path="/stores/multi-store" element={<MultiStoreSEOPage />} />
+          <Route path="/content/advanced" element={<AdvancedContentPage />} />
+          <Route path="/content/landing-pages" element={<LandingPageBuilderPage />} />
+          <Route path="/analytics/advanced" element={<AdvancedAnalyticsPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
