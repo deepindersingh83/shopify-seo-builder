@@ -24,7 +24,7 @@ import {
   TrendingUp,
   RefreshCw,
   Gauge,
-  Memory,
+  HardDrive,
   Clock,
   Users,
   Activity,
