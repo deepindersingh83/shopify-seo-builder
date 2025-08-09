@@ -38,7 +38,6 @@ import {
   MapPin,
   Calendar,
   Clock,
-  Sync,
   Shield,
   Award,
   Activity
