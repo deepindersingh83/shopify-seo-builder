@@ -935,6 +935,41 @@ function ConnectServiceForm({
         </div>
       )}
 
+      {(service === "microsoft_clarity" ||
+        service === "microsoft_ads" ||
+        service === "azure_insights") && (
+        <div className="space-y-4">
+          <div className="p-4 bg-muted/50 rounded-lg">
+            <p className="text-sm text-muted-foreground">
+              You'll be redirected to Microsoft to authenticate and grant
+              permissions to access your {service === "microsoft_clarity" ? "Clarity" :
+              service === "microsoft_ads" ? "Advertising" : "Azure"} data.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {service === "linkedin_ads" && (
+        <div className="space-y-4">
+          <div>
+            <Label>LinkedIn Access Token</Label>
+            <Input
+              type="password"
+              placeholder="LinkedIn Ads API access token"
+              value={credentials.accessToken || ""}
+              onChange={(e) =>
+                setCredentials({ ...credentials, accessToken: e.target.value })
+              }
+            />
+          </div>
+          <div className="p-4 bg-muted/50 rounded-lg">
+            <p className="text-sm text-muted-foreground">
+              Get your access token from LinkedIn Developer Portal under Campaign Manager API.
+            </p>
+          </div>
+        </div>
+      )}
+
       {service === "facebook" && (
         <div>
           <Label>Access Token</Label>
