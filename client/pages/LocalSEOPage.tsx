@@ -46,7 +46,8 @@ import {
   ThumbsUp,
   Navigation,
   Camera,
-  Award
+  Award,
+  ExternalLink
 } from "lucide-react";
 
 interface BusinessLocation {
