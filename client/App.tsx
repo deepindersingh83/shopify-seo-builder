@@ -111,6 +111,10 @@ const App = () => (
           <Route path="/international/hreflang" element={<HreflangManagerPage />} />
           <Route path="/links/backlinks" element={<BacklinkMonitorPage />} />
           <Route path="/links/redirects" element={<RedirectManagerPage />} />
+          <Route path="/performance/mobile" element={<MobileOptimizationPage />} />
+          <Route path="/international/local" element={<LocalSEOPage />} />
+          <Route path="/analytics/rankings" element={<KeywordRankingsPage />} />
+          <Route path="/analytics/traffic" element={<TrafficAnalysisPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
