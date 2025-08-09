@@ -524,7 +524,7 @@ export default function MultiStoreSEOPage() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Button variant="outline" className="h-auto p-4 flex flex-col items-start">
-                <Sync className="h-5 w-5 mb-2" />
+                <RefreshCw className="h-5 w-5 mb-2" />
                 <div className="text-left">
                   <div className="font-medium">Sync All Stores</div>
                   <div className="text-sm text-muted-foreground">Update data from all stores</div>
