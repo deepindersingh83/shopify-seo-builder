@@ -106,6 +106,7 @@ const App = () => (
           <Route path="/seo/collections" element={<CollectionSEOPage />} />
           <Route path="/international/hreflang" element={<HreflangManagerPage />} />
           <Route path="/links/backlinks" element={<BacklinkMonitorPage />} />
+          <Route path="/links/redirects" element={<RedirectManagerPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
