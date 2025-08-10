@@ -103,6 +103,11 @@ class ProductRepository {
     filters: ProductFilters = {},
     pagination: PaginationOptions
   ): Promise<ProductSearchResult> {
+    // If database is not available, fall back to mock data
+    if (!databaseService.isConnected()) {
+      return this.findAllMockData(filters, pagination);
+    }
+
     const { offset, limit, sortBy } = pagination;
     
     let baseQuery = 'SELECT * FROM products';
