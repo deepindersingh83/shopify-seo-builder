@@ -69,8 +69,8 @@ export function createServer() {
 
   // Initialize database on startup
   databaseService.initialize().catch(error => {
-    console.error('Failed to initialize database:', error);
-    process.exit(1);
+    console.warn('Database initialization failed, continuing in mock mode:', error.message);
+    // Don't exit the process - allow the app to run with mock data
   });
 
   return app;
