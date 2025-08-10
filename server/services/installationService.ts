@@ -123,8 +123,17 @@ class InstallationService {
     error?: string;
   }> {
     try {
-      const mariadb = require('mariadb');
-      
+      // Dynamic import to handle missing mariadb module gracefully
+      let mariadb;
+      try {
+        mariadb = await import('mariadb');
+      } catch (importError) {
+        return {
+          success: false,
+          error: 'MariaDB module not found. Please install MariaDB dependencies.',
+        };
+      }
+
       const pool = mariadb.createPool({
         host: config.host,
         port: config.port,
