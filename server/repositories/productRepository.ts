@@ -423,6 +423,18 @@ class ProductRepository {
   }
 
   async getCount(filters: ProductFilters = {}): Promise<number> {
+    if (!databaseService.isConnected()) {
+      // Return simulated count based on filters
+      let count = 500000;
+      if (filters.query) {
+        count = Math.floor(count * 0.1);
+      }
+      if (filters.status && filters.status.length > 0) {
+        count = Math.floor(count * (filters.status.length / 3));
+      }
+      return count;
+    }
+
     let query = 'SELECT COUNT(*) as total FROM products';
     const params: any[] = [];
     const whereClauses: string[] = [];
