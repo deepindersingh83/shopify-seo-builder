@@ -46,7 +46,6 @@ import {
   HardDrive,
   Monitor,
   Cpu,
-  HardDrive,
   Gauge,
   Target,
   TrendingUp,
@@ -1465,7 +1464,7 @@ export default function SettingsPage() {
                 <div>
                   <p className="font-medium">Webhook Secret</p>
                   <p className="text-sm text-muted-foreground">
-                    whsec_••••••••••••5678
+                    whsec_•���••••••••••5678
                   </p>
                 </div>
                 <div className="flex space-x-2">
