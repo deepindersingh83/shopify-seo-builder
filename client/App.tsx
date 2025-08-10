@@ -50,6 +50,7 @@ import MultiStoreSEOPage from "./pages/MultiStoreSEOPage";
 import AdvancedContentPage from "./pages/AdvancedContentPage";
 import AdvancedAnalyticsPage from "./pages/AdvancedAnalyticsPage";
 import LandingPageBuilderPage from "./pages/LandingPageBuilderPage";
+import InstallationPage from "./pages/InstallationPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
