@@ -219,13 +219,8 @@ class InstallationService {
       // First close any existing connection
       await databaseService.close();
 
-      // Then reinitialize with new config
-      await databaseService.initialize();
-
-      // Check if database is actually connected after initialization
-      if (!databaseService.isConnected()) {
-        throw new Error("Database connection failed - cannot proceed with installation");
-      }
+      // Then reinitialize with new config using strict mode (throws on failure)
+      await databaseService.initializeStrict();
 
       progress.steps[2].status = "completed";
       progress.currentStep = 3;
