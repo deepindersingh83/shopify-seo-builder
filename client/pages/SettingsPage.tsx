@@ -1573,6 +1573,13 @@ export default function SettingsPage() {
               <Database className="h-4 w-4" />
               <span>APIs</span>
             </TabsTrigger>
+            <TabsTrigger
+              value="database"
+              className="flex items-center space-x-2"
+            >
+              <HardDrive className="h-4 w-4" />
+              <span>Database</span>
+            </TabsTrigger>
             <TabsTrigger value="team" className="flex items-center space-x-2">
               <Users className="h-4 w-4" />
               <span>Team</span>
