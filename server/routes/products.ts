@@ -60,12 +60,16 @@ const generateMockProduct = (id: number): Product => {
     "Sustainable and eco-friendly option that doesn't compromise on quality or performance.",
   ];
 
+  // Use product ID as seed for deterministic randomness
+  const seed = id * 9301 + 49297; // Simple LCG constants
+  const seededRandom = (seed: number, max: number) => ((seed * 16807) % 2147483647) % max;
+
   const title = `Product ${id} - ${vendors[id % vendors.length]} ${productTypes[id % productTypes.length]}`;
   const handle = title
     .toLowerCase()
     .replace(/[^a-z0-9]/g, "-")
     .replace(/-+/g, "-");
-  const seoScore = Math.floor(Math.random() * 100);
+  const seoScore = seededRandom(seed, 100);
 
   return {
     id: `product-${id}`,
@@ -79,21 +83,21 @@ const generateMockProduct = (id: number): Product => {
       `category-${id % 10}`,
       `featured-${id % 50}`,
     ],
-    price: Math.floor(Math.random() * 500) + 20,
+    price: seededRandom(seed + 1, 500) + 20,
     compareAtPrice:
-      Math.random() > 0.7 ? Math.floor(Math.random() * 100) + 100 : undefined,
-    inventory: Math.floor(Math.random() * 1000),
+      seededRandom(seed + 2, 10) > 7 ? seededRandom(seed + 3, 100) + 100 : undefined,
+    inventory: seededRandom(seed + 4, 1000),
     image: `https://picsum.photos/200/200?random=${id}`,
     createdAt: new Date(
-      Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000,
+      Date.now() - seededRandom(seed + 5, 365 * 24 * 60 * 60 * 1000),
     ).toISOString(),
     updatedAt: new Date(
-      Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
+      Date.now() - seededRandom(seed + 6, 30 * 24 * 60 * 60 * 1000),
     ).toISOString(),
     description: descriptions[id % descriptions.length],
-    metaTitle: Math.random() > 0.3 ? `${title} | Best Quality` : undefined,
+    metaTitle: seededRandom(seed + 7, 10) > 3 ? `${title} | Best Quality` : undefined,
     metaDescription:
-      Math.random() > 0.2
+      seededRandom(seed + 8, 10) > 2
         ? `${descriptions[id % descriptions.length].substring(0, 150)}...`
         : undefined,
     seoScore,
