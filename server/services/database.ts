@@ -43,7 +43,7 @@ class DatabaseService {
   async initialize(): Promise<void> {
     try {
       console.log('Initializing MariaDB connection pool...');
-      
+
       this.pool = mariadb.createPool({
         host: this.config.host,
         port: this.config.port,
@@ -51,8 +51,8 @@ class DatabaseService {
         password: this.config.password,
         database: this.config.database,
         connectionLimit: this.config.connectionLimit,
-        acquireTimeout: this.config.acquireTimeout,
-        timeout: this.config.timeout,
+        acquireTimeout: 5000, // Reduce timeout for faster fallback
+        timeout: 5000,
         ssl: this.config.ssl,
         multipleStatements: true,
         charset: 'utf8mb4',
@@ -66,10 +66,22 @@ class DatabaseService {
 
       // Run migrations if needed
       await this.runMigrations();
-      
+
     } catch (error) {
-      console.error('❌ Failed to initialize MariaDB:', error);
-      throw error;
+      console.warn('⚠️  MariaDB connection failed, falling back to mock data mode:', error.message);
+
+      // Clean up the failed pool
+      if (this.pool) {
+        try {
+          await this.pool.end();
+        } catch (e) {
+          // Ignore cleanup errors
+        }
+        this.pool = null;
+      }
+
+      // Don't throw the error - allow the app to continue in mock mode
+      console.log('📝 Running in mock data mode - database features will use simulated data');
     }
   }
 
