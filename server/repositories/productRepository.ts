@@ -469,19 +469,80 @@ class ProductRepository {
   }
 
   async getProductTypes(): Promise<string[]> {
+    if (!databaseService.isConnected()) {
+      return ["Electronics", "Clothing", "Shoes", "Accessories", "Home & Garden", "Sports", "Beauty", "Books", "Games", "Tools"];
+    }
+
     try {
       const result = await databaseService.query(`
-        SELECT DISTINCT product_type 
-        FROM products 
+        SELECT DISTINCT product_type
+        FROM products
         WHERE product_type IS NOT NULL AND product_type != ''
         ORDER BY product_type
       `);
-      
+
       return result.map((row: any) => row.product_type);
     } catch (error) {
       console.error('Error in ProductRepository.getProductTypes:', error);
       throw error;
     }
+  }
+
+  // Mock data fallback methods
+  private async findAllMockData(
+    filters: ProductFilters = {},
+    pagination: PaginationOptions
+  ): Promise<ProductSearchResult> {
+    const { offset, limit } = pagination;
+    const TOTAL_PRODUCTS = 500000;
+
+    const products: Product[] = [];
+    let productsAdded = 0;
+    let currentIndex = offset;
+
+    while (productsAdded < limit && currentIndex < TOTAL_PRODUCTS) {
+      const product = generateMockProduct(currentIndex + 1);
+      let includeProduct = true;
+
+      // Apply filters
+      if (filters.status && filters.status.length > 0 && !filters.status.includes(product.status)) {
+        includeProduct = false;
+      }
+      if (filters.vendor && filters.vendor.length > 0 && !filters.vendor.includes(product.vendor)) {
+        includeProduct = false;
+      }
+      if (filters.query) {
+        const query = filters.query.toLowerCase();
+        const matchesQuery =
+          product.title.toLowerCase().includes(query) ||
+          product.description?.toLowerCase().includes(query) ||
+          product.vendor?.toLowerCase().includes(query) ||
+          product.product_type?.toLowerCase().includes(query) ||
+          product.tags.some(tag => tag.toLowerCase().includes(query));
+
+        if (!matchesQuery) {
+          includeProduct = false;
+        }
+      }
+
+      if (includeProduct) {
+        products.push(product);
+        productsAdded++;
+      }
+
+      currentIndex++;
+
+      if (currentIndex - offset > limit * 10) {
+        break;
+      }
+    }
+
+    return {
+      products,
+      totalCount: TOTAL_PRODUCTS,
+      hasNextPage: offset + limit < TOTAL_PRODUCTS,
+      hasPreviousPage: offset > 0,
+    };
   }
 }
 
