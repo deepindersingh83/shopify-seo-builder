@@ -215,7 +215,11 @@ class InstallationService {
       process.env.DB_PASSWORD = config.database.password;
       process.env.DB_SSL = config.database.enableSSL.toString();
 
-      // Initialize database with new config
+      // Force reinitialize database service with new config
+      // First close any existing connection
+      await databaseService.close();
+
+      // Then reinitialize with new config
       await databaseService.initialize();
 
       // Check if database is actually connected after initialization
