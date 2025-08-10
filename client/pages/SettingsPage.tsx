@@ -194,6 +194,22 @@ export default function SettingsPage() {
     enablePrefetching: true,
   });
 
+  const [databaseSettings, setDatabaseSettings] = useState({
+    host: "localhost",
+    port: 3306,
+    database: "seo_manager",
+    user: "root",
+    password: "",
+    connectionPoolSize: 10,
+    connectionTimeout: 30000,
+    enableSSL: false,
+    autoBackup: true,
+    backupFrequency: "daily",
+    retentionDays: 30,
+    enableLogging: true,
+    logLevel: "info",
+  });
+
   const [apiIntegrations, setApiIntegrations] = useState<APIIntegration[]>([
     {
       id: "1",
