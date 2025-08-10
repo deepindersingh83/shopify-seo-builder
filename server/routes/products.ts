@@ -1,304 +1,95 @@
 import { Request, Response } from "express";
-
-interface Product {
-  id: string;
-  title: string;
-  handle: string;
-  status: "active" | "draft" | "archived";
-  vendor: string;
-  productType: string;
-  tags: string[];
-  price: number;
-  compareAtPrice?: number;
-  inventory: number;
-  image: string;
-  createdAt: string;
-  updatedAt: string;
-  description: string;
-  metaTitle?: string;
-  metaDescription?: string;
-  seoScore: number;
-}
-
-// Generate mock data for 500K+ products efficiently
-const generateMockProduct = (id: number): Product => {
-  const statuses: ("active" | "draft" | "archived")[] = [
-    "active",
-    "draft",
-    "archived",
-  ];
-  const vendors = [
-    "Nike",
-    "Adidas",
-    "Apple",
-    "Samsung",
-    "Sony",
-    "Microsoft",
-    "Amazon",
-    "Google",
-    "Dell",
-    "HP",
-  ];
-  const productTypes = [
-    "Electronics",
-    "Clothing",
-    "Shoes",
-    "Accessories",
-    "Home & Garden",
-    "Sports",
-    "Beauty",
-    "Books",
-    "Games",
-    "Tools",
-  ];
-
-  const descriptions = [
-    "High-quality product designed for modern consumers with exceptional durability and style.",
-    "Premium offering that combines functionality with aesthetic appeal for the discerning customer.",
-    "Innovation meets tradition in this carefully crafted product that exceeds expectations.",
-    "Professional-grade solution engineered for performance and reliability in demanding environments.",
-    "Sustainable and eco-friendly option that doesn't compromise on quality or performance.",
-  ];
-
-  // Use product ID as seed for deterministic randomness
-  const seed = id * 9301 + 49297; // Simple LCG constants
-  const seededRandom = (seed: number, max: number) => ((seed * 16807) % 2147483647) % max;
-
-  const title = `Product ${id} - ${vendors[id % vendors.length]} ${productTypes[id % productTypes.length]}`;
-  const handle = title
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, "-")
-    .replace(/-+/g, "-");
-  const seoScore = seededRandom(seed, 100);
-
-  return {
-    id: `product-${id}`,
-    title,
-    handle,
-    status: statuses[id % statuses.length],
-    vendor: vendors[id % vendors.length],
-    productType: productTypes[id % productTypes.length],
-    tags: [
-      `tag-${Math.floor(id / 100)}`,
-      `category-${id % 10}`,
-      `featured-${id % 50}`,
-    ],
-    price: seededRandom(seed + 1, 500) + 20,
-    compareAtPrice:
-      seededRandom(seed + 2, 10) > 7 ? seededRandom(seed + 3, 100) + 100 : undefined,
-    inventory: seededRandom(seed + 4, 1000),
-    image: `https://picsum.photos/200/200?random=${id}`,
-    createdAt: new Date(
-      Date.now() - seededRandom(seed + 5, 365 * 24 * 60 * 60 * 1000),
-    ).toISOString(),
-    updatedAt: new Date(
-      Date.now() - seededRandom(seed + 6, 30 * 24 * 60 * 60 * 1000),
-    ).toISOString(),
-    description: descriptions[id % descriptions.length],
-    metaTitle: seededRandom(seed + 7, 10) > 3 ? `${title} | Best Quality` : undefined,
-    metaDescription:
-      seededRandom(seed + 8, 10) > 2
-        ? `${descriptions[id % descriptions.length].substring(0, 150)}...`
-        : undefined,
-    seoScore,
-  };
-};
+import { productRepository, type Product, type ProductFilters } from "../repositories/productRepository";
 
 // Paginated products endpoint
-export const getPaginatedProducts = (req: Request, res: Response) => {
+export const getPaginatedProducts = async (req: Request, res: Response) => {
   try {
     const { offset = 0, limit = 50, filters = {}, sorting = {} } = req.body;
     const startTime = Date.now();
 
-    // Simulate large dataset (500K products)
-    const TOTAL_PRODUCTS = 500000;
     const startIndex = parseInt(offset as string);
-    const pageSize = Math.min(parseInt(limit as string), 500); // Max 500 per page for performance
+    const pageSize = Math.min(parseInt(limit as string), 500);
 
-    // Generate products for the requested range
-    const products: Product[] = [];
-    let productsAdded = 0;
-    let currentIndex = startIndex;
+    // Convert frontend filters to repository filters
+    const productFilters: ProductFilters = {
+      status: filters.status,
+      vendor: filters.vendor,
+      product_type: filters.productType,
+      seo_score_min: filters.seoScoreRange?.[0],
+      seo_score_max: filters.seoScoreRange?.[1],
+      price_min: filters.priceRange?.[0],
+      price_max: filters.priceRange?.[1],
+      tags: filters.tags,
+      query: filters.query,
+      has_meta_title: filters.hasMetaTitle,
+      has_meta_description: filters.hasMetaDescription,
+    };
 
-    // Generate enough products to fill the page, accounting for filtering
-    while (productsAdded < pageSize && currentIndex < TOTAL_PRODUCTS) {
-      const product = generateMockProduct(currentIndex + 1);
-      let includeProduct = true;
+    const sortBy = sorting.field ? {
+      field: sorting.field,
+      direction: sorting.direction || 'desc'
+    } : undefined;
 
-      // Apply filters
-      if (
-        filters.status &&
-        filters.status.length > 0 &&
-        !filters.status.includes(product.status)
-      ) {
-        includeProduct = false;
-      }
-      if (
-        filters.vendor &&
-        filters.vendor.length > 0 &&
-        !filters.vendor.includes(product.vendor)
-      ) {
-        includeProduct = false;
-      }
-      if (filters.query) {
-        const query = filters.query.toLowerCase();
-        const matchesQuery =
-          product.title.toLowerCase().includes(query) ||
-          product.description.toLowerCase().includes(query) ||
-          product.vendor.toLowerCase().includes(query) ||
-          product.productType.toLowerCase().includes(query) ||
-          product.tags.some(tag => tag.toLowerCase().includes(query));
-
-        if (!matchesQuery) {
-          includeProduct = false;
-        }
-      }
-
-      if (includeProduct) {
-        products.push(product);
-        productsAdded++;
-      }
-
-      currentIndex++;
-
-      // Prevent infinite loop if no products match filters
-      if (currentIndex - startIndex > pageSize * 10) {
-        break;
-      }
-    }
-
-    // Apply sorting
-    if (sorting.field) {
-      products.sort((a, b) => {
-        const aVal = a[sorting.field as keyof Product];
-        const bVal = b[sorting.field as keyof Product];
-
-        if (sorting.direction === "desc") {
-          return aVal < bVal ? 1 : -1;
-        }
-        return aVal > bVal ? 1 : -1;
-      });
-    }
+    const result = await productRepository.findAll(productFilters, {
+      offset: startIndex,
+      limit: pageSize,
+      sortBy,
+    });
 
     const queryTime = Date.now() - startTime;
 
     res.json({
-      data: products,
-      totalCount: TOTAL_PRODUCTS,
-      pageCount: Math.ceil(TOTAL_PRODUCTS / pageSize),
-      hasNextPage: startIndex + pageSize < TOTAL_PRODUCTS,
-      hasPreviousPage: startIndex > 0,
+      data: result.products,
+      totalCount: result.totalCount,
+      pageCount: Math.ceil(result.totalCount / pageSize),
+      hasNextPage: result.hasNextPage,
+      hasPreviousPage: result.hasPreviousPage,
       queryTime,
       virtualScrollMetadata: {
         startIndex,
-        endIndex: startIndex + products.length - 1,
-        totalHeight: TOTAL_PRODUCTS * 80, // Assuming 80px per item
-        visibleItems: products.length,
+        endIndex: startIndex + result.products.length - 1,
+        totalHeight: result.totalCount * 80,
+        visibleItems: result.products.length,
       },
     });
   } catch (error) {
-    console.error("Error in getPaginatedProducts:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('Error in getPaginatedProducts:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
 // Search products endpoint
-export const searchProducts = (req: Request, res: Response) => {
+export const searchProducts = async (req: Request, res: Response) => {
   try {
     const { query = "", filters = {}, sortBy = {}, limit = 50 } = req.body;
     const startTime = Date.now();
 
-    const TOTAL_PRODUCTS = 500000;
     const searchLimit = Math.min(parseInt(limit as string), 200);
-    const products: Product[] = [];
-    const matchedProducts = new Set<string>(); // Track unique products
 
-    // Simulate searching through a large dataset efficiently
-    if (query) {
-      const searchQuery = query.toLowerCase();
+    // Convert frontend filters to repository filters
+    const productFilters: ProductFilters = {
+      status: filters.status,
+      vendor: filters.vendor,
+      product_type: filters.productType,
+      seo_score_min: filters.seoScoreRange?.[0],
+      seo_score_max: filters.seoScoreRange?.[1],
+      price_min: filters.priceRange?.[0],
+      price_max: filters.priceRange?.[1],
+      tags: filters.tags,
+      query,
+      has_meta_title: filters.hasMetaTitle,
+      has_meta_description: filters.hasMetaDescription,
+    };
 
-      // Use query hash to distribute search across the product range to avoid duplicates
-      const queryHash = searchQuery.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-      const searchRange = Math.min(5000, TOTAL_PRODUCTS);
-
-      for (let i = 0; i < searchRange; i++) {
-        // Generate unique product IDs based on search query and iteration
-        const productId = (queryHash * 31 + i * 7) % TOTAL_PRODUCTS + 1;
-        const productKey = `product-${productId}`;
-
-        if (matchedProducts.has(productKey)) {
-          continue; // Skip duplicates
-        }
-
-        const product = generateMockProduct(productId);
-
-        // Check if product matches search query
-        const matchesQuery =
-          product.title.toLowerCase().includes(searchQuery) ||
-          product.description.toLowerCase().includes(searchQuery) ||
-          product.vendor.toLowerCase().includes(searchQuery) ||
-          product.productType.toLowerCase().includes(searchQuery) ||
-          product.tags.some(tag => tag.toLowerCase().includes(searchQuery));
-
-        if (!matchesQuery) {
-          continue;
-        }
-
-        // Apply filters
-        if (
-          filters.status &&
-          filters.status.length > 0 &&
-          !filters.status.includes(product.status)
-        ) {
-          continue;
-        }
-        if (
-          filters.vendor &&
-          filters.vendor.length > 0 &&
-          !filters.vendor.includes(product.vendor)
-        ) {
-          continue;
-        }
-
-        matchedProducts.add(productKey);
-        products.push(product);
-
-        if (products.length >= searchLimit) {
-          break;
-        }
-      }
-    } else {
-      // No search query - return unique sample of products
-      for (let i = 1; i <= searchLimit && i <= TOTAL_PRODUCTS; i++) {
-        const product = generateMockProduct(i);
-
-        // Apply filters
-        if (
-          filters.status &&
-          filters.status.length > 0 &&
-          !filters.status.includes(product.status)
-        ) {
-          continue;
-        }
-        if (
-          filters.vendor &&
-          filters.vendor.length > 0 &&
-          !filters.vendor.includes(product.vendor)
-        ) {
-          continue;
-        }
-
-        products.push(product);
-      }
-    }
-
-    // Apply sorting
+    const products = await productRepository.search(query, productFilters, searchLimit);
+    
+    // Apply sorting if requested
     if (sortBy.field) {
-      products.sort((a, b) => {
-        const aVal = a[sortBy.field as keyof Product];
-        const bVal = b[sortBy.field as keyof Product];
-
-        if (sortBy.direction === "desc") {
+      products.sort((a: any, b: any) => {
+        const aVal = a[sortBy.field];
+        const bVal = b[sortBy.field];
+        
+        if (sortBy.direction === 'desc') {
           return aVal < bVal ? 1 : -1;
         }
         return aVal > bVal ? 1 : -1;
@@ -313,90 +104,173 @@ export const searchProducts = (req: Request, res: Response) => {
       queryTime,
     });
   } catch (error) {
-    console.error("Error in searchProducts:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('Error in searchProducts:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
 // Get product count endpoint
-export const getProductCount = (req: Request, res: Response) => {
+export const getProductCount = async (req: Request, res: Response) => {
   try {
     const { query = "", filters = {} } = req.body;
+    
+    const productFilters: ProductFilters = {
+      status: filters.status,
+      vendor: filters.vendor,
+      product_type: filters.productType,
+      query,
+    };
 
-    // For demo purposes, return different counts based on filters
-    let count = 500000; // Base count
-
-    if (query) {
-      count = Math.floor(count * 0.1); // Search typically returns 10% of total
-    }
-
-    if (filters.status && filters.status.length > 0) {
-      count = Math.floor(count * (filters.status.length / 3)); // 3 total statuses
-    }
-
+    const count = await productRepository.getCount(productFilters);
+    
     res.json({ count });
   } catch (error) {
-    console.error("Error in getProductCount:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('Error in getProductCount:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
 // Lazy load products endpoint
-export const lazyLoadProducts = (req: Request, res: Response) => {
+export const lazyLoadProducts = async (req: Request, res: Response) => {
   try {
     const { startIndex, count } = req.body;
-    const products: Product[] = [];
 
-    for (let i = startIndex; i < startIndex + count; i++) {
-      products.push(generateMockProduct(i + 1));
-    }
+    const result = await productRepository.findAll({}, {
+      offset: startIndex,
+      limit: count,
+    });
 
-    res.json(products);
+    res.json(result.products);
   } catch (error) {
-    console.error("Error in lazyLoadProducts:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('Error in lazyLoadProducts:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
 // Bulk update products endpoint
-export const bulkUpdateProducts = (req: Request, res: Response) => {
+export const bulkUpdateProducts = async (req: Request, res: Response) => {
   try {
     const { productIds, updates } = req.body;
+    
+    // Convert frontend updates to database format
+    const dbUpdates: Partial<Product> = {};
+    
+    if (updates.status) dbUpdates.status = updates.status;
+    if (updates.vendor) dbUpdates.vendor = updates.vendor;
+    if (updates.productType) dbUpdates.product_type = updates.productType;
+    if (updates.metaTitle) dbUpdates.meta_title = updates.metaTitle;
+    if (updates.metaDescription) dbUpdates.meta_description = updates.metaDescription;
+    if (updates.tags) {
+      // Parse comma-separated tags
+      dbUpdates.tags = updates.tags.split(',').map((tag: string) => tag.trim()).filter(Boolean);
+    }
 
-    // Simulate bulk update processing
-    const results = productIds.map((id: string) => ({
-      id,
-      success: Math.random() > 0.1, // 90% success rate
-      changes: updates,
-      error: Math.random() > 0.9 ? "Failed to update product" : null,
-    }));
+    const result = await productRepository.bulkUpdate(productIds, dbUpdates);
 
     res.json({
       success: true,
-      updatedCount: results.filter((r: any) => r.success).length,
-      failedCount: results.filter((r: any) => !r.success).length,
-      results,
+      updatedCount: result.updated,
+      failedCount: result.errors.length,
+      results: productIds.map(id => ({
+        id,
+        success: !result.errors.some(error => error.includes(id)),
+        changes: dbUpdates,
+        error: result.errors.find(error => error.includes(id)) || null,
+      })),
     });
   } catch (error) {
-    console.error("Error in bulkUpdateProducts:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('Error in bulkUpdateProducts:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
 // Get single product endpoint
-export const getProduct = (req: Request, res: Response) => {
+export const getProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const productId = parseInt(id.replace("product-", ""));
-
-    if (isNaN(productId)) {
-      return res.status(404).json({ error: "Product not found" });
+    
+    const product = await productRepository.findById(id);
+    
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
     }
 
-    const product = generateMockProduct(productId);
     res.json(product);
   } catch (error) {
-    console.error("Error in getProduct:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error('Error in getProduct:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Create product endpoint
+export const createProduct = async (req: Request, res: Response) => {
+  try {
+    const productData = req.body;
+    
+    const product = await productRepository.create(productData);
+    
+    res.status(201).json(product);
+  } catch (error) {
+    console.error('Error in createProduct:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Update product endpoint
+export const updateProduct = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+    
+    const product = await productRepository.update(id, updates);
+    
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.json(product);
+  } catch (error) {
+    console.error('Error in updateProduct:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Delete product endpoint
+export const deleteProduct = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    
+    const deleted = await productRepository.delete(id);
+    
+    if (!deleted) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error in deleteProduct:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Get vendors endpoint
+export const getVendors = async (req: Request, res: Response) => {
+  try {
+    const vendors = await productRepository.getVendors();
+    res.json(vendors);
+  } catch (error) {
+    console.error('Error in getVendors:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Get product types endpoint
+export const getProductTypes = async (req: Request, res: Response) => {
+  try {
+    const productTypes = await productRepository.getProductTypes();
+    res.json(productTypes);
+  } catch (error) {
+    console.error('Error in getProductTypes:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
