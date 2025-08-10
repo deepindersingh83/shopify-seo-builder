@@ -47,7 +47,12 @@ export function createServer() {
   app.post("/api/products/count", productRoutes.getProductCount);
   app.post("/api/products/lazy-load", productRoutes.lazyLoadProducts);
   app.post("/api/products/bulk-update", productRoutes.bulkUpdateProducts);
+  app.get("/api/products/vendors", productRoutes.getVendors);
+  app.get("/api/products/types", productRoutes.getProductTypes);
+  app.post("/api/products", productRoutes.createProduct);
   app.get("/api/products/:id", productRoutes.getProduct);
+  app.put("/api/products/:id", productRoutes.updateProduct);
+  app.delete("/api/products/:id", productRoutes.deleteProduct);
 
   // Database health check
   app.get("/api/health/database", async (req, res) => {
