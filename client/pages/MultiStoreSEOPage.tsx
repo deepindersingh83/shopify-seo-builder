@@ -73,6 +73,7 @@ import {
   Shield,
   Award,
   Activity,
+  RefreshCw,
 } from "lucide-react";
 
 interface ShopifyStore {
