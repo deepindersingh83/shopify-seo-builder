@@ -1538,6 +1538,256 @@ export default function SettingsPage() {
     </div>
   );
 
+  const renderDatabaseSettings = () => (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>MariaDB Database Configuration</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <h4 className="font-medium">Connection Settings</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label htmlFor="db-host">Database Host</Label>
+                <Input
+                  id="db-host"
+                  value={databaseSettings.host}
+                  onChange={(e) =>
+                    setDatabaseSettings((prev) => ({
+                      ...prev,
+                      host: e.target.value,
+                    }))
+                  }
+                  placeholder="localhost"
+                />
+              </div>
+              <div>
+                <Label htmlFor="db-port">Port</Label>
+                <Input
+                  id="db-port"
+                  type="number"
+                  value={databaseSettings.port}
+                  onChange={(e) =>
+                    setDatabaseSettings((prev) => ({
+                      ...prev,
+                      port: parseInt(e.target.value),
+                    }))
+                  }
+                  placeholder="3306"
+                />
+              </div>
+              <div>
+                <Label htmlFor="db-name">Database Name</Label>
+                <Input
+                  id="db-name"
+                  value={databaseSettings.database}
+                  onChange={(e) =>
+                    setDatabaseSettings((prev) => ({
+                      ...prev,
+                      database: e.target.value,
+                    }))
+                  }
+                  placeholder="seo_manager"
+                />
+              </div>
+              <div>
+                <Label htmlFor="db-user">Username</Label>
+                <Input
+                  id="db-user"
+                  value={databaseSettings.user}
+                  onChange={(e) =>
+                    setDatabaseSettings((prev) => ({
+                      ...prev,
+                      user: e.target.value,
+                    }))
+                  }
+                  placeholder="root"
+                />
+              </div>
+              <div>
+                <Label htmlFor="db-password">Password</Label>
+                <Input
+                  id="db-password"
+                  type="password"
+                  value={databaseSettings.password}
+                  onChange={(e) =>
+                    setDatabaseSettings((prev) => ({
+                      ...prev,
+                      password: e.target.value,
+                    }))
+                  }
+                  placeholder="Enter database password"
+                />
+              </div>
+              <div>
+                <Label htmlFor="db-pool-size">Connection Pool Size</Label>
+                <Input
+                  id="db-pool-size"
+                  type="number"
+                  value={databaseSettings.connectionPoolSize}
+                  onChange={(e) =>
+                    setDatabaseSettings((prev) => ({
+                      ...prev,
+                      connectionPoolSize: parseInt(e.target.value),
+                    }))
+                  }
+                  min="1"
+                  max="50"
+                />
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-4">
+            <h4 className="font-medium">Advanced Settings</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Enable SSL</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Use SSL/TLS encryption for database connections
+                  </p>
+                </div>
+                <Switch
+                  checked={databaseSettings.enableSSL}
+                  onCheckedChange={(checked) =>
+                    setDatabaseSettings((prev) => ({
+                      ...prev,
+                      enableSSL: checked,
+                    }))
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Enable Auto Backup</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Automatically backup database
+                  </p>
+                </div>
+                <Switch
+                  checked={databaseSettings.autoBackup}
+                  onCheckedChange={(checked) =>
+                    setDatabaseSettings((prev) => ({
+                      ...prev,
+                      autoBackup: checked,
+                    }))
+                  }
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Enable Query Logging</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Log database queries for debugging
+                  </p>
+                </div>
+                <Switch
+                  checked={databaseSettings.enableLogging}
+                  onCheckedChange={(checked) =>
+                    setDatabaseSettings((prev) => ({
+                      ...prev,
+                      enableLogging: checked,
+                    }))
+                  }
+                />
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-4">
+            <h4 className="font-medium">Backup Settings</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label htmlFor="backup-frequency">Backup Frequency</Label>
+                <Select
+                  value={databaseSettings.backupFrequency}
+                  onValueChange={(value) =>
+                    setDatabaseSettings((prev) => ({
+                      ...prev,
+                      backupFrequency: value,
+                    }))
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="hourly">Hourly</SelectItem>
+                    <SelectItem value="daily">Daily</SelectItem>
+                    <SelectItem value="weekly">Weekly</SelectItem>
+                    <SelectItem value="monthly">Monthly</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="retention-days">Retention Days</Label>
+                <Input
+                  id="retention-days"
+                  type="number"
+                  value={databaseSettings.retentionDays}
+                  onChange={(e) =>
+                    setDatabaseSettings((prev) => ({
+                      ...prev,
+                      retentionDays: parseInt(e.target.value),
+                    }))
+                  }
+                  min="1"
+                  max="365"
+                />
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-4">
+            <h4 className="font-medium">Database Actions</h4>
+            <div className="flex flex-wrap gap-4">
+              <Button variant="outline" className="flex-1">
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Test Connection
+              </Button>
+              <Button variant="outline" className="flex-1">
+                <Download className="h-4 w-4 mr-2" />
+                Backup Now
+              </Button>
+              <Button variant="outline" className="flex-1">
+                <Upload className="h-4 w-4 mr-2" />
+                Restore Backup
+              </Button>
+              <Button variant="outline" className="flex-1">
+                <Activity className="h-4 w-4 mr-2" />
+                View Logs
+              </Button>
+            </div>
+          </div>
+
+          <Alert>
+            <HardDrive className="h-4 w-4" />
+            <AlertTitle>Database Information</AlertTitle>
+            <AlertDescription>
+              The application uses MariaDB for data storage. Ensure your database server is running and accessible.
+              Connection settings are applied immediately and may require an application restart.
+            </AlertDescription>
+          </Alert>
+
+          <div className="flex justify-end">
+            <Button onClick={() => handleSaveSettings("database")}>
+              <Save className="h-4 w-4 mr-2" />
+              Save Database Settings
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
   return (
     <Layout>
       <div className="container mx-auto px-6 py-6">
