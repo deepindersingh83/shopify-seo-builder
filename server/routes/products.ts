@@ -189,43 +189,88 @@ export const searchProducts = (req: Request, res: Response) => {
     const { query = "", filters = {}, sortBy = {}, limit = 50 } = req.body;
     const startTime = Date.now();
 
-    // For search, we'll generate a smaller subset and filter
-    const searchLimit = Math.min(parseInt(limit as string), 1000);
+    const TOTAL_PRODUCTS = 500000;
+    const searchLimit = Math.min(parseInt(limit as string), 200);
     const products: Product[] = [];
+    const matchedProducts = new Set<string>(); // Track unique products
 
-    // Generate products to search through (simulate indexed search)
-    for (let i = 1; i <= searchLimit; i++) {
-      const product = generateMockProduct(i);
+    // Simulate searching through a large dataset efficiently
+    if (query) {
+      const searchQuery = query.toLowerCase();
 
-      // Apply search query
-      if (query) {
-        const searchQuery = query.toLowerCase();
+      // Use query hash to distribute search across the product range to avoid duplicates
+      const queryHash = searchQuery.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      const searchRange = Math.min(5000, TOTAL_PRODUCTS);
+
+      for (let i = 0; i < searchRange; i++) {
+        // Generate unique product IDs based on search query and iteration
+        const productId = (queryHash * 31 + i * 7) % TOTAL_PRODUCTS + 1;
+        const productKey = `product-${productId}`;
+
+        if (matchedProducts.has(productKey)) {
+          continue; // Skip duplicates
+        }
+
+        const product = generateMockProduct(productId);
+
+        // Check if product matches search query
+        const matchesQuery =
+          product.title.toLowerCase().includes(searchQuery) ||
+          product.description.toLowerCase().includes(searchQuery) ||
+          product.vendor.toLowerCase().includes(searchQuery) ||
+          product.productType.toLowerCase().includes(searchQuery) ||
+          product.tags.some(tag => tag.toLowerCase().includes(searchQuery));
+
+        if (!matchesQuery) {
+          continue;
+        }
+
+        // Apply filters
         if (
-          !product.title.toLowerCase().includes(searchQuery) &&
-          !product.description.toLowerCase().includes(searchQuery) &&
-          !product.vendor.toLowerCase().includes(searchQuery)
+          filters.status &&
+          filters.status.length > 0 &&
+          !filters.status.includes(product.status)
         ) {
           continue;
         }
-      }
+        if (
+          filters.vendor &&
+          filters.vendor.length > 0 &&
+          !filters.vendor.includes(product.vendor)
+        ) {
+          continue;
+        }
 
-      // Apply filters
-      if (
-        filters.status &&
-        filters.status.length > 0 &&
-        !filters.status.includes(product.status)
-      ) {
-        continue;
-      }
-      if (
-        filters.vendor &&
-        filters.vendor.length > 0 &&
-        !filters.vendor.includes(product.vendor)
-      ) {
-        continue;
-      }
+        matchedProducts.add(productKey);
+        products.push(product);
 
-      products.push(product);
+        if (products.length >= searchLimit) {
+          break;
+        }
+      }
+    } else {
+      // No search query - return unique sample of products
+      for (let i = 1; i <= searchLimit && i <= TOTAL_PRODUCTS; i++) {
+        const product = generateMockProduct(i);
+
+        // Apply filters
+        if (
+          filters.status &&
+          filters.status.length > 0 &&
+          !filters.status.includes(product.status)
+        ) {
+          continue;
+        }
+        if (
+          filters.vendor &&
+          filters.vendor.length > 0 &&
+          !filters.vendor.includes(product.vendor)
+        ) {
+          continue;
+        }
+
+        products.push(product);
+      }
     }
 
     // Apply sorting
