@@ -150,6 +150,7 @@ const App = () => (
             path="/analytics/advanced"
             element={<AdvancedAnalyticsPage />}
           />
+          <Route path="/install" element={<InstallationPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
