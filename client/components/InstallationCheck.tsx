@@ -28,22 +28,27 @@ export default function InstallationCheck({ children }: InstallationCheckProps) 
       const response = await fetch("/api/installation/status");
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        console.warn(`Installation status check failed: HTTP ${response.status}`);
+        // For now, allow access to main app even if installation check fails
+        setIsInstalled(true);
+        return;
       }
 
       const data = await response.json();
 
       if (!data.installed) {
-        // Redirect to installation page
+        // Redirect to installation page only if we can confirm it's not installed
+        console.log("App not installed, redirecting to installation page");
         navigate("/install");
         return;
       }
 
       setIsInstalled(true);
     } catch (error) {
-      console.error("Failed to check installation status:", error);
-      // If we can't check the status, assume it's not installed and redirect to install
-      navigate("/install");
+      console.warn("Failed to check installation status, allowing access to main app:", error);
+      // If we can't check the status, allow access to main app for now
+      // This prevents the app from being unusable due to installation check issues
+      setIsInstalled(true);
     } finally {
       setIsChecking(false);
     }
