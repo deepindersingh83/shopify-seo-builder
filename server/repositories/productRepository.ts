@@ -1,6 +1,49 @@
 import { databaseService } from '../services/database';
 import { z } from 'zod';
 
+// Mock data generator for fallback when database is unavailable
+const generateMockProduct = (id: number): Product => {
+  const vendors = ["Nike", "Adidas", "Apple", "Samsung", "Sony", "Microsoft", "Amazon", "Google", "Dell", "HP"];
+  const productTypes = ["Electronics", "Clothing", "Shoes", "Accessories", "Home & Garden", "Sports", "Beauty", "Books", "Games", "Tools"];
+  const statuses: ("active" | "draft" | "archived")[] = ["active", "draft", "archived"];
+
+  const descriptions = [
+    "High-quality product designed for modern consumers with exceptional durability and style.",
+    "Premium offering that combines functionality with aesthetic appeal for the discerning customer.",
+    "Innovation meets tradition in this carefully crafted product that exceeds expectations.",
+    "Professional-grade solution engineered for performance and reliability in demanding environments.",
+    "Sustainable and eco-friendly option that doesn't compromise on quality or performance.",
+  ];
+
+  // Use product ID as seed for deterministic randomness
+  const seed = id * 9301 + 49297;
+  const seededRandom = (seed: number, max: number) => ((seed * 16807) % 2147483647) % max;
+
+  const title = `Product ${id} - ${vendors[id % vendors.length]} ${productTypes[id % productTypes.length]}`;
+  const handle = title.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-");
+  const seoScore = seededRandom(seed, 100);
+
+  return {
+    id: `product-${id}`,
+    title,
+    handle,
+    description: descriptions[id % descriptions.length],
+    status: statuses[id % statuses.length],
+    vendor: vendors[id % vendors.length],
+    product_type: productTypes[id % productTypes.length],
+    tags: [`tag-${Math.floor(id / 100)}`, `category-${id % 10}`, `featured-${id % 50}`],
+    price: seededRandom(seed + 1, 500) + 20,
+    compare_at_price: seededRandom(seed + 2, 10) > 7 ? seededRandom(seed + 3, 100) + 100 : undefined,
+    inventory: seededRandom(seed + 4, 1000),
+    image_url: `https://picsum.photos/200/200?random=${id}`,
+    meta_title: seededRandom(seed + 7, 10) > 3 ? `${title} | Best Quality` : undefined,
+    meta_description: seededRandom(seed + 8, 10) > 2 ? `${descriptions[id % descriptions.length].substring(0, 150)}...` : undefined,
+    seo_score: seoScore,
+    created_at: new Date(Date.now() - seededRandom(seed + 5, 365 * 24 * 60 * 60 * 1000)).toISOString(),
+    updated_at: new Date(Date.now() - seededRandom(seed + 6, 30 * 24 * 60 * 60 * 1000)).toISOString(),
+  };
+};
+
 // Product schema for validation
 export const ProductSchema = z.object({
   id: z.string(),
