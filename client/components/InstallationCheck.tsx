@@ -26,18 +26,23 @@ export default function InstallationCheck({ children }: InstallationCheckProps) 
 
     try {
       const response = await fetch("/api/installation/status");
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
       const data = await response.json();
-      
+
       if (!data.installed) {
         // Redirect to installation page
         navigate("/install");
         return;
       }
-      
+
       setIsInstalled(true);
     } catch (error) {
       console.error("Failed to check installation status:", error);
-      // If we can't check the status, assume it's not installed
+      // If we can't check the status, assume it's not installed and redirect to install
       navigate("/install");
     } finally {
       setIsChecking(false);
