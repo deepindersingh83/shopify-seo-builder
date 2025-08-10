@@ -1771,8 +1771,9 @@ export default function SettingsPage() {
             <HardDrive className="h-4 w-4" />
             <AlertTitle>Database Information</AlertTitle>
             <AlertDescription>
-              The application uses MariaDB for data storage. Ensure your database server is running and accessible.
-              Connection settings are applied immediately and may require an application restart.
+              The application uses MariaDB for data storage. Ensure your
+              database server is running and accessible. Connection settings are
+              applied immediately and may require an application restart.
             </AlertDescription>
           </Alert>
 

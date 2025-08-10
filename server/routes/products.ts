@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { productRepository, type Product, type ProductFilters } from "../repositories/productRepository";
+import {
+  productRepository,
+  type Product,
+  type ProductFilters,
+} from "../repositories/productRepository";
 
 // Paginated products endpoint
 export const getPaginatedProducts = async (req: Request, res: Response) => {
@@ -25,10 +29,12 @@ export const getPaginatedProducts = async (req: Request, res: Response) => {
       has_meta_description: filters.hasMetaDescription,
     };
 
-    const sortBy = sorting.field ? {
-      field: sorting.field,
-      direction: sorting.direction || 'desc'
-    } : undefined;
+    const sortBy = sorting.field
+      ? {
+          field: sorting.field,
+          direction: sorting.direction || "desc",
+        }
+      : undefined;
 
     const result = await productRepository.findAll(productFilters, {
       offset: startIndex,
@@ -53,8 +59,8 @@ export const getPaginatedProducts = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.error('Error in getPaginatedProducts:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in getPaginatedProducts:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -81,15 +87,19 @@ export const searchProducts = async (req: Request, res: Response) => {
       has_meta_description: filters.hasMetaDescription,
     };
 
-    const products = await productRepository.search(query, productFilters, searchLimit);
-    
+    const products = await productRepository.search(
+      query,
+      productFilters,
+      searchLimit,
+    );
+
     // Apply sorting if requested
     if (sortBy.field) {
       products.sort((a: any, b: any) => {
         const aVal = a[sortBy.field];
         const bVal = b[sortBy.field];
-        
-        if (sortBy.direction === 'desc') {
+
+        if (sortBy.direction === "desc") {
           return aVal < bVal ? 1 : -1;
         }
         return aVal > bVal ? 1 : -1;
@@ -104,8 +114,8 @@ export const searchProducts = async (req: Request, res: Response) => {
       queryTime,
     });
   } catch (error) {
-    console.error('Error in searchProducts:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in searchProducts:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -113,7 +123,7 @@ export const searchProducts = async (req: Request, res: Response) => {
 export const getProductCount = async (req: Request, res: Response) => {
   try {
     const { query = "", filters = {} } = req.body;
-    
+
     const productFilters: ProductFilters = {
       status: filters.status,
       vendor: filters.vendor,
@@ -122,11 +132,11 @@ export const getProductCount = async (req: Request, res: Response) => {
     };
 
     const count = await productRepository.getCount(productFilters);
-    
+
     res.json({ count });
   } catch (error) {
-    console.error('Error in getProductCount:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in getProductCount:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -135,15 +145,18 @@ export const lazyLoadProducts = async (req: Request, res: Response) => {
   try {
     const { startIndex, count } = req.body;
 
-    const result = await productRepository.findAll({}, {
-      offset: startIndex,
-      limit: count,
-    });
+    const result = await productRepository.findAll(
+      {},
+      {
+        offset: startIndex,
+        limit: count,
+      },
+    );
 
     res.json(result.products);
   } catch (error) {
-    console.error('Error in lazyLoadProducts:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in lazyLoadProducts:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -151,18 +164,22 @@ export const lazyLoadProducts = async (req: Request, res: Response) => {
 export const bulkUpdateProducts = async (req: Request, res: Response) => {
   try {
     const { productIds, updates } = req.body;
-    
+
     // Convert frontend updates to database format
     const dbUpdates: Partial<Product> = {};
-    
+
     if (updates.status) dbUpdates.status = updates.status;
     if (updates.vendor) dbUpdates.vendor = updates.vendor;
     if (updates.productType) dbUpdates.product_type = updates.productType;
     if (updates.metaTitle) dbUpdates.meta_title = updates.metaTitle;
-    if (updates.metaDescription) dbUpdates.meta_description = updates.metaDescription;
+    if (updates.metaDescription)
+      dbUpdates.meta_description = updates.metaDescription;
     if (updates.tags) {
       // Parse comma-separated tags
-      dbUpdates.tags = updates.tags.split(',').map((tag: string) => tag.trim()).filter(Boolean);
+      dbUpdates.tags = updates.tags
+        .split(",")
+        .map((tag: string) => tag.trim())
+        .filter(Boolean);
     }
 
     const result = await productRepository.bulkUpdate(productIds, dbUpdates);
@@ -171,16 +188,16 @@ export const bulkUpdateProducts = async (req: Request, res: Response) => {
       success: true,
       updatedCount: result.updated,
       failedCount: result.errors.length,
-      results: productIds.map(id => ({
+      results: productIds.map((id) => ({
         id,
-        success: !result.errors.some(error => error.includes(id)),
+        success: !result.errors.some((error) => error.includes(id)),
         changes: dbUpdates,
-        error: result.errors.find(error => error.includes(id)) || null,
+        error: result.errors.find((error) => error.includes(id)) || null,
       })),
     });
   } catch (error) {
-    console.error('Error in bulkUpdateProducts:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in bulkUpdateProducts:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -188,17 +205,17 @@ export const bulkUpdateProducts = async (req: Request, res: Response) => {
 export const getProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    
+
     const product = await productRepository.findById(id);
-    
+
     if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
+      return res.status(404).json({ error: "Product not found" });
     }
 
     res.json(product);
   } catch (error) {
-    console.error('Error in getProduct:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in getProduct:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -206,13 +223,13 @@ export const getProduct = async (req: Request, res: Response) => {
 export const createProduct = async (req: Request, res: Response) => {
   try {
     const productData = req.body;
-    
+
     const product = await productRepository.create(productData);
-    
+
     res.status(201).json(product);
   } catch (error) {
-    console.error('Error in createProduct:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in createProduct:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -221,17 +238,17 @@ export const updateProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const updates = req.body;
-    
+
     const product = await productRepository.update(id, updates);
-    
+
     if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
+      return res.status(404).json({ error: "Product not found" });
     }
 
     res.json(product);
   } catch (error) {
-    console.error('Error in updateProduct:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in updateProduct:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -239,17 +256,17 @@ export const updateProduct = async (req: Request, res: Response) => {
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    
+
     const deleted = await productRepository.delete(id);
-    
+
     if (!deleted) {
-      return res.status(404).json({ error: 'Product not found' });
+      return res.status(404).json({ error: "Product not found" });
     }
 
     res.json({ success: true });
   } catch (error) {
-    console.error('Error in deleteProduct:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in deleteProduct:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -259,8 +276,8 @@ export const getVendors = async (req: Request, res: Response) => {
     const vendors = await productRepository.getVendors();
     res.json(vendors);
   } catch (error) {
-    console.error('Error in getVendors:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in getVendors:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -270,7 +287,7 @@ export const getProductTypes = async (req: Request, res: Response) => {
     const productTypes = await productRepository.getProductTypes();
     res.json(productTypes);
   } catch (error) {
-    console.error('Error in getProductTypes:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error in getProductTypes:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };

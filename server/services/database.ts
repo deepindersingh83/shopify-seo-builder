@@ -1,13 +1,13 @@
-import mariadb from 'mariadb';
-import { z } from 'zod';
+import mariadb from "mariadb";
+import { z } from "zod";
 
 // Database configuration schema
 const DatabaseConfigSchema = z.object({
-  host: z.string().default('localhost'),
+  host: z.string().default("localhost"),
   port: z.number().default(3306),
-  user: z.string().default('root'),
-  password: z.string().default(''),
-  database: z.string().default('seo_manager'),
+  user: z.string().default("root"),
+  password: z.string().default(""),
+  database: z.string().default("seo_manager"),
   connectionLimit: z.number().default(10),
   acquireTimeout: z.number().default(30000),
   timeout: z.number().default(30000),
@@ -26,15 +26,15 @@ class DatabaseService {
 
   private loadConfig(): DatabaseConfig {
     const config = {
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '3306'),
-      user: process.env.DB_USER || 'root',
-      password: process.env.DB_PASSWORD || '',
-      database: process.env.DB_NAME || 'seo_manager',
-      connectionLimit: parseInt(process.env.DB_POOL_SIZE || '10'),
-      acquireTimeout: parseInt(process.env.DB_ACQUIRE_TIMEOUT || '30000'),
-      timeout: parseInt(process.env.DB_TIMEOUT || '30000'),
-      ssl: process.env.DB_SSL === 'true',
+      host: process.env.DB_HOST || "localhost",
+      port: parseInt(process.env.DB_PORT || "3306"),
+      user: process.env.DB_USER || "root",
+      password: process.env.DB_PASSWORD || "",
+      database: process.env.DB_NAME || "seo_manager",
+      connectionLimit: parseInt(process.env.DB_POOL_SIZE || "10"),
+      acquireTimeout: parseInt(process.env.DB_ACQUIRE_TIMEOUT || "30000"),
+      timeout: parseInt(process.env.DB_TIMEOUT || "30000"),
+      ssl: process.env.DB_SSL === "true",
     };
 
     return DatabaseConfigSchema.parse(config);
@@ -42,7 +42,7 @@ class DatabaseService {
 
   async initialize(): Promise<void> {
     try {
-      console.log('Initializing MariaDB connection pool...');
+      console.log("Initializing MariaDB connection pool...");
 
       this.pool = mariadb.createPool({
         host: this.config.host,
@@ -55,20 +55,22 @@ class DatabaseService {
         timeout: 5000,
         ssl: this.config.ssl,
         multipleStatements: true,
-        charset: 'utf8mb4',
-        collation: 'utf8mb4_unicode_ci',
+        charset: "utf8mb4",
+        collation: "utf8mb4_unicode_ci",
       });
 
       // Test the connection
       const conn = await this.pool.getConnection();
-      console.log('✅ MariaDB connection established successfully');
+      console.log("✅ MariaDB connection established successfully");
       await conn.release();
 
       // Run migrations if needed
       await this.runMigrations();
-
     } catch (error) {
-      console.warn('⚠️  MariaDB connection failed, falling back to mock data mode:', error.message);
+      console.warn(
+        "⚠️  MariaDB connection failed, falling back to mock data mode:",
+        error.message,
+      );
 
       // Clean up the failed pool
       if (this.pool) {
@@ -81,13 +83,15 @@ class DatabaseService {
       }
 
       // Don't throw the error - allow the app to continue in mock mode
-      console.log('📝 Running in mock data mode - database features will use simulated data');
+      console.log(
+        "📝 Running in mock data mode - database features will use simulated data",
+      );
     }
   }
 
   async getConnection(): Promise<mariadb.PoolConnection> {
     if (!this.pool) {
-      throw new Error('Database not initialized. Call initialize() first.');
+      throw new Error("Database not initialized. Call initialize() first.");
     }
     return this.pool.getConnection();
   }
@@ -102,7 +106,9 @@ class DatabaseService {
     }
   }
 
-  async transaction<T>(callback: (conn: mariadb.PoolConnection) => Promise<T>): Promise<T> {
+  async transaction<T>(
+    callback: (conn: mariadb.PoolConnection) => Promise<T>,
+  ): Promise<T> {
     const conn = await this.getConnection();
     try {
       await conn.beginTransaction();
@@ -118,8 +124,8 @@ class DatabaseService {
   }
 
   private async runMigrations(): Promise<void> {
-    console.log('🔄 Running database migrations...');
-    
+    console.log("🔄 Running database migrations...");
+
     try {
       // Create migrations table if it doesn't exist
       await this.query(`
@@ -132,16 +138,16 @@ class DatabaseService {
 
       // Check which migrations have been run
       const executedMigrations = await this.query(
-        'SELECT migration_name FROM migrations'
+        "SELECT migration_name FROM migrations",
       );
       const executedNames = new Set(
-        executedMigrations.map((m: any) => m.migration_name)
+        executedMigrations.map((m: any) => m.migration_name),
       );
 
       // Define migrations in order
       const migrations = [
         {
-          name: '001_create_products_table',
+          name: "001_create_products_table",
           sql: `
             CREATE TABLE IF NOT EXISTS products (
               id VARCHAR(50) PRIMARY KEY,
@@ -172,7 +178,7 @@ class DatabaseService {
           `,
         },
         {
-          name: '002_create_stores_table',
+          name: "002_create_stores_table",
           sql: `
             CREATE TABLE IF NOT EXISTS stores (
               id VARCHAR(50) PRIMARY KEY,
@@ -196,7 +202,7 @@ class DatabaseService {
           `,
         },
         {
-          name: '003_create_seo_audits_table',
+          name: "003_create_seo_audits_table",
           sql: `
             CREATE TABLE IF NOT EXISTS seo_audits (
               id VARCHAR(50) PRIMARY KEY,
@@ -216,7 +222,7 @@ class DatabaseService {
           `,
         },
         {
-          name: '004_create_keywords_table',
+          name: "004_create_keywords_table",
           sql: `
             CREATE TABLE IF NOT EXISTS keywords (
               id VARCHAR(50) PRIMARY KEY,
@@ -237,7 +243,7 @@ class DatabaseService {
           `,
         },
         {
-          name: '005_create_bulk_operations_table',
+          name: "005_create_bulk_operations_table",
           sql: `
             CREATE TABLE IF NOT EXISTS bulk_operations (
               id VARCHAR(50) PRIMARY KEY,
@@ -259,7 +265,7 @@ class DatabaseService {
           `,
         },
         {
-          name: '006_create_performance_metrics_table',
+          name: "006_create_performance_metrics_table",
           sql: `
             CREATE TABLE IF NOT EXISTS performance_metrics (
               id VARCHAR(50) PRIMARY KEY,
@@ -283,29 +289,31 @@ class DatabaseService {
           console.log(`  ⚡ Running migration: ${migration.name}`);
           await this.query(migration.sql);
           await this.query(
-            'INSERT INTO migrations (migration_name) VALUES (?)',
-            [migration.name]
+            "INSERT INTO migrations (migration_name) VALUES (?)",
+            [migration.name],
           );
           console.log(`  ✅ Migration completed: ${migration.name}`);
         }
       }
 
-      console.log('✅ All migrations completed successfully');
+      console.log("✅ All migrations completed successfully");
     } catch (error) {
-      console.error('❌ Migration failed:', error);
+      console.error("❌ Migration failed:", error);
       throw error;
     }
   }
 
   async seedData(): Promise<void> {
-    console.log('🌱 Seeding initial data...');
-    
+    console.log("🌱 Seeding initial data...");
+
     try {
       // Check if we already have data
-      const productCount = await this.query('SELECT COUNT(*) as count FROM products');
-      
+      const productCount = await this.query(
+        "SELECT COUNT(*) as count FROM products",
+      );
+
       if (productCount[0].count > 0) {
-        console.log('📊 Database already contains data, skipping seed');
+        console.log("📊 Database already contains data, skipping seed");
         return;
       }
 
@@ -318,61 +326,67 @@ class DatabaseService {
       // Seed some sample products for testing
       const sampleProducts = [
         {
-          id: 'product-1',
-          title: 'Premium Wireless Headphones',
-          handle: 'premium-wireless-headphones',
-          description: 'High-quality wireless headphones with noise cancellation and premium sound quality.',
-          vendor: 'AudioTech',
-          product_type: 'Electronics',
+          id: "product-1",
+          title: "Premium Wireless Headphones",
+          handle: "premium-wireless-headphones",
+          description:
+            "High-quality wireless headphones with noise cancellation and premium sound quality.",
+          vendor: "AudioTech",
+          product_type: "Electronics",
           price: 299.99,
           seo_score: 85,
         },
         {
-          id: 'product-2',
-          title: 'Eco-Friendly Water Bottle',
-          handle: 'eco-friendly-water-bottle',
-          description: 'Sustainable and reusable water bottle made from recycled materials.',
-          vendor: 'EcoLife',
-          product_type: 'Accessories',
+          id: "product-2",
+          title: "Eco-Friendly Water Bottle",
+          handle: "eco-friendly-water-bottle",
+          description:
+            "Sustainable and reusable water bottle made from recycled materials.",
+          vendor: "EcoLife",
+          product_type: "Accessories",
           price: 24.99,
           seo_score: 72,
         },
         {
-          id: 'product-3',
-          title: 'Smart Fitness Tracker',
-          handle: 'smart-fitness-tracker',
-          description: 'Advanced fitness tracker with heart rate monitoring and GPS.',
-          vendor: 'FitTech',
-          product_type: 'Electronics',
+          id: "product-3",
+          title: "Smart Fitness Tracker",
+          handle: "smart-fitness-tracker",
+          description:
+            "Advanced fitness tracker with heart rate monitoring and GPS.",
+          vendor: "FitTech",
+          product_type: "Electronics",
           price: 199.99,
           seo_score: 91,
         },
       ];
 
       for (const product of sampleProducts) {
-        await this.query(`
+        await this.query(
+          `
           INSERT IGNORE INTO products (
             id, title, handle, description, vendor, product_type, price, seo_score,
             tags, inventory, image_url
           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `, [
-          product.id,
-          product.title,
-          product.handle,
-          product.description,
-          product.vendor,
-          product.product_type,
-          product.price,
-          product.seo_score,
-          JSON.stringify(['demo', 'sample', product.vendor.toLowerCase()]),
-          Math.floor(Math.random() * 100) + 10,
-          `https://picsum.photos/400/400?random=${product.id.split('-')[1]}`
-        ]);
+        `,
+          [
+            product.id,
+            product.title,
+            product.handle,
+            product.description,
+            product.vendor,
+            product.product_type,
+            product.price,
+            product.seo_score,
+            JSON.stringify(["demo", "sample", product.vendor.toLowerCase()]),
+            Math.floor(Math.random() * 100) + 10,
+            `https://picsum.photos/400/400?random=${product.id.split("-")[1]}`,
+          ],
+        );
       }
 
-      console.log('✅ Initial data seeded successfully');
+      console.log("✅ Initial data seeded successfully");
     } catch (error) {
-      console.error('❌ Data seeding failed:', error);
+      console.error("❌ Data seeding failed:", error);
       throw error;
     }
   }
@@ -381,7 +395,7 @@ class DatabaseService {
     if (this.pool) {
       await this.pool.end();
       this.pool = null;
-      console.log('🔌 Database connection closed');
+      console.log("🔌 Database connection closed");
     }
   }
 
@@ -390,30 +404,32 @@ class DatabaseService {
   }
 
   // Health check method
-  async healthCheck(): Promise<{status: string, details: any}> {
+  async healthCheck(): Promise<{ status: string; details: any }> {
     try {
-      const result = await this.query('SELECT 1 as health_check');
-      const connectionInfo = await this.query('SHOW STATUS LIKE "Threads_connected"');
-      
+      const result = await this.query("SELECT 1 as health_check");
+      const connectionInfo = await this.query(
+        'SHOW STATUS LIKE "Threads_connected"',
+      );
+
       return {
-        status: 'healthy',
+        status: "healthy",
         details: {
           connected: result.length > 0,
-          activeConnections: connectionInfo[0]?.Value || 'unknown',
+          activeConnections: connectionInfo[0]?.Value || "unknown",
           database: this.config.database,
           host: this.config.host,
           port: this.config.port,
-        }
+        },
       };
     } catch (error) {
       return {
-        status: 'unhealthy',
+        status: "unhealthy",
         details: {
-          error: error instanceof Error ? error.message : 'Unknown error',
+          error: error instanceof Error ? error.message : "Unknown error",
           database: this.config.database,
           host: this.config.host,
           port: this.config.port,
-        }
+        },
       };
     }
   }

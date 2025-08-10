@@ -58,18 +58,23 @@ export function createServer() {
   app.get("/api/health/database", async (req, res) => {
     try {
       const health = await databaseService.healthCheck();
-      res.status(health.status === 'healthy' ? 200 : 503).json(health);
+      res.status(health.status === "healthy" ? 200 : 503).json(health);
     } catch (error) {
       res.status(503).json({
-        status: 'error',
-        details: { error: error instanceof Error ? error.message : 'Unknown error' }
+        status: "error",
+        details: {
+          error: error instanceof Error ? error.message : "Unknown error",
+        },
       });
     }
   });
 
   // Initialize database on startup
-  databaseService.initialize().catch(error => {
-    console.warn('Database initialization failed, continuing in mock mode:', error.message);
+  databaseService.initialize().catch((error) => {
+    console.warn(
+      "Database initialization failed, continuing in mock mode:",
+      error.message,
+    );
     // Don't exit the process - allow the app to run with mock data
   });
 

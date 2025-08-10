@@ -1,11 +1,37 @@
-import { databaseService } from '../services/database';
-import { z } from 'zod';
+import { databaseService } from "../services/database";
+import { z } from "zod";
 
 // Mock data generator for fallback when database is unavailable
 const generateMockProduct = (id: number): Product => {
-  const vendors = ["Nike", "Adidas", "Apple", "Samsung", "Sony", "Microsoft", "Amazon", "Google", "Dell", "HP"];
-  const productTypes = ["Electronics", "Clothing", "Shoes", "Accessories", "Home & Garden", "Sports", "Beauty", "Books", "Games", "Tools"];
-  const statuses: ("active" | "draft" | "archived")[] = ["active", "draft", "archived"];
+  const vendors = [
+    "Nike",
+    "Adidas",
+    "Apple",
+    "Samsung",
+    "Sony",
+    "Microsoft",
+    "Amazon",
+    "Google",
+    "Dell",
+    "HP",
+  ];
+  const productTypes = [
+    "Electronics",
+    "Clothing",
+    "Shoes",
+    "Accessories",
+    "Home & Garden",
+    "Sports",
+    "Beauty",
+    "Books",
+    "Games",
+    "Tools",
+  ];
+  const statuses: ("active" | "draft" | "archived")[] = [
+    "active",
+    "draft",
+    "archived",
+  ];
 
   const descriptions = [
     "High-quality product designed for modern consumers with exceptional durability and style.",
@@ -17,10 +43,14 @@ const generateMockProduct = (id: number): Product => {
 
   // Use product ID as seed for deterministic randomness
   const seed = id * 9301 + 49297;
-  const seededRandom = (seed: number, max: number) => ((seed * 16807) % 2147483647) % max;
+  const seededRandom = (seed: number, max: number) =>
+    ((seed * 16807) % 2147483647) % max;
 
   const title = `Product ${id} - ${vendors[id % vendors.length]} ${productTypes[id % productTypes.length]}`;
-  const handle = title.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-");
+  const handle = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "-")
+    .replace(/-+/g, "-");
   const seoScore = seededRandom(seed, 100);
 
   return {
@@ -31,16 +61,31 @@ const generateMockProduct = (id: number): Product => {
     status: statuses[id % statuses.length],
     vendor: vendors[id % vendors.length],
     product_type: productTypes[id % productTypes.length],
-    tags: [`tag-${Math.floor(id / 100)}`, `category-${id % 10}`, `featured-${id % 50}`],
+    tags: [
+      `tag-${Math.floor(id / 100)}`,
+      `category-${id % 10}`,
+      `featured-${id % 50}`,
+    ],
     price: seededRandom(seed + 1, 500) + 20,
-    compare_at_price: seededRandom(seed + 2, 10) > 7 ? seededRandom(seed + 3, 100) + 100 : undefined,
+    compare_at_price:
+      seededRandom(seed + 2, 10) > 7
+        ? seededRandom(seed + 3, 100) + 100
+        : undefined,
     inventory: seededRandom(seed + 4, 1000),
     image_url: `https://picsum.photos/200/200?random=${id}`,
-    meta_title: seededRandom(seed + 7, 10) > 3 ? `${title} | Best Quality` : undefined,
-    meta_description: seededRandom(seed + 8, 10) > 2 ? `${descriptions[id % descriptions.length].substring(0, 150)}...` : undefined,
+    meta_title:
+      seededRandom(seed + 7, 10) > 3 ? `${title} | Best Quality` : undefined,
+    meta_description:
+      seededRandom(seed + 8, 10) > 2
+        ? `${descriptions[id % descriptions.length].substring(0, 150)}...`
+        : undefined,
     seo_score: seoScore,
-    created_at: new Date(Date.now() - seededRandom(seed + 5, 365 * 24 * 60 * 60 * 1000)).toISOString(),
-    updated_at: new Date(Date.now() - seededRandom(seed + 6, 30 * 24 * 60 * 60 * 1000)).toISOString(),
+    created_at: new Date(
+      Date.now() - seededRandom(seed + 5, 365 * 24 * 60 * 60 * 1000),
+    ).toISOString(),
+    updated_at: new Date(
+      Date.now() - seededRandom(seed + 6, 30 * 24 * 60 * 60 * 1000),
+    ).toISOString(),
   };
 };
 
@@ -51,7 +96,7 @@ export const ProductSchema = z.object({
   title: z.string(),
   handle: z.string(),
   description: z.string().optional(),
-  status: z.enum(['active', 'draft', 'archived']).default('active'),
+  status: z.enum(["active", "draft", "archived"]).default("active"),
   vendor: z.string().optional(),
   product_type: z.string().optional(),
   tags: z.array(z.string()).default([]),
@@ -87,7 +132,7 @@ export interface PaginationOptions {
   limit: number;
   sortBy?: {
     field: string;
-    direction: 'asc' | 'desc';
+    direction: "asc" | "desc";
   };
 }
 
@@ -101,7 +146,7 @@ export interface ProductSearchResult {
 class ProductRepository {
   async findAll(
     filters: ProductFilters = {},
-    pagination: PaginationOptions
+    pagination: PaginationOptions,
   ): Promise<ProductSearchResult> {
     // If database is not available, fall back to mock data
     if (!databaseService.isConnected()) {
@@ -109,48 +154,48 @@ class ProductRepository {
     }
 
     const { offset, limit, sortBy } = pagination;
-    
-    let baseQuery = 'SELECT * FROM products';
-    let countQuery = 'SELECT COUNT(*) as total FROM products';
+
+    let baseQuery = "SELECT * FROM products";
+    let countQuery = "SELECT COUNT(*) as total FROM products";
     const params: any[] = [];
     const whereClauses: string[] = [];
 
     // Build WHERE clauses based on filters
     if (filters.status && filters.status.length > 0) {
-      const placeholders = filters.status.map(() => '?').join(',');
+      const placeholders = filters.status.map(() => "?").join(",");
       whereClauses.push(`status IN (${placeholders})`);
       params.push(...filters.status);
     }
 
     if (filters.vendor && filters.vendor.length > 0) {
-      const placeholders = filters.vendor.map(() => '?').join(',');
+      const placeholders = filters.vendor.map(() => "?").join(",");
       whereClauses.push(`vendor IN (${placeholders})`);
       params.push(...filters.vendor);
     }
 
     if (filters.product_type && filters.product_type.length > 0) {
-      const placeholders = filters.product_type.map(() => '?').join(',');
+      const placeholders = filters.product_type.map(() => "?").join(",");
       whereClauses.push(`product_type IN (${placeholders})`);
       params.push(...filters.product_type);
     }
 
     if (filters.seo_score_min !== undefined) {
-      whereClauses.push('seo_score >= ?');
+      whereClauses.push("seo_score >= ?");
       params.push(filters.seo_score_min);
     }
 
     if (filters.seo_score_max !== undefined) {
-      whereClauses.push('seo_score <= ?');
+      whereClauses.push("seo_score <= ?");
       params.push(filters.seo_score_max);
     }
 
     if (filters.price_min !== undefined) {
-      whereClauses.push('price >= ?');
+      whereClauses.push("price >= ?");
       params.push(filters.price_min);
     }
 
     if (filters.price_max !== undefined) {
-      whereClauses.push('price <= ?');
+      whereClauses.push("price <= ?");
       params.push(filters.price_max);
     }
 
@@ -164,16 +209,22 @@ class ProductRepository {
 
     if (filters.has_meta_description !== undefined) {
       if (filters.has_meta_description) {
-        whereClauses.push('meta_description IS NOT NULL AND meta_description != ""');
+        whereClauses.push(
+          'meta_description IS NOT NULL AND meta_description != ""',
+        );
       } else {
-        whereClauses.push('(meta_description IS NULL OR meta_description = "")');
+        whereClauses.push(
+          '(meta_description IS NULL OR meta_description = "")',
+        );
       }
     }
 
     if (filters.tags && filters.tags.length > 0) {
-      const tagConditions = filters.tags.map(() => 'JSON_CONTAINS(tags, ?)').join(' OR ');
+      const tagConditions = filters.tags
+        .map(() => "JSON_CONTAINS(tags, ?)")
+        .join(" OR ");
       whereClauses.push(`(${tagConditions})`);
-      params.push(...filters.tags.map(tag => JSON.stringify(tag)));
+      params.push(...filters.tags.map((tag) => JSON.stringify(tag)));
     }
 
     if (filters.query) {
@@ -185,12 +236,18 @@ class ProductRepository {
         product_type LIKE ?
       )`);
       const queryParam = `%${filters.query}%`;
-      params.push(filters.query, queryParam, queryParam, queryParam, queryParam);
+      params.push(
+        filters.query,
+        queryParam,
+        queryParam,
+        queryParam,
+        queryParam,
+      );
     }
 
     // Apply WHERE clauses
     if (whereClauses.length > 0) {
-      const whereClause = ` WHERE ${whereClauses.join(' AND ')}`;
+      const whereClause = ` WHERE ${whereClauses.join(" AND ")}`;
       baseQuery += whereClause;
       countQuery += whereClause;
     }
@@ -200,11 +257,11 @@ class ProductRepository {
       const direction = sortBy.direction.toUpperCase();
       baseQuery += ` ORDER BY ${sortBy.field} ${direction}`;
     } else {
-      baseQuery += ' ORDER BY updated_at DESC';
+      baseQuery += " ORDER BY updated_at DESC";
     }
 
     // Apply pagination
-    baseQuery += ' LIMIT ? OFFSET ?';
+    baseQuery += " LIMIT ? OFFSET ?";
     const queryParams = [...params, limit, offset];
     const countParams = [...params];
 
@@ -216,7 +273,7 @@ class ProductRepository {
       ]);
 
       const totalCount = countResult[0].total;
-      
+
       // Parse JSON fields
       const parsedProducts = products.map((product: any) => ({
         ...product,
@@ -232,22 +289,22 @@ class ProductRepository {
         hasPreviousPage: offset > 0,
       };
     } catch (error) {
-      console.error('Error in ProductRepository.findAll:', error);
+      console.error("Error in ProductRepository.findAll:", error);
       throw error;
     }
   }
 
   async findById(id: string): Promise<Product | null> {
     if (!databaseService.isConnected()) {
-      const productId = parseInt(id.replace('product-', ''));
+      const productId = parseInt(id.replace("product-", ""));
       if (isNaN(productId)) return null;
       return generateMockProduct(productId);
     }
 
     try {
       const result = await databaseService.query(
-        'SELECT * FROM products WHERE id = ?',
-        [id]
+        "SELECT * FROM products WHERE id = ?",
+        [id],
       );
 
       if (result.length === 0) {
@@ -262,7 +319,7 @@ class ProductRepository {
         updated_at: product.updated_at?.toISOString(),
       };
     } catch (error) {
-      console.error('Error in ProductRepository.findById:', error);
+      console.error("Error in ProductRepository.findById:", error);
       throw error;
     }
   }
@@ -270,13 +327,13 @@ class ProductRepository {
   async search(
     query: string,
     filters: ProductFilters = {},
-    limit: number = 50
+    limit: number = 50,
   ): Promise<Product[]> {
     const searchFilters = { ...filters, query };
     const result = await this.findAll(searchFilters, {
       offset: 0,
       limit,
-      sortBy: { field: 'updated_at', direction: 'desc' },
+      sortBy: { field: "updated_at", direction: "desc" },
     });
 
     return result.products;
@@ -289,38 +346,41 @@ class ProductRepository {
     });
 
     try {
-      await databaseService.query(`
+      await databaseService.query(
+        `
         INSERT INTO products (
           id, shopify_id, title, handle, description, status, vendor, product_type,
           tags, price, compare_at_price, inventory, image_url, meta_title, meta_description, seo_score
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `, [
-        product.id,
-        product.shopify_id,
-        product.title,
-        product.handle,
-        product.description,
-        product.status,
-        product.vendor,
-        product.product_type,
-        JSON.stringify(product.tags),
-        product.price,
-        product.compare_at_price,
-        product.inventory,
-        product.image_url,
-        product.meta_title,
-        product.meta_description,
-        product.seo_score,
-      ]);
+      `,
+        [
+          product.id,
+          product.shopify_id,
+          product.title,
+          product.handle,
+          product.description,
+          product.status,
+          product.vendor,
+          product.product_type,
+          JSON.stringify(product.tags),
+          product.price,
+          product.compare_at_price,
+          product.inventory,
+          product.image_url,
+          product.meta_title,
+          product.meta_description,
+          product.seo_score,
+        ],
+      );
 
       const createdProduct = await this.findById(product.id);
       if (!createdProduct) {
-        throw new Error('Failed to create product');
+        throw new Error("Failed to create product");
       }
 
       return createdProduct;
     } catch (error) {
-      console.error('Error in ProductRepository.create:', error);
+      console.error("Error in ProductRepository.create:", error);
       throw error;
     }
   }
@@ -331,9 +391,9 @@ class ProductRepository {
 
     // Build dynamic update query
     Object.entries(updates).forEach(([key, value]) => {
-      if (key !== 'id' && value !== undefined) {
+      if (key !== "id" && value !== undefined) {
         updateFields.push(`${key} = ?`);
-        if (key === 'tags') {
+        if (key === "tags") {
           params.push(JSON.stringify(value));
         } else {
           params.push(value);
@@ -348,22 +408,25 @@ class ProductRepository {
     params.push(id); // for WHERE clause
 
     try {
-      await databaseService.query(`
+      await databaseService.query(
+        `
         UPDATE products 
-        SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP
+        SET ${updateFields.join(", ")}, updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
-      `, params);
+      `,
+        params,
+      );
 
       return this.findById(id);
     } catch (error) {
-      console.error('Error in ProductRepository.update:', error);
+      console.error("Error in ProductRepository.update:", error);
       throw error;
     }
   }
 
   async bulkUpdate(
     productIds: string[],
-    updates: Partial<Product>
+    updates: Partial<Product>,
   ): Promise<{ updated: number; errors: string[] }> {
     const errors: string[] = [];
     let updated = 0;
@@ -376,9 +439,9 @@ class ProductRepository {
             const params: any[] = [];
 
             Object.entries(updates).forEach(([key, value]) => {
-              if (key !== 'id' && value !== undefined) {
+              if (key !== "id" && value !== undefined) {
                 updateFields.push(`${key} = ?`);
-                if (key === 'tags') {
+                if (key === "tags") {
                   params.push(JSON.stringify(value));
                 } else {
                   params.push(value);
@@ -388,22 +451,27 @@ class ProductRepository {
 
             if (updateFields.length > 0) {
               params.push(id);
-              await conn.query(`
+              await conn.query(
+                `
                 UPDATE products 
-                SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP
+                SET ${updateFields.join(", ")}, updated_at = CURRENT_TIMESTAMP
                 WHERE id = ?
-              `, params);
+              `,
+                params,
+              );
               updated++;
             }
           } catch (error) {
-            errors.push(`Product ${id}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            errors.push(
+              `Product ${id}: ${error instanceof Error ? error.message : "Unknown error"}`,
+            );
           }
         }
       });
 
       return { updated, errors };
     } catch (error) {
-      console.error('Error in ProductRepository.bulkUpdate:', error);
+      console.error("Error in ProductRepository.bulkUpdate:", error);
       throw error;
     }
   }
@@ -411,13 +479,13 @@ class ProductRepository {
   async delete(id: string): Promise<boolean> {
     try {
       const result = await databaseService.query(
-        'DELETE FROM products WHERE id = ?',
-        [id]
+        "DELETE FROM products WHERE id = ?",
+        [id],
       );
 
       return result.affectedRows > 0;
     } catch (error) {
-      console.error('Error in ProductRepository.delete:', error);
+      console.error("Error in ProductRepository.delete:", error);
       throw error;
     }
   }
@@ -435,13 +503,13 @@ class ProductRepository {
       return count;
     }
 
-    let query = 'SELECT COUNT(*) as total FROM products';
+    let query = "SELECT COUNT(*) as total FROM products";
     const params: any[] = [];
     const whereClauses: string[] = [];
 
     // Apply the same filters as in findAll
     if (filters.status && filters.status.length > 0) {
-      const placeholders = filters.status.map(() => '?').join(',');
+      const placeholders = filters.status.map(() => "?").join(",");
       whereClauses.push(`status IN (${placeholders})`);
       params.push(...filters.status);
     }
@@ -458,21 +526,32 @@ class ProductRepository {
     }
 
     if (whereClauses.length > 0) {
-      query += ` WHERE ${whereClauses.join(' AND ')}`;
+      query += ` WHERE ${whereClauses.join(" AND ")}`;
     }
 
     try {
       const result = await databaseService.query(query, params);
       return result[0].total;
     } catch (error) {
-      console.error('Error in ProductRepository.getCount:', error);
+      console.error("Error in ProductRepository.getCount:", error);
       throw error;
     }
   }
 
   async getVendors(): Promise<string[]> {
     if (!databaseService.isConnected()) {
-      return ["Nike", "Adidas", "Apple", "Samsung", "Sony", "Microsoft", "Amazon", "Google", "Dell", "HP"];
+      return [
+        "Nike",
+        "Adidas",
+        "Apple",
+        "Samsung",
+        "Sony",
+        "Microsoft",
+        "Amazon",
+        "Google",
+        "Dell",
+        "HP",
+      ];
     }
 
     try {
@@ -485,14 +564,25 @@ class ProductRepository {
 
       return result.map((row: any) => row.vendor);
     } catch (error) {
-      console.error('Error in ProductRepository.getVendors:', error);
+      console.error("Error in ProductRepository.getVendors:", error);
       throw error;
     }
   }
 
   async getProductTypes(): Promise<string[]> {
     if (!databaseService.isConnected()) {
-      return ["Electronics", "Clothing", "Shoes", "Accessories", "Home & Garden", "Sports", "Beauty", "Books", "Games", "Tools"];
+      return [
+        "Electronics",
+        "Clothing",
+        "Shoes",
+        "Accessories",
+        "Home & Garden",
+        "Sports",
+        "Beauty",
+        "Books",
+        "Games",
+        "Tools",
+      ];
     }
 
     try {
@@ -505,7 +595,7 @@ class ProductRepository {
 
       return result.map((row: any) => row.product_type);
     } catch (error) {
-      console.error('Error in ProductRepository.getProductTypes:', error);
+      console.error("Error in ProductRepository.getProductTypes:", error);
       throw error;
     }
   }
@@ -513,7 +603,7 @@ class ProductRepository {
   // Mock data fallback methods
   private async findAllMockData(
     filters: ProductFilters = {},
-    pagination: PaginationOptions
+    pagination: PaginationOptions,
   ): Promise<ProductSearchResult> {
     const { offset, limit } = pagination;
     const TOTAL_PRODUCTS = 500000;
@@ -527,10 +617,18 @@ class ProductRepository {
       let includeProduct = true;
 
       // Apply filters
-      if (filters.status && filters.status.length > 0 && !filters.status.includes(product.status)) {
+      if (
+        filters.status &&
+        filters.status.length > 0 &&
+        !filters.status.includes(product.status)
+      ) {
         includeProduct = false;
       }
-      if (filters.vendor && filters.vendor.length > 0 && !filters.vendor.includes(product.vendor)) {
+      if (
+        filters.vendor &&
+        filters.vendor.length > 0 &&
+        !filters.vendor.includes(product.vendor)
+      ) {
         includeProduct = false;
       }
       if (filters.query) {
@@ -540,7 +638,7 @@ class ProductRepository {
           product.description?.toLowerCase().includes(query) ||
           product.vendor?.toLowerCase().includes(query) ||
           product.product_type?.toLowerCase().includes(query) ||
-          product.tags.some(tag => tag.toLowerCase().includes(query));
+          product.tags.some((tag) => tag.toLowerCase().includes(query));
 
         if (!matchesQuery) {
           includeProduct = false;
