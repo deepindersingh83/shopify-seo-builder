@@ -385,6 +385,10 @@ class DatabaseService {
     }
   }
 
+  isConnected(): boolean {
+    return this.pool !== null;
+  }
+
   // Health check method
   async healthCheck(): Promise<{status: string, details: any}> {
     try {
