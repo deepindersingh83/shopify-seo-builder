@@ -44,6 +44,9 @@ class DatabaseService {
     try {
       console.log("Initializing MariaDB connection pool...");
 
+      // Refresh config from environment variables
+      this.config = this.loadConfig();
+
       this.pool = mariadb.createPool({
         host: this.config.host,
         port: this.config.port,
