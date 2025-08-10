@@ -5,7 +5,9 @@ import { handleDemo } from "./routes/demo";
 import * as workflowRoutes from "./routes/workflows";
 import * as bulkRoutes from "./routes/bulk";
 import * as productRoutes from "./routes/products";
+import * as installationRoutes from "./routes/installation";
 import { databaseService } from "./services/database";
+import { installationService } from "./services/installationService";
 
 export function createServer() {
   const app = express();
