@@ -1870,6 +1870,7 @@ export default function SettingsPage() {
           <TabsContent value="integrations">
             {renderAPIIntegrations()}
           </TabsContent>
+          <TabsContent value="database">{renderDatabaseSettings()}</TabsContent>
           <TabsContent value="team">{renderTeamManagement()}</TabsContent>
           <TabsContent value="security">{renderSecurity()}</TabsContent>
         </Tabs>
