@@ -51,6 +51,7 @@ import AdvancedContentPage from "./pages/AdvancedContentPage";
 import AdvancedAnalyticsPage from "./pages/AdvancedAnalyticsPage";
 import LandingPageBuilderPage from "./pages/LandingPageBuilderPage";
 import InstallationPage from "./pages/InstallationPage";
+import InstallationCheck from "./components/InstallationCheck";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
