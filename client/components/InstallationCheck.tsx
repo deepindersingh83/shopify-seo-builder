@@ -6,7 +6,9 @@ interface InstallationCheckProps {
   children: React.ReactNode;
 }
 
-export default function InstallationCheck({ children }: InstallationCheckProps) {
+export default function InstallationCheck({
+  children,
+}: InstallationCheckProps) {
   const [isChecking, setIsChecking] = useState(true);
   const [isInstalled, setIsInstalled] = useState(false);
   const navigate = useNavigate();
@@ -28,7 +30,9 @@ export default function InstallationCheck({ children }: InstallationCheckProps) 
       const response = await fetch("/api/installation/status");
 
       if (!response.ok) {
-        console.warn(`Installation status check failed: HTTP ${response.status}`);
+        console.warn(
+          `Installation status check failed: HTTP ${response.status}`,
+        );
         // For now, allow access to main app even if installation check fails
         setIsInstalled(true);
         return;
@@ -45,7 +49,10 @@ export default function InstallationCheck({ children }: InstallationCheckProps) 
 
       setIsInstalled(true);
     } catch (error) {
-      console.warn("Failed to check installation status, allowing access to main app:", error);
+      console.warn(
+        "Failed to check installation status, allowing access to main app:",
+        error,
+      );
       // If we can't check the status, allow access to main app for now
       // This prevents the app from being unusable due to installation check issues
       setIsInstalled(true);

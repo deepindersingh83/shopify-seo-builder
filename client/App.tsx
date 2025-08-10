@@ -85,7 +85,10 @@ const App = () => (
             <Route path="/seo/overview" element={<SEOOverviewPage />} />
             <Route path="/seo/keywords" element={<KeywordResearchPage />} />
             <Route path="/seo/serp-preview" element={<SERPPreviewPage />} />
-            <Route path="/seo/competitors" element={<CompetitorAnalysisPage />} />
+            <Route
+              path="/seo/competitors"
+              element={<CompetitorAnalysisPage />}
+            />
             <Route path="/seo/content" element={<ContentOptimizationPage />} />
             <Route
               path="/integrations"
@@ -102,7 +105,10 @@ const App = () => (
               element={<ThirdPartyIntegrationsPage />}
             />
             <Route path="/links/internal" element={<InternalLinksPage />} />
-            <Route path="/performance/speed" element={<PerformanceSpeedPage />} />
+            <Route
+              path="/performance/speed"
+              element={<PerformanceSpeedPage />}
+            />
             <Route
               path="/performance/reports"
               element={<PerformanceReportsPage />}
@@ -116,7 +122,10 @@ const App = () => (
             <Route path="/technical/schema" element={<TechnicalSchemaPage />} />
             <Route path="/technical/crawl" element={<TechnicalCrawlPage />} />
             <Route path="/analytics/roi" element={<AnalyticsROIPage />} />
-            <Route path="/analytics/reports" element={<AnalyticsReportsPage />} />
+            <Route
+              path="/analytics/reports"
+              element={<AnalyticsReportsPage />}
+            />
             <Route
               path="/social-media-autopost"
               element={<SocialMediaAutopostPage />}
@@ -133,10 +142,19 @@ const App = () => (
               element={<MobileOptimizationPage />}
             />
             <Route path="/international/local" element={<LocalSEOPage />} />
-            <Route path="/analytics/rankings" element={<KeywordRankingsPage />} />
-            <Route path="/analytics/traffic" element={<TrafficAnalysisPage />} />
+            <Route
+              path="/analytics/rankings"
+              element={<KeywordRankingsPage />}
+            />
+            <Route
+              path="/analytics/traffic"
+              element={<TrafficAnalysisPage />}
+            />
             <Route path="/automation/rules" element={<SEORulesPage />} />
-            <Route path="/automation/audits" element={<ScheduledAuditsPage />} />
+            <Route
+              path="/automation/audits"
+              element={<ScheduledAuditsPage />}
+            />
             <Route path="/automation/bulk" element={<AutomationBulkPage />} />
             <Route
               path="/automation/templates"

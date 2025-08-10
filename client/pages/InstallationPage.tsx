@@ -37,7 +37,7 @@ import {
 
 interface SystemRequirement {
   name: string;
-  status: 'passed' | 'failed' | 'warning';
+  status: "passed" | "failed" | "warning";
   message: string;
 }
 
@@ -45,7 +45,7 @@ interface InstallationStep {
   id: string;
   title: string;
   description: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'failed';
+  status: "pending" | "in_progress" | "completed" | "failed";
   error?: string;
 }
 
@@ -53,7 +53,7 @@ interface InstallationProgress {
   currentStep: number;
   totalSteps: number;
   steps: InstallationStep[];
-  overallStatus: 'not_started' | 'in_progress' | 'completed' | 'failed';
+  overallStatus: "not_started" | "in_progress" | "completed" | "failed";
   errorDetails?: string;
 }
 
@@ -87,8 +87,12 @@ export default function InstallationPage() {
   const [showDbPassword, setShowDbPassword] = useState(false);
   const [requirements, setRequirements] = useState<SystemRequirement[]>([]);
   const [canInstall, setCanInstall] = useState(false);
-  const [dbTestResult, setDbTestResult] = useState<{ success?: boolean; error?: string } | null>(null);
-  const [installationProgress, setInstallationProgress] = useState<InstallationProgress | null>(null);
+  const [dbTestResult, setDbTestResult] = useState<{
+    success?: boolean;
+    error?: string;
+  } | null>(null);
+  const [installationProgress, setInstallationProgress] =
+    useState<InstallationProgress | null>(null);
 
   const [config, setConfig] = useState<InstallationConfig>({
     adminUser: {
@@ -167,14 +171,14 @@ export default function InstallationPage() {
   const testDatabaseConnection = async () => {
     setIsLoading(true);
     setDbTestResult(null);
-    
+
     try {
       const response = await fetch("/api/installation/test-db", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ database: config.database }),
       });
-      
+
       const result = await response.json();
       setDbTestResult(result);
     } catch (error) {
@@ -269,10 +273,15 @@ export default function InstallationPage() {
   const renderSystemRequirements = () => (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold mb-4">System Requirements Check</h3>
+        <h3 className="text-lg font-semibold mb-4">
+          System Requirements Check
+        </h3>
         <div className="space-y-3">
           {requirements.map((req, index) => (
-            <div key={index} className="flex items-center space-x-3 p-3 border rounded">
+            <div
+              key={index}
+              className="flex items-center space-x-3 p-3 border rounded"
+            >
               {req.status === "passed" && (
                 <CheckCircle className="h-5 w-5 text-green-600" />
               )}
@@ -296,7 +305,8 @@ export default function InstallationPage() {
           <AlertCircle className="h-4 w-4 text-red-600" />
           <AlertTitle className="text-red-600">Cannot Install</AlertTitle>
           <AlertDescription>
-            Please resolve the failed requirements before proceeding with installation.
+            Please resolve the failed requirements before proceeding with
+            installation.
           </AlertDescription>
         </Alert>
       )}
@@ -313,7 +323,9 @@ export default function InstallationPage() {
   const renderAdminSetup = () => (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold mb-4">Create Administrator Account</h3>
+        <h3 className="text-lg font-semibold mb-4">
+          Create Administrator Account
+        </h3>
         <div className="space-y-4">
           <div>
             <Label htmlFor="admin-name">Full Name</Label>
@@ -321,7 +333,7 @@ export default function InstallationPage() {
               id="admin-name"
               value={config.adminUser.name}
               onChange={(e) =>
-                setConfig(prev => ({
+                setConfig((prev) => ({
                   ...prev,
                   adminUser: { ...prev.adminUser, name: e.target.value },
                 }))
@@ -337,7 +349,7 @@ export default function InstallationPage() {
               type="email"
               value={config.adminUser.email}
               onChange={(e) =>
-                setConfig(prev => ({
+                setConfig((prev) => ({
                   ...prev,
                   adminUser: { ...prev.adminUser, email: e.target.value },
                 }))
@@ -354,7 +366,7 @@ export default function InstallationPage() {
                 type={showPassword ? "text" : "password"}
                 value={config.adminUser.password}
                 onChange={(e) =>
-                  setConfig(prev => ({
+                  setConfig((prev) => ({
                     ...prev,
                     adminUser: { ...prev.adminUser, password: e.target.value },
                   }))
@@ -368,7 +380,11 @@ export default function InstallationPage() {
                 className="absolute right-0 top-0 h-full px-3"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
               </Button>
             </div>
           </div>
@@ -380,9 +396,12 @@ export default function InstallationPage() {
               type="password"
               value={config.adminUser.confirmPassword}
               onChange={(e) =>
-                setConfig(prev => ({
+                setConfig((prev) => ({
                   ...prev,
-                  adminUser: { ...prev.adminUser, confirmPassword: e.target.value },
+                  adminUser: {
+                    ...prev.adminUser,
+                    confirmPassword: e.target.value,
+                  },
                 }))
               }
               placeholder="Confirm your password"
@@ -391,11 +410,11 @@ export default function InstallationPage() {
 
           {config.adminUser.password !== config.adminUser.confirmPassword &&
             config.adminUser.confirmPassword.length > 0 && (
-            <Alert className="border-red-200 bg-red-50">
-              <AlertCircle className="h-4 w-4 text-red-600" />
-              <AlertDescription>Passwords do not match</AlertDescription>
-            </Alert>
-          )}
+              <Alert className="border-red-200 bg-red-50">
+                <AlertCircle className="h-4 w-4 text-red-600" />
+                <AlertDescription>Passwords do not match</AlertDescription>
+              </Alert>
+            )}
         </div>
       </div>
     </div>
@@ -412,7 +431,7 @@ export default function InstallationPage() {
               id="db-host"
               value={config.database.host}
               onChange={(e) =>
-                setConfig(prev => ({
+                setConfig((prev) => ({
                   ...prev,
                   database: { ...prev.database, host: e.target.value },
                 }))
@@ -428,9 +447,12 @@ export default function InstallationPage() {
               type="number"
               value={config.database.port}
               onChange={(e) =>
-                setConfig(prev => ({
+                setConfig((prev) => ({
                   ...prev,
-                  database: { ...prev.database, port: parseInt(e.target.value) || 3306 },
+                  database: {
+                    ...prev.database,
+                    port: parseInt(e.target.value) || 3306,
+                  },
                 }))
               }
               placeholder="3306"
@@ -443,7 +465,7 @@ export default function InstallationPage() {
               id="db-name"
               value={config.database.database}
               onChange={(e) =>
-                setConfig(prev => ({
+                setConfig((prev) => ({
                   ...prev,
                   database: { ...prev.database, database: e.target.value },
                 }))
@@ -458,7 +480,7 @@ export default function InstallationPage() {
               id="db-user"
               value={config.database.user}
               onChange={(e) =>
-                setConfig(prev => ({
+                setConfig((prev) => ({
                   ...prev,
                   database: { ...prev.database, user: e.target.value },
                 }))
@@ -475,7 +497,7 @@ export default function InstallationPage() {
                 type={showDbPassword ? "text" : "password"}
                 value={config.database.password}
                 onChange={(e) =>
-                  setConfig(prev => ({
+                  setConfig((prev) => ({
                     ...prev,
                     database: { ...prev.database, password: e.target.value },
                   }))
@@ -489,7 +511,11 @@ export default function InstallationPage() {
                 className="absolute right-0 top-0 h-full px-3"
                 onClick={() => setShowDbPassword(!showDbPassword)}
               >
-                {showDbPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showDbPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
               </Button>
             </div>
           </div>
@@ -499,7 +525,7 @@ export default function InstallationPage() {
           <Switch
             checked={config.database.enableSSL}
             onCheckedChange={(checked) =>
-              setConfig(prev => ({
+              setConfig((prev) => ({
                 ...prev,
                 database: { ...prev.database, enableSSL: checked },
               }))
@@ -526,7 +552,13 @@ export default function InstallationPage() {
         </div>
 
         {dbTestResult && (
-          <Alert className={dbTestResult.success ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"}>
+          <Alert
+            className={
+              dbTestResult.success
+                ? "border-green-200 bg-green-50"
+                : "border-red-200 bg-red-50"
+            }
+          >
             {dbTestResult.success ? (
               <CheckCircle className="h-4 w-4 text-green-600" />
             ) : (
@@ -554,9 +586,12 @@ export default function InstallationPage() {
               id="site-name"
               value={config.application.siteName}
               onChange={(e) =>
-                setConfig(prev => ({
+                setConfig((prev) => ({
                   ...prev,
-                  application: { ...prev.application, siteName: e.target.value },
+                  application: {
+                    ...prev.application,
+                    siteName: e.target.value,
+                  },
                 }))
               }
               placeholder="SEO Manager Pro"
@@ -569,7 +604,7 @@ export default function InstallationPage() {
               id="site-url"
               value={config.application.siteUrl}
               onChange={(e) =>
-                setConfig(prev => ({
+                setConfig((prev) => ({
                   ...prev,
                   application: { ...prev.application, siteUrl: e.target.value },
                 }))
@@ -584,7 +619,7 @@ export default function InstallationPage() {
               <Select
                 value={config.application.timezone}
                 onValueChange={(value) =>
-                  setConfig(prev => ({
+                  setConfig((prev) => ({
                     ...prev,
                     application: { ...prev.application, timezone: value },
                   }))
@@ -596,7 +631,9 @@ export default function InstallationPage() {
                 <SelectContent>
                   <SelectItem value="UTC">UTC</SelectItem>
                   <SelectItem value="America/New_York">Eastern Time</SelectItem>
-                  <SelectItem value="America/Los_Angeles">Pacific Time</SelectItem>
+                  <SelectItem value="America/Los_Angeles">
+                    Pacific Time
+                  </SelectItem>
                   <SelectItem value="Europe/London">London</SelectItem>
                   <SelectItem value="Europe/Paris">Paris</SelectItem>
                   <SelectItem value="Asia/Tokyo">Tokyo</SelectItem>
@@ -610,7 +647,7 @@ export default function InstallationPage() {
               <Select
                 value={config.application.language}
                 onValueChange={(value) =>
-                  setConfig(prev => ({
+                  setConfig((prev) => ({
                     ...prev,
                     application: { ...prev.application, language: value },
                   }))
@@ -639,7 +676,7 @@ export default function InstallationPage() {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold mb-4">Installation Progress</h3>
-        
+
         {!installationProgress && (
           <div className="text-center py-8">
             <Button onClick={runInstallation} disabled={isLoading} size="lg">
@@ -657,29 +694,37 @@ export default function InstallationPage() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">
-                Overall Progress: {installationProgress.currentStep} of {installationProgress.totalSteps}
+                Overall Progress: {installationProgress.currentStep} of{" "}
+                {installationProgress.totalSteps}
               </span>
               <Badge
                 variant={
                   installationProgress.overallStatus === "completed"
                     ? "default"
                     : installationProgress.overallStatus === "failed"
-                    ? "destructive"
-                    : "secondary"
+                      ? "destructive"
+                      : "secondary"
                 }
               >
                 {installationProgress.overallStatus}
               </Badge>
             </div>
-            
+
             <Progress
-              value={(installationProgress.currentStep / installationProgress.totalSteps) * 100}
+              value={
+                (installationProgress.currentStep /
+                  installationProgress.totalSteps) *
+                100
+              }
               className="h-3"
             />
 
             <div className="space-y-3">
               {installationProgress.steps.map((step, index) => (
-                <div key={step.id} className="flex items-center space-x-3 p-3 border rounded">
+                <div
+                  key={step.id}
+                  className="flex items-center space-x-3 p-3 border rounded"
+                >
                   {step.status === "completed" && (
                     <CheckCircle className="h-5 w-5 text-green-600" />
                   )}
@@ -692,10 +737,12 @@ export default function InstallationPage() {
                   {step.status === "pending" && (
                     <div className="h-5 w-5 border-2 border-gray-300 rounded-full" />
                   )}
-                  
+
                   <div className="flex-1">
                     <p className="font-medium">{step.title}</p>
-                    <p className="text-sm text-muted-foreground">{step.description}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {step.description}
+                    </p>
                     {step.error && (
                       <p className="text-sm text-red-600 mt-1">{step.error}</p>
                     )}
@@ -707,9 +754,12 @@ export default function InstallationPage() {
             {installationProgress.overallStatus === "completed" && (
               <Alert className="border-green-200 bg-green-50">
                 <CheckCircle className="h-4 w-4 text-green-600" />
-                <AlertTitle className="text-green-600">Installation Complete!</AlertTitle>
+                <AlertTitle className="text-green-600">
+                  Installation Complete!
+                </AlertTitle>
                 <AlertDescription>
-                  The installation has been completed successfully. You will be redirected to the main application in a few seconds.
+                  The installation has been completed successfully. You will be
+                  redirected to the main application in a few seconds.
                 </AlertDescription>
               </Alert>
             )}
@@ -717,9 +767,12 @@ export default function InstallationPage() {
             {installationProgress.overallStatus === "failed" && (
               <Alert className="border-red-200 bg-red-50">
                 <AlertCircle className="h-4 w-4 text-red-600" />
-                <AlertTitle className="text-red-600">Installation Failed</AlertTitle>
+                <AlertTitle className="text-red-600">
+                  Installation Failed
+                </AlertTitle>
                 <AlertDescription>
-                  {installationProgress.errorDetails || "An error occurred during installation."}
+                  {installationProgress.errorDetails ||
+                    "An error occurred during installation."}
                 </AlertDescription>
               </Alert>
             )}
@@ -766,7 +819,7 @@ export default function InstallationPage() {
               {steps.map((step, index) => {
                 const status = getStepStatus(index);
                 const StepIcon = step.icon;
-                
+
                 return (
                   <div key={step.id} className="flex flex-col items-center">
                     <div
@@ -774,8 +827,8 @@ export default function InstallationPage() {
                         status === "completed"
                           ? "bg-green-600 text-white"
                           : status === "current"
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-200 text-gray-500"
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-200 text-gray-500"
                       }`}
                     >
                       {status === "completed" ? (
@@ -795,12 +848,14 @@ export default function InstallationPage() {
                 );
               })}
             </div>
-            
+
             <div className="relative">
               <div className="absolute top-6 left-6 right-6 h-0.5 bg-gray-200" />
               <div
                 className="absolute top-6 left-6 h-0.5 bg-blue-600 transition-all duration-300"
-                style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
+                style={{
+                  width: `${(currentStep / (steps.length - 1)) * 100}%`,
+                }}
               />
             </div>
           </div>
@@ -809,10 +864,14 @@ export default function InstallationPage() {
           <Card className="mb-8">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                {React.createElement(steps[currentStep].icon, { className: "h-5 w-5" })}
+                {React.createElement(steps[currentStep].icon, {
+                  className: "h-5 w-5",
+                })}
                 <span>{steps[currentStep].title}</span>
               </CardTitle>
-              <p className="text-muted-foreground">{steps[currentStep].description}</p>
+              <p className="text-muted-foreground">
+                {steps[currentStep].description}
+              </p>
             </CardHeader>
             <CardContent>{renderStepContent()}</CardContent>
           </Card>
@@ -827,10 +886,12 @@ export default function InstallationPage() {
               <ArrowLeft className="h-4 w-4 mr-2" />
               Previous
             </Button>
-            
+
             <Button
               onClick={nextStep}
-              disabled={currentStep === steps.length - 1 || !validateCurrentStep()}
+              disabled={
+                currentStep === steps.length - 1 || !validateCurrentStep()
+              }
             >
               Next
               <ArrowRight className="h-4 w-4 ml-2" />

@@ -28,7 +28,7 @@ export function createServer() {
     res.json({
       status: "ok",
       timestamp: new Date().toISOString(),
-      message: "Server is running"
+      message: "Server is running",
     });
   });
 
@@ -67,11 +67,23 @@ export function createServer() {
 
   // Installation routes
   app.get("/api/installation/status", installationRoutes.getInstallationStatus);
-  app.get("/api/installation/requirements", installationRoutes.getSystemRequirements);
-  app.post("/api/installation/test-db", installationRoutes.testDatabaseConnection);
-  app.post("/api/installation/validate", installationRoutes.validateConfiguration);
+  app.get(
+    "/api/installation/requirements",
+    installationRoutes.getSystemRequirements,
+  );
+  app.post(
+    "/api/installation/test-db",
+    installationRoutes.testDatabaseConnection,
+  );
+  app.post(
+    "/api/installation/validate",
+    installationRoutes.validateConfiguration,
+  );
   app.post("/api/installation/install", installationRoutes.runInstallation);
-  app.get("/api/installation/progress", installationRoutes.getInstallationProgress);
+  app.get(
+    "/api/installation/progress",
+    installationRoutes.getInstallationProgress,
+  );
 
   // Database health check
   app.get("/api/health/database", async (req, res) => {
