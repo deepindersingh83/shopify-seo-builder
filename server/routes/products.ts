@@ -117,12 +117,13 @@ export const getPaginatedProducts = (req: Request, res: Response) => {
 
     // Generate products for the requested range
     const products: Product[] = [];
-    for (
-      let i = startIndex;
-      i < Math.min(startIndex + pageSize, TOTAL_PRODUCTS);
-      i++
-    ) {
-      const product = generateMockProduct(i + 1);
+    let productsAdded = 0;
+    let currentIndex = startIndex;
+
+    // Generate enough products to fill the page, accounting for filtering
+    while (productsAdded < pageSize && currentIndex < TOTAL_PRODUCTS) {
+      const product = generateMockProduct(currentIndex + 1);
+      let includeProduct = true;
 
       // Apply filters
       if (
@@ -130,26 +131,40 @@ export const getPaginatedProducts = (req: Request, res: Response) => {
         filters.status.length > 0 &&
         !filters.status.includes(product.status)
       ) {
-        continue;
+        includeProduct = false;
       }
       if (
         filters.vendor &&
         filters.vendor.length > 0 &&
         !filters.vendor.includes(product.vendor)
       ) {
-        continue;
+        includeProduct = false;
       }
       if (filters.query) {
         const query = filters.query.toLowerCase();
-        if (
-          !product.title.toLowerCase().includes(query) &&
-          !product.description.toLowerCase().includes(query)
-        ) {
-          continue;
+        const matchesQuery =
+          product.title.toLowerCase().includes(query) ||
+          product.description.toLowerCase().includes(query) ||
+          product.vendor.toLowerCase().includes(query) ||
+          product.productType.toLowerCase().includes(query) ||
+          product.tags.some(tag => tag.toLowerCase().includes(query));
+
+        if (!matchesQuery) {
+          includeProduct = false;
         }
       }
 
-      products.push(product);
+      if (includeProduct) {
+        products.push(product);
+        productsAdded++;
+      }
+
+      currentIndex++;
+
+      // Prevent infinite loop if no products match filters
+      if (currentIndex - startIndex > pageSize * 10) {
+        break;
+      }
     }
 
     // Apply sorting
