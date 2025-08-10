@@ -471,14 +471,18 @@ class ProductRepository {
   }
 
   async getVendors(): Promise<string[]> {
+    if (!databaseService.isConnected()) {
+      return ["Nike", "Adidas", "Apple", "Samsung", "Sony", "Microsoft", "Amazon", "Google", "Dell", "HP"];
+    }
+
     try {
       const result = await databaseService.query(`
-        SELECT DISTINCT vendor 
-        FROM products 
+        SELECT DISTINCT vendor
+        FROM products
         WHERE vendor IS NOT NULL AND vendor != ''
         ORDER BY vendor
       `);
-      
+
       return result.map((row: any) => row.vendor);
     } catch (error) {
       console.error('Error in ProductRepository.getVendors:', error);
