@@ -49,5 +49,24 @@ export function createServer() {
   app.post("/api/products/bulk-update", productRoutes.bulkUpdateProducts);
   app.get("/api/products/:id", productRoutes.getProduct);
 
+  // Database health check
+  app.get("/api/health/database", async (req, res) => {
+    try {
+      const health = await databaseService.healthCheck();
+      res.status(health.status === 'healthy' ? 200 : 503).json(health);
+    } catch (error) {
+      res.status(503).json({
+        status: 'error',
+        details: { error: error instanceof Error ? error.message : 'Unknown error' }
+      });
+    }
+  });
+
+  // Initialize database on startup
+  databaseService.initialize().catch(error => {
+    console.error('Failed to initialize database:', error);
+    process.exit(1);
+  });
+
   return app;
 }
