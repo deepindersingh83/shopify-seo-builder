@@ -23,6 +23,15 @@ export function createServer() {
     res.json({ message: ping });
   });
 
+  // Simple test endpoint
+  app.get("/api/test", (_req, res) => {
+    res.json({
+      status: "ok",
+      timestamp: new Date().toISOString(),
+      message: "Server is running"
+    });
+  });
+
   app.get("/api/demo", handleDemo);
 
   // Workflow routes
