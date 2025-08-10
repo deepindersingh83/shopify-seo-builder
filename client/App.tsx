@@ -62,99 +62,101 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/product/:id/edit" element={<EditProduct />} />
-          <Route path="/workflows" element={<WorkflowAutomation />} />
-          <Route path="/workflow-builder" element={<WorkflowBuilderPage />} />
-          <Route path="/data-sources" element={<DataSourcesPage />} />
-          <Route
-            path="/multi-language-seo"
-            element={<MultiLanguageSEOPage />}
-          />
-          <Route
-            path="/market-opportunities"
-            element={<MarketOpportunityPage />}
-          />
-          <Route
-            path="/multi-channel-listings"
-            element={<MultiChannelListingsPage />}
-          />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/seo/overview" element={<SEOOverviewPage />} />
-          <Route path="/seo/keywords" element={<KeywordResearchPage />} />
-          <Route path="/seo/serp-preview" element={<SERPPreviewPage />} />
-          <Route path="/seo/competitors" element={<CompetitorAnalysisPage />} />
-          <Route path="/seo/content" element={<ContentOptimizationPage />} />
-          <Route
-            path="/integrations"
-            element={<ThirdPartyIntegrationsPage />}
-          />
-          <Route path="/bulk-edit" element={<BulkEditPage />} />
-          <Route
-            path="/performance/vitals"
-            element={<PerformanceVitalsPage />}
-          />
-          <Route path="/product/new" element={<EditProduct />} />
-          <Route
-            path="/import-export"
-            element={<ThirdPartyIntegrationsPage />}
-          />
-          <Route path="/links/internal" element={<InternalLinksPage />} />
-          <Route path="/performance/speed" element={<PerformanceSpeedPage />} />
-          <Route
-            path="/performance/reports"
-            element={<PerformanceReportsPage />}
-          />
-          <Route path="/links/broken" element={<BrokenLinksPage />} />
-          <Route
-            path="/technical/sitemaps"
-            element={<TechnicalSitemapsPage />}
-          />
-          <Route path="/technical/robots" element={<TechnicalRobotsPage />} />
-          <Route path="/technical/schema" element={<TechnicalSchemaPage />} />
-          <Route path="/technical/crawl" element={<TechnicalCrawlPage />} />
-          <Route path="/analytics/roi" element={<AnalyticsROIPage />} />
-          <Route path="/analytics/reports" element={<AnalyticsReportsPage />} />
-          <Route
-            path="/social-media-autopost"
-            element={<SocialMediaAutopostPage />}
-          />
-          <Route path="/seo/collections" element={<CollectionSEOPage />} />
-          <Route
-            path="/international/hreflang"
-            element={<HreflangManagerPage />}
-          />
-          <Route path="/links/backlinks" element={<BacklinkMonitorPage />} />
-          <Route path="/links/redirects" element={<RedirectManagerPage />} />
-          <Route
-            path="/performance/mobile"
-            element={<MobileOptimizationPage />}
-          />
-          <Route path="/international/local" element={<LocalSEOPage />} />
-          <Route path="/analytics/rankings" element={<KeywordRankingsPage />} />
-          <Route path="/analytics/traffic" element={<TrafficAnalysisPage />} />
-          <Route path="/automation/rules" element={<SEORulesPage />} />
-          <Route path="/automation/audits" element={<ScheduledAuditsPage />} />
-          <Route path="/automation/bulk" element={<AutomationBulkPage />} />
-          <Route
-            path="/automation/templates"
-            element={<AutomationTemplatesPage />}
-          />
-          <Route path="/stores/multi-store" element={<MultiStoreSEOPage />} />
-          <Route path="/content/advanced" element={<AdvancedContentPage />} />
-          <Route
-            path="/content/landing-pages"
-            element={<LandingPageBuilderPage />}
-          />
-          <Route
-            path="/analytics/advanced"
-            element={<AdvancedAnalyticsPage />}
-          />
-          <Route path="/install" element={<InstallationPage />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <InstallationCheck>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/product/:id/edit" element={<EditProduct />} />
+            <Route path="/workflows" element={<WorkflowAutomation />} />
+            <Route path="/workflow-builder" element={<WorkflowBuilderPage />} />
+            <Route path="/data-sources" element={<DataSourcesPage />} />
+            <Route
+              path="/multi-language-seo"
+              element={<MultiLanguageSEOPage />}
+            />
+            <Route
+              path="/market-opportunities"
+              element={<MarketOpportunityPage />}
+            />
+            <Route
+              path="/multi-channel-listings"
+              element={<MultiChannelListingsPage />}
+            />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/seo/overview" element={<SEOOverviewPage />} />
+            <Route path="/seo/keywords" element={<KeywordResearchPage />} />
+            <Route path="/seo/serp-preview" element={<SERPPreviewPage />} />
+            <Route path="/seo/competitors" element={<CompetitorAnalysisPage />} />
+            <Route path="/seo/content" element={<ContentOptimizationPage />} />
+            <Route
+              path="/integrations"
+              element={<ThirdPartyIntegrationsPage />}
+            />
+            <Route path="/bulk-edit" element={<BulkEditPage />} />
+            <Route
+              path="/performance/vitals"
+              element={<PerformanceVitalsPage />}
+            />
+            <Route path="/product/new" element={<EditProduct />} />
+            <Route
+              path="/import-export"
+              element={<ThirdPartyIntegrationsPage />}
+            />
+            <Route path="/links/internal" element={<InternalLinksPage />} />
+            <Route path="/performance/speed" element={<PerformanceSpeedPage />} />
+            <Route
+              path="/performance/reports"
+              element={<PerformanceReportsPage />}
+            />
+            <Route path="/links/broken" element={<BrokenLinksPage />} />
+            <Route
+              path="/technical/sitemaps"
+              element={<TechnicalSitemapsPage />}
+            />
+            <Route path="/technical/robots" element={<TechnicalRobotsPage />} />
+            <Route path="/technical/schema" element={<TechnicalSchemaPage />} />
+            <Route path="/technical/crawl" element={<TechnicalCrawlPage />} />
+            <Route path="/analytics/roi" element={<AnalyticsROIPage />} />
+            <Route path="/analytics/reports" element={<AnalyticsReportsPage />} />
+            <Route
+              path="/social-media-autopost"
+              element={<SocialMediaAutopostPage />}
+            />
+            <Route path="/seo/collections" element={<CollectionSEOPage />} />
+            <Route
+              path="/international/hreflang"
+              element={<HreflangManagerPage />}
+            />
+            <Route path="/links/backlinks" element={<BacklinkMonitorPage />} />
+            <Route path="/links/redirects" element={<RedirectManagerPage />} />
+            <Route
+              path="/performance/mobile"
+              element={<MobileOptimizationPage />}
+            />
+            <Route path="/international/local" element={<LocalSEOPage />} />
+            <Route path="/analytics/rankings" element={<KeywordRankingsPage />} />
+            <Route path="/analytics/traffic" element={<TrafficAnalysisPage />} />
+            <Route path="/automation/rules" element={<SEORulesPage />} />
+            <Route path="/automation/audits" element={<ScheduledAuditsPage />} />
+            <Route path="/automation/bulk" element={<AutomationBulkPage />} />
+            <Route
+              path="/automation/templates"
+              element={<AutomationTemplatesPage />}
+            />
+            <Route path="/stores/multi-store" element={<MultiStoreSEOPage />} />
+            <Route path="/content/advanced" element={<AdvancedContentPage />} />
+            <Route
+              path="/content/landing-pages"
+              element={<LandingPageBuilderPage />}
+            />
+            <Route
+              path="/analytics/advanced"
+              element={<AdvancedAnalyticsPage />}
+            />
+            <Route path="/install" element={<InstallationPage />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </InstallationCheck>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
