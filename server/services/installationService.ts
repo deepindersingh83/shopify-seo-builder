@@ -1,7 +1,7 @@
 import { databaseService } from './database';
 import { z } from 'zod';
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import fs from 'fs/promises';
+import path from 'path';
 
 // Installation configuration schema
 const InstallationConfigSchema = z.object({
