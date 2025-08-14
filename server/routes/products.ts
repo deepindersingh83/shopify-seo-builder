@@ -6,6 +6,20 @@ import {
 } from "../repositories/productRepository";
 import { databaseService } from "../services/database";
 
+// Get products from connected stores endpoint
+const getConnectedStoreProducts = async (): Promise<Product[]> => {
+  try {
+    const response = await fetch("http://localhost:8080/api/stores/products");
+    if (response.ok) {
+      const data = await response.json();
+      return data.products || [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch connected store products:", error);
+  }
+  return [];
+};
+
 // Paginated products endpoint
 export const getPaginatedProducts = async (req: Request, res: Response) => {
   try {
