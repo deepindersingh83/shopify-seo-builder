@@ -132,6 +132,9 @@ export default function MultiStoreSEOPage() {
   const [selectedStores, setSelectedStores] = useState<string[]>([]);
   const [isAddStoreDialogOpen, setIsAddStoreDialogOpen] = useState(false);
   const [isCampaignDialogOpen, setIsCampaignDialogOpen] = useState(false);
+  const [storeUrl, setStoreUrl] = useState("");
+  const [accessToken, setAccessToken] = useState("");
+  const [isConnecting, setIsConnecting] = useState(false);
 
   // Mock data for Shopify stores
   const stores: ShopifyStore[] = [
@@ -386,6 +389,57 @@ export default function MultiStoreSEOPage() {
     console.log(`Bulk action: ${action} on stores:`, selectedStores);
   };
 
+  const handleConnectStore = async () => {
+    if (!storeUrl || !accessToken) {
+      alert("Please enter both store URL and access token");
+      return;
+    }
+
+    setIsConnecting(true);
+
+    try {
+      // Mock API call - replace with actual endpoint
+      const response = await fetch("/api/stores/connect", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          storeUrl: storeUrl.trim(),
+          accessToken: accessToken.trim(),
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Store connected successfully:", result);
+
+        // Reset form and close dialog
+        setStoreUrl("");
+        setAccessToken("");
+        setIsAddStoreDialogOpen(false);
+
+        // Show success message
+        alert(
+          "Store connected successfully! The page will refresh to show your new store.",
+        );
+
+        // Refresh the page to show the new store
+        window.location.reload();
+      } else {
+        const error = await response.json();
+        alert(`Failed to connect store: ${error.message || "Unknown error"}`);
+      }
+    } catch (error) {
+      console.error("Error connecting store:", error);
+      alert(
+        "Failed to connect store. Please check your network connection and try again.",
+      );
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
   return (
     <Layout>
       <div className="space-y-6">
@@ -520,6 +574,8 @@ export default function MultiStoreSEOPage() {
                     <Input
                       id="store-url"
                       placeholder="yourstore.myshopify.com"
+                      value={storeUrl}
+                      onChange={(e) => setStoreUrl(e.target.value)}
                     />
                   </div>
                   <div>
@@ -530,6 +586,8 @@ export default function MultiStoreSEOPage() {
                       id="access-token"
                       type="password"
                       placeholder="shpat_..."
+                      value={accessToken}
+                      onChange={(e) => setAccessToken(e.target.value)}
                     />
                   </div>
                   <Alert>
@@ -543,12 +601,27 @@ export default function MultiStoreSEOPage() {
                 <DialogFooter>
                   <Button
                     variant="outline"
-                    onClick={() => setIsAddStoreDialogOpen(false)}
+                    onClick={() => {
+                      setStoreUrl("");
+                      setAccessToken("");
+                      setIsAddStoreDialogOpen(false);
+                    }}
+                    disabled={isConnecting}
                   >
                     Cancel
                   </Button>
-                  <Button onClick={() => setIsAddStoreDialogOpen(false)}>
-                    Connect Store
+                  <Button
+                    onClick={handleConnectStore}
+                    disabled={isConnecting || !storeUrl || !accessToken}
+                  >
+                    {isConnecting ? (
+                      <>
+                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                        Connecting...
+                      </>
+                    ) : (
+                      "Connect Store"
+                    )}
                   </Button>
                 </DialogFooter>
               </DialogContent>
