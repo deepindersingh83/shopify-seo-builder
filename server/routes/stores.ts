@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { z } from "zod";
 import { databaseService } from "../services/database";
 import { productRepository } from "../repositories/productRepository";
+import { storeProductsService } from "../services/storeProductsService";
 
 // In-memory storage for when database is not available
 const connectedStores = new Map<string, any>();
