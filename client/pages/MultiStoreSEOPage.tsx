@@ -482,6 +482,8 @@ export default function MultiStoreSEOPage() {
             <p className="text-muted-foreground mt-2">
               Centralized SEO management and optimization for all your Shopify
               stores
+              {isLoading && " (Loading stores...)"}
+              {!isLoading && stores.length === 0 && " (No stores connected - connect your first store below!)"}
             </p>
           </div>
           <div className="flex gap-3">
