@@ -37,24 +37,26 @@ export const connectStore = async (req: Request, res: Response) => {
     // 1. Validate the access token by making a test API call to Shopify
     // 2. Fetch store information
     // 3. Save the store to the database
-    
+
     console.log(`Attempting to connect to Shopify store: ${cleanUrl}`);
     console.log(`Using access token: ${accessToken.substring(0, 10)}...`);
 
     // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Mock store data that would be fetched from Shopify API
     const mockStoreData = {
       id: `store-${Date.now()}`,
-      name: cleanUrl.split('.')[0].charAt(0).toUpperCase() + cleanUrl.split('.')[0].slice(1),
+      name:
+        cleanUrl.split(".")[0].charAt(0).toUpperCase() +
+        cleanUrl.split(".")[0].slice(1),
       domain: cleanUrl,
       plan: "basic",
       status: "active",
       country: "Unknown",
       currency: "USD",
       timezone: "UTC",
-      lastSync: new Date().toISOString().slice(0, 19).replace('T', ' '),
+      lastSync: new Date().toISOString().slice(0, 19).replace("T", " "),
       seoScore: Math.floor(Math.random() * 40) + 40, // Random score 40-80
       monthlyRevenue: Math.floor(Math.random() * 50000) + 10000,
       monthlyTraffic: Math.floor(Math.random() * 20000) + 5000,
@@ -76,7 +78,6 @@ export const connectStore = async (req: Request, res: Response) => {
       message: "Store connected successfully",
       store: mockStoreData,
     });
-
   } catch (error) {
     console.error("Error connecting store:", error);
     res.status(500).json({

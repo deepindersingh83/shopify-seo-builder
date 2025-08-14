@@ -420,7 +420,9 @@ export default function MultiStoreSEOPage() {
         setIsAddStoreDialogOpen(false);
 
         // Show success message
-        alert("Store connected successfully! The page will refresh to show your new store.");
+        alert(
+          "Store connected successfully! The page will refresh to show your new store.",
+        );
 
         // Refresh the page to show the new store
         window.location.reload();
@@ -430,7 +432,9 @@ export default function MultiStoreSEOPage() {
       }
     } catch (error) {
       console.error("Error connecting store:", error);
-      alert("Failed to connect store. Please check your network connection and try again.");
+      alert(
+        "Failed to connect store. Please check your network connection and try again.",
+      );
     } finally {
       setIsConnecting(false);
     }

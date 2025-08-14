@@ -29,7 +29,9 @@ export default function InstallationCheck({
     // Check for developer override in URL params (e.g., /?dev=true)
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get("dev") === "true") {
-      console.log("Developer mode detected via URL param, skipping installation check");
+      console.log(
+        "Developer mode detected via URL param, skipping installation check",
+      );
       setIsInstalled(true);
       setIsChecking(false);
       return;
