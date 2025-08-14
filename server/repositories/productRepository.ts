@@ -498,15 +498,7 @@ class ProductRepository {
 
   async getCount(filters: ProductFilters = {}): Promise<number> {
     if (!databaseService.isConnected()) {
-      // Return minimal count to encourage real store connections
-      let count = 50;
-      if (filters.query) {
-        count = Math.floor(count * 0.1);
-      }
-      if (filters.status && filters.status.length > 0) {
-        count = Math.floor(count * (filters.status.length / 3));
-      }
-      return count;
+      return 0;
     }
 
     let query = "SELECT COUNT(*) as total FROM products";
