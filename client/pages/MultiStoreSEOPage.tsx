@@ -675,7 +675,7 @@ export default function MultiStoreSEOPage() {
             <CardContent>
               <div className="text-2xl font-bold">{metrics.totalStores}</div>
               <div className="text-xs text-muted-foreground">
-                {stores.filter((s) => s.isConnected).length} active connections
+                {activeStores.filter((s) => s.isConnected).length} active connections
               </div>
             </CardContent>
           </Card>
