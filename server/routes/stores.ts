@@ -6,7 +6,6 @@ import { storeProductsService } from "../services/storeProductsService";
 
 // In-memory storage for when database is not available
 const connectedStores = new Map<string, any>();
-const storeProducts = new Map<string, any[]>();
 
 // Simulate Shopify store connection and product import
 async function simulateShopifyStoreConnection(domain: string, accessToken: string) {
