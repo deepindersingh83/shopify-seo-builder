@@ -923,6 +923,17 @@ export default function MultiStoreSEOPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
+                      {filteredStores.length === 0 && !isLoading && (
+                        <TableRow>
+                          <TableCell colSpan={8} className="text-center py-8">
+                            <div className="text-muted-foreground">
+                              {stores.length === 0
+                                ? "No stores connected. Click 'Connect Store' to add your first Shopify store."
+                                : "No stores match the current filters."}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
                       {filteredStores.map((store) => (
                         <TableRow key={store.id}>
                           <TableCell>
