@@ -148,9 +148,15 @@ class ProductRepository {
     filters: ProductFilters = {},
     pagination: PaginationOptions,
   ): Promise<ProductSearchResult> {
-    // If database is not available, fall back to mock data
+    // If database is not available, return empty results
     if (!databaseService.isConnected()) {
-      return this.findAllMockData(filters, pagination);
+      return {
+        products: [],
+        total: 0,
+        hasMore: false,
+        page: Math.floor(pagination.offset / pagination.limit) + 1,
+        totalPages: 0,
+      };
     }
 
     const { offset, limit, sortBy } = pagination;
