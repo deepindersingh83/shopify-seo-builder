@@ -166,31 +166,13 @@ export const connectStore = async (req: Request, res: Response) => {
     // Simulate API call delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    // Mock store data that would be fetched from Shopify API
-    const mockStoreData = {
-      id: `store-${Date.now()}`,
-      name:
-        cleanUrl.split(".")[0].charAt(0).toUpperCase() +
-        cleanUrl.split(".")[0].slice(1),
-      domain: cleanUrl,
-      plan: "basic",
-      status: "active",
-      country: "Unknown",
-      currency: "USD",
-      timezone: "UTC",
-      lastSync: new Date().toISOString().slice(0, 19).replace("T", " "),
-      seoScore: Math.floor(Math.random() * 40) + 40, // Random score 40-80
-      monthlyRevenue: Math.floor(Math.random() * 50000) + 10000,
-      monthlyTraffic: Math.floor(Math.random() * 20000) + 5000,
-      productsCount: Math.floor(Math.random() * 500) + 50,
-      ordersCount: Math.floor(Math.random() * 300) + 50,
-      conversionRate: +(Math.random() * 3 + 1).toFixed(1),
-      avgOrderValue: +(Math.random() * 100 + 50).toFixed(2),
-      topKeywords: ["product keyword", "brand name", "category term"],
-      connectedAt: new Date().toISOString().slice(0, 10),
-      isConnected: true,
-      accessToken: accessToken, // In production, encrypt this
-    };
+    // In a real implementation, you would:
+    // 1. Validate access token with Shopify API
+    // 2. Fetch store information from Shopify
+    // 3. Import products from Shopify
+
+    // For now, simulate getting store data and importing products
+    const storeData = await simulateShopifyStoreConnection(cleanUrl, accessToken);
 
     // Save store to storage (database or in-memory for now)
     try {
