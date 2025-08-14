@@ -818,6 +818,28 @@ export default function InstallationPage() {
             <p className="text-gray-600">
               Welcome! Let's set up your SEO management platform step by step.
             </p>
+
+            {/* Developer Skip Option */}
+            <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <div className="flex items-center justify-center space-x-3">
+                <Code className="h-5 w-5 text-yellow-600" />
+                <span className="text-sm font-medium text-yellow-800">
+                  Developer Mode
+                </span>
+              </div>
+              <p className="text-sm text-yellow-700 mt-1 mb-3">
+                Skip installation and use the app with mock data for development
+              </p>
+              <Button
+                onClick={skipInstallation}
+                variant="outline"
+                size="sm"
+                className="bg-white border-yellow-300 text-yellow-700 hover:bg-yellow-50"
+              >
+                <Zap className="h-4 w-4 mr-2" />
+                Skip Installation & Start Developing
+              </Button>
+            </div>
           </div>
 
           {/* Progress Steps */}
