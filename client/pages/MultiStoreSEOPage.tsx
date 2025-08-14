@@ -556,7 +556,7 @@ export default function MultiStoreSEOPage() {
                   <div>
                     <Label>Target Stores</Label>
                     <div className="mt-2 space-y-2">
-                      {stores
+                      {activeStores
                         .filter((s) => s.isConnected)
                         .map((store) => (
                           <div
