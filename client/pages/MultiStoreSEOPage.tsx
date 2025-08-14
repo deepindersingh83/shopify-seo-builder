@@ -1223,7 +1223,7 @@ export default function MultiStoreSEOPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {stores.map((store) => (
+                    {activeStores.map((store) => (
                       <div
                         key={store.id}
                         className="flex items-center justify-between p-3 border rounded"
@@ -1233,8 +1233,8 @@ export default function MultiStoreSEOPage() {
                           <span className="font-medium">{store.name}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="font-bold">{store.seoScore}</span>
-                          {store.seoScore >= 80 ? (
+                          <span className="font-bold">{store.seoScore || 0}</span>
+                          {(store.seoScore || 0) >= 80 ? (
                             <TrendingUp className="h-4 w-4 text-green-500" />
                           ) : (
                             <TrendingDown className="h-4 w-4 text-red-500" />
