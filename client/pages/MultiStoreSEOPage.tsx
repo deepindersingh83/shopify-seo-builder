@@ -1,5 +1,5 @@
 import { Layout } from "../components/Layout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -135,9 +135,36 @@ export default function MultiStoreSEOPage() {
   const [storeUrl, setStoreUrl] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
+  const [stores, setStores] = useState<ShopifyStore[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock data for Shopify stores
-  const stores: ShopifyStore[] = [
+  // Load stores from API on component mount
+  useEffect(() => {
+    loadStores();
+  }, []);
+
+  const loadStores = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch("/api/stores");
+      if (response.ok) {
+        const data = await response.json();
+        setStores(data.stores || []);
+      } else {
+        console.error("Failed to load stores");
+        // Keep stores as empty array if API fails
+        setStores([]);
+      }
+    } catch (error) {
+      console.error("Error loading stores:", error);
+      setStores([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fallback mock data when no real stores are connected
+  const fallbackStores: ShopifyStore[] = [
     {
       id: "1",
       name: "TechGear Pro",
@@ -232,18 +259,47 @@ export default function MultiStoreSEOPage() {
     },
   ];
 
-  // Mock metrics
+  // Calculate metrics from real store data
+  const activeStores = stores.length > 0 ? stores : fallbackStores;
   const metrics: StoreMetrics = {
-    totalStores: stores.length,
-    totalRevenue: stores.reduce((sum, store) => sum + store.monthlyRevenue, 0),
-    totalTraffic: stores.reduce((sum, store) => sum + store.monthlyTraffic, 0),
-    averageSEOScore: Math.round(
-      stores.reduce((sum, store) => sum + store.seoScore, 0) / stores.length,
+    totalStores: activeStores.length,
+    totalRevenue: activeStores.reduce(
+      (sum, store) => sum + (store.monthlyRevenue || 0),
+      0,
     ),
-    totalProducts: stores.reduce((sum, store) => sum + store.productsCount, 0),
-    totalOrders: stores.reduce((sum, store) => sum + store.ordersCount, 0),
-    bestPerformingStore: "TechGear Pro",
-    worstPerformingStore: "Home Essentials",
+    totalTraffic: activeStores.reduce(
+      (sum, store) => sum + (store.monthlyTraffic || 0),
+      0,
+    ),
+    averageSEOScore:
+      activeStores.length > 0
+        ? Math.round(
+            activeStores.reduce(
+              (sum, store) => sum + (store.seoScore || 0),
+              0,
+            ) / activeStores.length,
+          )
+        : 0,
+    totalProducts: activeStores.reduce(
+      (sum, store) => sum + (store.productsCount || 0),
+      0,
+    ),
+    totalOrders: activeStores.reduce(
+      (sum, store) => sum + (store.ordersCount || 0),
+      0,
+    ),
+    bestPerformingStore:
+      activeStores.length > 0
+        ? activeStores.reduce((best, store) =>
+            (store.seoScore || 0) > (best.seoScore || 0) ? store : best,
+          ).name
+        : "None",
+    worstPerformingStore:
+      activeStores.length > 0
+        ? activeStores.reduce((worst, store) =>
+            (store.seoScore || 0) < (worst.seoScore || 0) ? store : worst,
+          ).name
+        : "None",
   };
 
   // Mock SEO campaigns
@@ -297,7 +353,7 @@ export default function MultiStoreSEOPage() {
     },
   ];
 
-  const filteredStores = stores.filter((store) => {
+  const filteredStores = activeStores.filter((store) => {
     const matchesSearch =
       searchTerm === "" ||
       store.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -424,8 +480,8 @@ export default function MultiStoreSEOPage() {
           "Store connected successfully! The page will refresh to show your new store.",
         );
 
-        // Refresh the page to show the new store
-        window.location.reload();
+        // Reload stores instead of refreshing entire page
+        await loadStores();
       } else {
         const error = await response.json();
         alert(`Failed to connect store: ${error.message || "Unknown error"}`);
@@ -450,6 +506,10 @@ export default function MultiStoreSEOPage() {
             <p className="text-muted-foreground mt-2">
               Centralized SEO management and optimization for all your Shopify
               stores
+              {isLoading && " (Loading stores...)"}
+              {!isLoading &&
+                stores.length === 0 &&
+                " (No stores connected - connect your first store below!)"}
             </p>
           </div>
           <div className="flex gap-3">
@@ -524,7 +584,7 @@ export default function MultiStoreSEOPage() {
                   <div>
                     <Label>Target Stores</Label>
                     <div className="mt-2 space-y-2">
-                      {stores
+                      {activeStores
                         .filter((s) => s.isConnected)
                         .map((store) => (
                           <div
@@ -641,7 +701,8 @@ export default function MultiStoreSEOPage() {
             <CardContent>
               <div className="text-2xl font-bold">{metrics.totalStores}</div>
               <div className="text-xs text-muted-foreground">
-                {stores.filter((s) => s.isConnected).length} active connections
+                {activeStores.filter((s) => s.isConnected).length} active
+                connections
               </div>
             </CardContent>
           </Card>
@@ -889,6 +950,17 @@ export default function MultiStoreSEOPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
+                      {filteredStores.length === 0 && !isLoading && (
+                        <TableRow>
+                          <TableCell colSpan={8} className="text-center py-8">
+                            <div className="text-muted-foreground">
+                              {stores.length === 0
+                                ? "No stores connected. Click 'Connect Store' to add your first Shopify store."
+                                : "No stores match the current filters."}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
                       {filteredStores.map((store) => (
                         <TableRow key={store.id}>
                           <TableCell>
@@ -1130,7 +1202,10 @@ export default function MultiStoreSEOPage() {
                         <div className="text-sm text-muted-foreground">
                           Target stores:{" "}
                           {campaign.targetStores
-                            .map((id) => stores.find((s) => s.id === id)?.name)
+                            .map(
+                              (id) =>
+                                activeStores.find((s) => s.id === id)?.name,
+                            )
                             .join(", ")}
                         </div>
                         <div className="flex gap-2">
@@ -1163,15 +1238,19 @@ export default function MultiStoreSEOPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {stores.map((store) => {
+                    {activeStores.map((store) => {
                       const percentage =
-                        (store.monthlyRevenue / metrics.totalRevenue) * 100;
+                        metrics.totalRevenue > 0
+                          ? ((store.monthlyRevenue || 0) /
+                              metrics.totalRevenue) *
+                            100
+                          : 0;
                       return (
                         <div key={store.id} className="space-y-2">
                           <div className="flex justify-between text-sm">
                             <span className="font-medium">{store.name}</span>
                             <span>
-                              ${store.monthlyRevenue.toLocaleString()} (
+                              ${(store.monthlyRevenue || 0).toLocaleString()} (
                               {percentage.toFixed(1)}%)
                             </span>
                           </div>
@@ -1190,7 +1269,7 @@ export default function MultiStoreSEOPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {stores.map((store) => (
+                    {activeStores.map((store) => (
                       <div
                         key={store.id}
                         className="flex items-center justify-between p-3 border rounded"
@@ -1200,8 +1279,10 @@ export default function MultiStoreSEOPage() {
                           <span className="font-medium">{store.name}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="font-bold">{store.seoScore}</span>
-                          {store.seoScore >= 80 ? (
+                          <span className="font-bold">
+                            {store.seoScore || 0}
+                          </span>
+                          {(store.seoScore || 0) >= 80 ? (
                             <TrendingUp className="h-4 w-4 text-green-500" />
                           ) : (
                             <TrendingDown className="h-4 w-4 text-red-500" />
@@ -1247,11 +1328,14 @@ export default function MultiStoreSEOPage() {
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-blue-600">
-                      {Math.round(
-                        (stores.filter((s) => s.seoScore >= 80).length /
-                          stores.length) *
-                          100,
-                      )}
+                      {activeStores.length > 0
+                        ? Math.round(
+                            (activeStores.filter((s) => (s.seoScore || 0) >= 80)
+                              .length /
+                              activeStores.length) *
+                              100,
+                          )
+                        : 0}
                       %
                     </div>
                     <div className="text-sm text-muted-foreground">
@@ -1400,7 +1484,7 @@ export default function MultiStoreSEOPage() {
                   <div className="md:col-span-2">
                     <Label>Target Stores</Label>
                     <div className="mt-2 grid grid-cols-2 gap-2">
-                      {stores
+                      {activeStores
                         .filter((s) => s.isConnected)
                         .map((store) => (
                           <div

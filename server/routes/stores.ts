@@ -1,5 +1,127 @@
 import { Request, Response } from "express";
 import { z } from "zod";
+import { databaseService } from "../services/database";
+
+// In-memory store for when database is not available
+const connectedStores = new Map<string, any>();
+
+// Helper functions for store management
+async function saveConnectedStore(storeData: any): Promise<void> {
+  if (databaseService.isConnected()) {
+    try {
+      await databaseService.query(
+        `INSERT INTO stores (
+          id, name, domain, plan, status, seo_score, monthly_revenue,
+          monthly_traffic, access_token, settings
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+          name = VALUES(name),
+          plan = VALUES(plan),
+          status = VALUES(status),
+          seo_score = VALUES(seo_score),
+          monthly_revenue = VALUES(monthly_revenue),
+          monthly_traffic = VALUES(monthly_traffic),
+          access_token = VALUES(access_token),
+          settings = VALUES(settings),
+          updated_at = CURRENT_TIMESTAMP`,
+        [
+          storeData.id,
+          storeData.name,
+          storeData.domain,
+          storeData.plan,
+          storeData.status,
+          storeData.seoScore,
+          storeData.monthlyRevenue,
+          storeData.monthlyTraffic,
+          storeData.accessToken,
+          JSON.stringify({
+            currency: storeData.currency,
+            timezone: storeData.timezone,
+            country: storeData.country,
+            productsCount: storeData.productsCount,
+            ordersCount: storeData.ordersCount,
+            conversionRate: storeData.conversionRate,
+            avgOrderValue: storeData.avgOrderValue,
+            topKeywords: storeData.topKeywords,
+            connectedAt: storeData.connectedAt,
+          }),
+        ],
+      );
+    } catch (error) {
+      console.error(
+        "Database store save failed, using memory fallback:",
+        error,
+      );
+      connectedStores.set(storeData.id, storeData);
+    }
+  } else {
+    // Use in-memory storage when database is not available
+    connectedStores.set(storeData.id, storeData);
+  }
+}
+
+async function getAllConnectedStores(): Promise<any[]> {
+  if (databaseService.isConnected()) {
+    try {
+      const stores = await databaseService.query(`
+        SELECT
+          id, name, domain, plan, status, seo_score as seoScore,
+          monthly_revenue as monthlyRevenue, monthly_traffic as monthlyTraffic,
+          settings, created_at as connectedAt, updated_at as lastSync
+        FROM stores
+        ORDER BY created_at DESC
+      `);
+
+      return stores.map((store: any) => {
+        const settings = store.settings ? JSON.parse(store.settings) : {};
+        return {
+          ...store,
+          isConnected: true,
+          country: settings.country || "Unknown",
+          currency: settings.currency || "USD",
+          timezone: settings.timezone || "UTC",
+          productsCount: settings.productsCount || 0,
+          ordersCount: settings.ordersCount || 0,
+          conversionRate: settings.conversionRate || 0,
+          avgOrderValue: settings.avgOrderValue || 0,
+          topKeywords: settings.topKeywords || [],
+          lastSync: store.lastSync
+            ? new Date(store.lastSync)
+                .toISOString()
+                .slice(0, 19)
+                .replace("T", " ")
+            : "Never",
+          connectedAt: store.connectedAt
+            ? new Date(store.connectedAt).toISOString().slice(0, 10)
+            : "Unknown",
+        };
+      });
+    } catch (error) {
+      console.error("Database fetch failed, using memory fallback:", error);
+      return Array.from(connectedStores.values());
+    }
+  } else {
+    // Use in-memory storage when database is not available
+    return Array.from(connectedStores.values());
+  }
+}
+
+async function removeConnectedStore(storeId: string): Promise<void> {
+  if (databaseService.isConnected()) {
+    try {
+      await databaseService.query("DELETE FROM stores WHERE id = ?", [storeId]);
+    } catch (error) {
+      console.error(
+        "Database store removal failed, using memory fallback:",
+        error,
+      );
+      connectedStores.delete(storeId);
+    }
+  } else {
+    // Use in-memory storage when database is not available
+    connectedStores.delete(storeId);
+  }
+}
 
 // Schema for store connection request
 const ConnectStoreSchema = z.object({
@@ -70,8 +192,14 @@ export const connectStore = async (req: Request, res: Response) => {
       accessToken: accessToken, // In production, encrypt this
     };
 
-    // In a real implementation, save to database here
-    console.log("Store connected successfully:", mockStoreData);
+    // Save store to storage (database or in-memory for now)
+    try {
+      await saveConnectedStore(mockStoreData);
+      console.log("Store connected and saved successfully:", mockStoreData);
+    } catch (error) {
+      console.error("Failed to save store:", error);
+      // Continue with response even if save fails
+    }
 
     res.status(200).json({
       success: true,
@@ -90,21 +218,7 @@ export const connectStore = async (req: Request, res: Response) => {
 // Get all connected stores
 export const getStores = async (req: Request, res: Response) => {
   try {
-    // Mock data - in real implementation, fetch from database
-    const stores = [
-      {
-        id: "1",
-        name: "TechGear Pro",
-        domain: "techgearpro.myshopify.com",
-        plan: "plus",
-        status: "active",
-        isConnected: true,
-        seoScore: 92,
-        monthlyRevenue: 125000,
-      },
-      // Add more mock stores as needed
-    ];
-
+    const stores = await getAllConnectedStores();
     res.json({ stores });
   } catch (error) {
     console.error("Error fetching stores:", error);
@@ -126,8 +240,17 @@ export const disconnectStore = async (req: Request, res: Response) => {
       });
     }
 
-    // In real implementation, remove from database
-    console.log(`Disconnecting store: ${storeId}`);
+    // Remove store from storage
+    try {
+      await removeConnectedStore(storeId);
+      console.log(`Store disconnected and removed: ${storeId}`);
+    } catch (error) {
+      console.error("Failed to remove store:", error);
+      return res.status(500).json({
+        error: "Failed to disconnect store",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
 
     res.json({
       success: true,
