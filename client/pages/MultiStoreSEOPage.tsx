@@ -132,6 +132,9 @@ export default function MultiStoreSEOPage() {
   const [selectedStores, setSelectedStores] = useState<string[]>([]);
   const [isAddStoreDialogOpen, setIsAddStoreDialogOpen] = useState(false);
   const [isCampaignDialogOpen, setIsCampaignDialogOpen] = useState(false);
+  const [storeUrl, setStoreUrl] = useState("");
+  const [accessToken, setAccessToken] = useState("");
+  const [isConnecting, setIsConnecting] = useState(false);
 
   // Mock data for Shopify stores
   const stores: ShopifyStore[] = [
