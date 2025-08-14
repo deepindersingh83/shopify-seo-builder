@@ -1280,11 +1280,11 @@ export default function MultiStoreSEOPage() {
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-blue-600">
-                      {Math.round(
-                        (stores.filter((s) => s.seoScore >= 80).length /
-                          stores.length) *
+                      {activeStores.length > 0 ? Math.round(
+                        (activeStores.filter((s) => (s.seoScore || 0) >= 80).length /
+                          activeStores.length) *
                           100,
-                      )}
+                      ) : 0}
                       %
                     </div>
                     <div className="text-sm text-muted-foreground">
