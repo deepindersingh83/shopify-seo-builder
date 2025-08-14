@@ -346,6 +346,74 @@ export const getStores = async (req: Request, res: Response) => {
   }
 };
 
+// Get products from all connected stores
+export const getStoreProducts = async (req: Request, res: Response) => {
+  try {
+    let allProducts: any[] = [];
+
+    if (databaseService.isConnected()) {
+      // Get products from database if available
+      const result = await productRepository.findAll({}, { offset: 0, limit: 1000, sortBy: "created_at", sortOrder: "desc" });
+      allProducts = result.products;
+      console.log(`📊 Retrieved ${allProducts.length} products from database`);
+    } else {
+      // Get products from memory storage
+      for (const [storeId, products] of storeProducts.entries()) {
+        allProducts = allProducts.concat(products);
+      }
+      console.log(`📊 Retrieved ${allProducts.length} products from memory storage`);
+    }
+
+    res.json({
+      products: allProducts,
+      total: allProducts.length,
+      source: databaseService.isConnected() ? "database" : "memory"
+    });
+  } catch (error) {
+    console.error("Error fetching store products:", error);
+    res.status(500).json({
+      error: "Failed to fetch products",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
+
+// Get products for a specific store
+export const getProductsForStore = async (req: Request, res: Response) => {
+  try {
+    const { storeId } = req.params;
+
+    if (!storeId) {
+      return res.status(400).json({ error: "Store ID is required" });
+    }
+
+    let products: any[] = [];
+
+    if (databaseService.isConnected()) {
+      // Filter products by store in database - we'd need to add store_id to products table
+      // For now, get all products (this would need to be improved in a real app)
+      const result = await productRepository.findAll({}, { offset: 0, limit: 1000, sortBy: "created_at", sortOrder: "desc" });
+      products = result.products;
+    } else {
+      // Get products from memory storage for this specific store
+      products = storeProducts.get(storeId) || [];
+    }
+
+    res.json({
+      products,
+      total: products.length,
+      storeId,
+      source: databaseService.isConnected() ? "database" : "memory"
+    });
+  } catch (error) {
+    console.error("Error fetching products for store:", error);
+    res.status(500).json({
+      error: "Failed to fetch products for store",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
+
 // Disconnect a store
 export const disconnectStore = async (req: Request, res: Response) => {
   try {
