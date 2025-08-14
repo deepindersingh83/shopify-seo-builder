@@ -86,6 +86,11 @@ export function createServer() {
     installationRoutes.getInstallationProgress,
   );
 
+  // Store routes
+  app.post("/api/stores/connect", storeRoutes.connectStore);
+  app.get("/api/stores", storeRoutes.getStores);
+  app.delete("/api/stores/:storeId", storeRoutes.disconnectStore);
+
   // Database health check
   app.get("/api/health/database", async (req, res) => {
     try {
