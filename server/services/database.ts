@@ -346,11 +346,7 @@ class DatabaseService {
         return;
       }
 
-      // Create default store
-      await this.query(`
-        INSERT IGNORE INTO stores (id, name, domain, plan, status, seo_score, monthly_revenue, monthly_traffic)
-        VALUES ('store-1', 'Demo Store', 'demo-store.myshopify.com', 'plus', 'active', 75, 125000.00, 45000)
-      `);
+      // No default demo stores - users must connect their own stores
 
       // Seed some sample products for testing
       const sampleProducts = [
