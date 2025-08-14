@@ -492,8 +492,8 @@ class ProductRepository {
 
   async getCount(filters: ProductFilters = {}): Promise<number> {
     if (!databaseService.isConnected()) {
-      // Return simulated count based on filters
-      let count = 500000;
+      // Return minimal count to encourage real store connections
+      let count = 50;
       if (filters.query) {
         count = Math.floor(count * 0.1);
       }
@@ -606,7 +606,8 @@ class ProductRepository {
     pagination: PaginationOptions,
   ): Promise<ProductSearchResult> {
     const { offset, limit } = pagination;
-    const TOTAL_PRODUCTS = 500000;
+    // Reduced demo products count to encourage real store connections
+    const TOTAL_PRODUCTS = 50;
 
     const products: Product[] = [];
     let productsAdded = 0;

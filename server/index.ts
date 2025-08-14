@@ -6,6 +6,7 @@ import * as workflowRoutes from "./routes/workflows";
 import * as bulkRoutes from "./routes/bulk";
 import * as productRoutes from "./routes/products";
 import * as installationRoutes from "./routes/installation";
+import * as storeRoutes from "./routes/stores";
 import { databaseService } from "./services/database";
 import { installationService } from "./services/installationService";
 
@@ -84,6 +85,11 @@ export function createServer() {
     "/api/installation/progress",
     installationRoutes.getInstallationProgress,
   );
+
+  // Store routes
+  app.post("/api/stores/connect", storeRoutes.connectStore);
+  app.get("/api/stores", storeRoutes.getStores);
+  app.delete("/api/stores/:storeId", storeRoutes.disconnectStore);
 
   // Database health check
   app.get("/api/health/database", async (req, res) => {
