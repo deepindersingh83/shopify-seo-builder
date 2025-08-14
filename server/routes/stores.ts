@@ -2,6 +2,114 @@ import { Request, Response } from "express";
 import { z } from "zod";
 import { databaseService } from "../services/database";
 
+// In-memory store for when database is not available
+const connectedStores = new Map<string, any>();
+
+// Helper functions for store management
+async function saveConnectedStore(storeData: any): Promise<void> {
+  if (databaseService.isConnected()) {
+    try {
+      await databaseService.query(
+        `INSERT INTO stores (
+          id, name, domain, plan, status, seo_score, monthly_revenue,
+          monthly_traffic, access_token, settings
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+          name = VALUES(name),
+          plan = VALUES(plan),
+          status = VALUES(status),
+          seo_score = VALUES(seo_score),
+          monthly_revenue = VALUES(monthly_revenue),
+          monthly_traffic = VALUES(monthly_traffic),
+          access_token = VALUES(access_token),
+          settings = VALUES(settings),
+          updated_at = CURRENT_TIMESTAMP`,
+        [
+          storeData.id,
+          storeData.name,
+          storeData.domain,
+          storeData.plan,
+          storeData.status,
+          storeData.seoScore,
+          storeData.monthlyRevenue,
+          storeData.monthlyTraffic,
+          storeData.accessToken,
+          JSON.stringify({
+            currency: storeData.currency,
+            timezone: storeData.timezone,
+            country: storeData.country,
+            productsCount: storeData.productsCount,
+            ordersCount: storeData.ordersCount,
+            conversionRate: storeData.conversionRate,
+            avgOrderValue: storeData.avgOrderValue,
+            topKeywords: storeData.topKeywords,
+            connectedAt: storeData.connectedAt,
+          }),
+        ]
+      );
+    } catch (error) {
+      console.error("Database store save failed, using memory fallback:", error);
+      connectedStores.set(storeData.id, storeData);
+    }
+  } else {
+    // Use in-memory storage when database is not available
+    connectedStores.set(storeData.id, storeData);
+  }
+}
+
+async function getAllConnectedStores(): Promise<any[]> {
+  if (databaseService.isConnected()) {
+    try {
+      const stores = await databaseService.query(`
+        SELECT
+          id, name, domain, plan, status, seo_score as seoScore,
+          monthly_revenue as monthlyRevenue, monthly_traffic as monthlyTraffic,
+          settings, created_at as connectedAt, updated_at as lastSync
+        FROM stores
+        ORDER BY created_at DESC
+      `);
+
+      return stores.map((store: any) => {
+        const settings = store.settings ? JSON.parse(store.settings) : {};
+        return {
+          ...store,
+          isConnected: true,
+          country: settings.country || "Unknown",
+          currency: settings.currency || "USD",
+          timezone: settings.timezone || "UTC",
+          productsCount: settings.productsCount || 0,
+          ordersCount: settings.ordersCount || 0,
+          conversionRate: settings.conversionRate || 0,
+          avgOrderValue: settings.avgOrderValue || 0,
+          topKeywords: settings.topKeywords || [],
+          lastSync: store.lastSync ? new Date(store.lastSync).toISOString().slice(0, 19).replace("T", " ") : "Never",
+          connectedAt: store.connectedAt ? new Date(store.connectedAt).toISOString().slice(0, 10) : "Unknown",
+        };
+      });
+    } catch (error) {
+      console.error("Database fetch failed, using memory fallback:", error);
+      return Array.from(connectedStores.values());
+    }
+  } else {
+    // Use in-memory storage when database is not available
+    return Array.from(connectedStores.values());
+  }
+}
+
+async function removeConnectedStore(storeId: string): Promise<void> {
+  if (databaseService.isConnected()) {
+    try {
+      await databaseService.query("DELETE FROM stores WHERE id = ?", [storeId]);
+    } catch (error) {
+      console.error("Database store removal failed, using memory fallback:", error);
+      connectedStores.delete(storeId);
+    }
+  } else {
+    // Use in-memory storage when database is not available
+    connectedStores.delete(storeId);
+  }
+}
+
 // Schema for store connection request
 const ConnectStoreSchema = z.object({
   storeUrl: z.string().min(1, "Store URL is required"),
