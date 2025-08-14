@@ -1,5 +1,5 @@
 import { Layout } from "../components/Layout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -135,9 +135,36 @@ export default function MultiStoreSEOPage() {
   const [storeUrl, setStoreUrl] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
+  const [stores, setStores] = useState<ShopifyStore[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock data for Shopify stores
-  const stores: ShopifyStore[] = [
+  // Load stores from API on component mount
+  useEffect(() => {
+    loadStores();
+  }, []);
+
+  const loadStores = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/stores');
+      if (response.ok) {
+        const data = await response.json();
+        setStores(data.stores || []);
+      } else {
+        console.error('Failed to load stores');
+        // Keep stores as empty array if API fails
+        setStores([]);
+      }
+    } catch (error) {
+      console.error('Error loading stores:', error);
+      setStores([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Fallback mock data when no real stores are connected
+  const fallbackStores: ShopifyStore[] = [
     {
       id: "1",
       name: "TechGear Pro",
@@ -424,8 +451,8 @@ export default function MultiStoreSEOPage() {
           "Store connected successfully! The page will refresh to show your new store.",
         );
 
-        // Refresh the page to show the new store
-        window.location.reload();
+        // Reload stores instead of refreshing entire page
+        await loadStores();
       } else {
         const error = await response.json();
         alert(`Failed to connect store: ${error.message || "Unknown error"}`);
