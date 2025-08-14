@@ -116,14 +116,19 @@ async function importSampleProducts(storeId: string, domain: string) {
     };
 
     try {
-      // Save product to database if connected
+      // Try to save product to database, but continue even if it fails
       if (databaseService.isConnected()) {
         await productRepository.create(product);
-        console.log(`📦 Imported product: ${product.title}`);
+        console.log(`📦 Imported product to database: ${product.title}`);
+      } else {
+        // Store products in memory when database is not available
+        console.log(`📦 Imported product to memory: ${product.title}`);
       }
       importedProducts.push(product);
     } catch (error) {
-      console.error(`❌ Failed to import product ${product.title}:`, error);
+      console.error(`⚠️ Database save failed for ${product.title}, keeping in memory:`, error.message);
+      // Still add to imported products even if database save fails
+      importedProducts.push(product);
     }
   }
 
