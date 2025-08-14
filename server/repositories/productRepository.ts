@@ -302,9 +302,7 @@ class ProductRepository {
 
   async findById(id: string): Promise<Product | null> {
     if (!databaseService.isConnected()) {
-      const productId = parseInt(id.replace("product-", ""));
-      if (isNaN(productId)) return null;
-      return generateMockProduct(productId);
+      return null;
     }
 
     try {
