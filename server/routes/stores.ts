@@ -301,8 +301,8 @@ export const connectStore = async (req: Request, res: Response) => {
 
     // Save store to storage (database or in-memory for now)
     try {
-      await saveConnectedStore(mockStoreData);
-      console.log("Store connected and saved successfully:", mockStoreData);
+      await saveConnectedStore(storeData);
+      console.log("Store connected and saved successfully:", storeData);
     } catch (error) {
       console.error("Failed to save store:", error);
       // Continue with response even if save fails
@@ -311,7 +311,7 @@ export const connectStore = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Store connected successfully",
-      store: mockStoreData,
+      store: storeData,
     });
   } catch (error) {
     console.error("Error connecting store:", error);
