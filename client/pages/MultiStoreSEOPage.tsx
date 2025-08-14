@@ -259,18 +259,23 @@ export default function MultiStoreSEOPage() {
     },
   ];
 
-  // Mock metrics
+  // Calculate metrics from real store data
+  const activeStores = stores.length > 0 ? stores : fallbackStores;
   const metrics: StoreMetrics = {
-    totalStores: stores.length,
-    totalRevenue: stores.reduce((sum, store) => sum + store.monthlyRevenue, 0),
-    totalTraffic: stores.reduce((sum, store) => sum + store.monthlyTraffic, 0),
-    averageSEOScore: Math.round(
-      stores.reduce((sum, store) => sum + store.seoScore, 0) / stores.length,
-    ),
-    totalProducts: stores.reduce((sum, store) => sum + store.productsCount, 0),
-    totalOrders: stores.reduce((sum, store) => sum + store.ordersCount, 0),
-    bestPerformingStore: "TechGear Pro",
-    worstPerformingStore: "Home Essentials",
+    totalStores: activeStores.length,
+    totalRevenue: activeStores.reduce((sum, store) => sum + (store.monthlyRevenue || 0), 0),
+    totalTraffic: activeStores.reduce((sum, store) => sum + (store.monthlyTraffic || 0), 0),
+    averageSEOScore: activeStores.length > 0
+      ? Math.round(activeStores.reduce((sum, store) => sum + (store.seoScore || 0), 0) / activeStores.length)
+      : 0,
+    totalProducts: activeStores.reduce((sum, store) => sum + (store.productsCount || 0), 0),
+    totalOrders: activeStores.reduce((sum, store) => sum + (store.ordersCount || 0), 0),
+    bestPerformingStore: activeStores.length > 0
+      ? activeStores.reduce((best, store) => (store.seoScore || 0) > (best.seoScore || 0) ? store : best).name
+      : "None",
+    worstPerformingStore: activeStores.length > 0
+      ? activeStores.reduce((worst, store) => (store.seoScore || 0) < (worst.seoScore || 0) ? store : worst).name
+      : "None",
   };
 
   // Mock SEO campaigns
