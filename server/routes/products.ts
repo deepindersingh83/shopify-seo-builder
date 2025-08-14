@@ -4,6 +4,7 @@ import {
   type Product,
   type ProductFilters,
 } from "../repositories/productRepository";
+import { databaseService } from "../services/database";
 
 // Paginated products endpoint
 export const getPaginatedProducts = async (req: Request, res: Response) => {
