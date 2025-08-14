@@ -570,6 +570,8 @@ export default function MultiStoreSEOPage() {
                     <Input
                       id="store-url"
                       placeholder="yourstore.myshopify.com"
+                      value={storeUrl}
+                      onChange={(e) => setStoreUrl(e.target.value)}
                     />
                   </div>
                   <div>
@@ -580,6 +582,8 @@ export default function MultiStoreSEOPage() {
                       id="access-token"
                       type="password"
                       placeholder="shpat_..."
+                      value={accessToken}
+                      onChange={(e) => setAccessToken(e.target.value)}
                     />
                   </div>
                   <Alert>
