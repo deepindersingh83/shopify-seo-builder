@@ -8,13 +8,17 @@ import { storeProductsService } from "../services/storeProductsService";
 const connectedStores = new Map<string, any>();
 
 // Simulate Shopify store connection and product import
-async function simulateShopifyStoreConnection(domain: string, accessToken: string) {
+async function simulateShopifyStoreConnection(
+  domain: string,
+  accessToken: string,
+) {
   console.log(`🔗 Simulating Shopify connection for: ${domain}`);
 
   // Generate store data based on the actual domain
-  const storeName = domain.split(".")[0]
+  const storeName = domain
+    .split(".")[0]
     .split("-")
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
   const storeData = {
@@ -44,7 +48,9 @@ async function simulateShopifyStoreConnection(domain: string, accessToken: strin
   const importedProducts = await importSampleProducts(storeData.id, domain);
   storeData.productsCount = importedProducts.length;
 
-  console.log(`✅ Store ${storeName} connected with ${importedProducts.length} products imported`);
+  console.log(
+    `✅ Store ${storeName} connected with ${importedProducts.length} products imported`,
+  );
 
   return storeData;
 }
@@ -58,38 +64,43 @@ async function importSampleProducts(storeId: string, domain: string) {
     {
       title: `${storeName} Premium Collection Item`,
       category: "Featured",
-      description: "Premium quality product from our signature collection with exceptional craftsmanship.",
+      description:
+        "Premium quality product from our signature collection with exceptional craftsmanship.",
       price: 89.99,
-      seoScore: 85
+      seoScore: 85,
     },
     {
       title: `${storeName} Essential Daily Use`,
       category: "Essentials",
-      description: "Perfect for everyday use with reliable performance and modern design.",
+      description:
+        "Perfect for everyday use with reliable performance and modern design.",
       price: 34.99,
-      seoScore: 72
+      seoScore: 72,
     },
     {
       title: `${storeName} Professional Grade`,
       category: "Professional",
-      description: "Professional-grade solution designed for demanding applications.",
+      description:
+        "Professional-grade solution designed for demanding applications.",
       price: 156.99,
-      seoScore: 91
+      seoScore: 91,
     },
     {
       title: `${storeName} Eco-Friendly Option`,
       category: "Sustainable",
-      description: "Environmentally conscious choice without compromising on quality.",
+      description:
+        "Environmentally conscious choice without compromising on quality.",
       price: 67.99,
-      seoScore: 78
+      seoScore: 78,
     },
     {
       title: `${storeName} Limited Edition`,
       category: "Limited",
-      description: "Exclusive limited edition item with unique features and premium materials.",
+      description:
+        "Exclusive limited edition item with unique features and premium materials.",
       price: 199.99,
-      seoScore: 88
-    }
+      seoScore: 88,
+    },
   ];
 
   const importedProducts = [];
@@ -102,12 +113,19 @@ async function importSampleProducts(storeId: string, domain: string) {
       id: productId,
       shopify_id: 10000 + i,
       title: template.title,
-      handle: template.title.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-"),
+      handle: template.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "-")
+        .replace(/-+/g, "-"),
       description: template.description,
       status: "active" as const,
       vendor: storeName,
       product_type: template.category,
-      tags: [storeName.toLowerCase(), template.category.toLowerCase(), "imported"],
+      tags: [
+        storeName.toLowerCase(),
+        template.category.toLowerCase(),
+        "imported",
+      ],
       price: template.price,
       inventory: Math.floor(Math.random() * 100) + 10,
       image_url: `https://picsum.photos/400/400?random=${productId}`,
@@ -127,7 +145,10 @@ async function importSampleProducts(storeId: string, domain: string) {
       }
       importedProducts.push(product);
     } catch (error) {
-      console.error(`⚠️ Database save failed for ${product.title}, keeping in memory:`, error.message);
+      console.error(
+        `⚠️ Database save failed for ${product.title}, keeping in memory:`,
+        error.message,
+      );
       // Still add to imported products even if database save fails
       importedProducts.push(product);
     }
@@ -306,7 +327,10 @@ export const connectStore = async (req: Request, res: Response) => {
     // 3. Import products from Shopify
 
     // For now, simulate getting store data and importing products
-    const storeData = await simulateShopifyStoreConnection(cleanUrl, accessToken);
+    const storeData = await simulateShopifyStoreConnection(
+      cleanUrl,
+      accessToken,
+    );
 
     // Save store to storage (database or in-memory for now)
     try {
@@ -352,19 +376,24 @@ export const getStoreProducts = async (req: Request, res: Response) => {
 
     if (databaseService.isConnected()) {
       // Get products from database if available
-      const result = await productRepository.findAll({}, { offset: 0, limit: 1000, sortBy: "created_at", sortOrder: "desc" });
+      const result = await productRepository.findAll(
+        {},
+        { offset: 0, limit: 1000, sortBy: "created_at", sortOrder: "desc" },
+      );
       allProducts = result.products;
       console.log(`📊 Retrieved ${allProducts.length} products from database`);
     } else {
       // Get products from memory storage using shared service
       allProducts = storeProductsService.getAllStoreProducts();
-      console.log(`📊 Retrieved ${allProducts.length} products from memory storage`);
+      console.log(
+        `📊 Retrieved ${allProducts.length} products from memory storage`,
+      );
     }
 
     res.json({
       products: allProducts,
       total: allProducts.length,
-      source: databaseService.isConnected() ? "database" : "memory"
+      source: databaseService.isConnected() ? "database" : "memory",
     });
   } catch (error) {
     console.error("Error fetching store products:", error);
@@ -389,7 +418,10 @@ export const getProductsForStore = async (req: Request, res: Response) => {
     if (databaseService.isConnected()) {
       // Filter products by store in database - we'd need to add store_id to products table
       // For now, get all products (this would need to be improved in a real app)
-      const result = await productRepository.findAll({}, { offset: 0, limit: 1000, sortBy: "created_at", sortOrder: "desc" });
+      const result = await productRepository.findAll(
+        {},
+        { offset: 0, limit: 1000, sortBy: "created_at", sortOrder: "desc" },
+      );
       products = result.products;
     } else {
       // Get products from memory storage for this specific store
@@ -400,7 +432,7 @@ export const getProductsForStore = async (req: Request, res: Response) => {
       products,
       total: products.length,
       storeId,
-      source: databaseService.isConnected() ? "database" : "memory"
+      source: databaseService.isConnected() ? "database" : "memory",
     });
   } catch (error) {
     console.error("Error fetching products for store:", error);

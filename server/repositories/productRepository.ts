@@ -1,7 +1,6 @@
 import { databaseService } from "../services/database";
 import { z } from "zod";
 
-
 // Product schema for validation
 export const ProductSchema = z.object({
   id: z.string(),
@@ -508,7 +507,6 @@ class ProductRepository {
       throw error;
     }
   }
-
 }
 
 export const productRepository = new ProductRepository();

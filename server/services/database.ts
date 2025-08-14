@@ -80,7 +80,10 @@ class DatabaseService {
     } catch (error) {
       if (strict) {
         // In strict mode (installation), throw the error
-        console.error("❌ MariaDB connection failed during installation:", error.message);
+        console.error(
+          "❌ MariaDB connection failed during installation:",
+          error.message,
+        );
 
         // Clean up the failed pool
         if (this.pool) {

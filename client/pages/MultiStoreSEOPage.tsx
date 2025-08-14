@@ -177,10 +177,8 @@ export default function MultiStoreSEOPage() {
     averageSEOScore:
       stores.length > 0
         ? Math.round(
-            stores.reduce(
-              (sum, store) => sum + (store.seoScore || 0),
-              0,
-            ) / stores.length,
+            stores.reduce((sum, store) => sum + (store.seoScore || 0), 0) /
+              stores.length,
           )
         : 0,
     totalProducts: stores.reduce(
@@ -604,8 +602,7 @@ export default function MultiStoreSEOPage() {
             <CardContent>
               <div className="text-2xl font-bold">{metrics.totalStores}</div>
               <div className="text-xs text-muted-foreground">
-                {stores.filter((s) => s.isConnected).length} active
-                connections
+                {stores.filter((s) => s.isConnected).length} active connections
               </div>
             </CardContent>
           </Card>
@@ -1105,10 +1102,7 @@ export default function MultiStoreSEOPage() {
                         <div className="text-sm text-muted-foreground">
                           Target stores:{" "}
                           {campaign.targetStores
-                            .map(
-                              (id) =>
-                                stores.find((s) => s.id === id)?.name,
-                            )
+                            .map((id) => stores.find((s) => s.id === id)?.name)
                             .join(", ")}
                         </div>
                         <div className="flex gap-2">
