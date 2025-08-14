@@ -1162,7 +1162,7 @@ export default function MultiStoreSEOPage() {
                         <div className="text-sm text-muted-foreground">
                           Target stores:{" "}
                           {campaign.targetStores
-                            .map((id) => stores.find((s) => s.id === id)?.name)
+                            .map((id) => activeStores.find((s) => s.id === id)?.name)
                             .join(", ")}
                         </div>
                         <div className="flex gap-2">
