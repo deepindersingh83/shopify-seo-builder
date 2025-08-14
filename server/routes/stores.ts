@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { z } from "zod";
+import { databaseService } from "../services/database";
 
 // Schema for store connection request
 const ConnectStoreSchema = z.object({
@@ -70,8 +71,14 @@ export const connectStore = async (req: Request, res: Response) => {
       accessToken: accessToken, // In production, encrypt this
     };
 
-    // In a real implementation, save to database here
-    console.log("Store connected successfully:", mockStoreData);
+    // Save store to storage (database or in-memory for now)
+    try {
+      await saveConnectedStore(mockStoreData);
+      console.log("Store connected and saved successfully:", mockStoreData);
+    } catch (error) {
+      console.error("Failed to save store:", error);
+      // Continue with response even if save fails
+    }
 
     res.status(200).json({
       success: true,
@@ -90,21 +97,7 @@ export const connectStore = async (req: Request, res: Response) => {
 // Get all connected stores
 export const getStores = async (req: Request, res: Response) => {
   try {
-    // Mock data - in real implementation, fetch from database
-    const stores = [
-      {
-        id: "1",
-        name: "TechGear Pro",
-        domain: "techgearpro.myshopify.com",
-        plan: "plus",
-        status: "active",
-        isConnected: true,
-        seoScore: 92,
-        monthlyRevenue: 125000,
-      },
-      // Add more mock stores as needed
-    ];
-
+    const stores = await getAllConnectedStores();
     res.json({ stores });
   } catch (error) {
     console.error("Error fetching stores:", error);
@@ -126,8 +119,17 @@ export const disconnectStore = async (req: Request, res: Response) => {
       });
     }
 
-    // In real implementation, remove from database
-    console.log(`Disconnecting store: ${storeId}`);
+    // Remove store from storage
+    try {
+      await removeConnectedStore(storeId);
+      console.log(`Store disconnected and removed: ${storeId}`);
+    } catch (error) {
+      console.error("Failed to remove store:", error);
+      return res.status(500).json({
+        error: "Failed to disconnect store",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
 
     res.json({
       success: true,
