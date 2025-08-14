@@ -597,12 +597,27 @@ export default function MultiStoreSEOPage() {
                 <DialogFooter>
                   <Button
                     variant="outline"
-                    onClick={() => setIsAddStoreDialogOpen(false)}
+                    onClick={() => {
+                      setStoreUrl("");
+                      setAccessToken("");
+                      setIsAddStoreDialogOpen(false);
+                    }}
+                    disabled={isConnecting}
                   >
                     Cancel
                   </Button>
-                  <Button onClick={() => setIsAddStoreDialogOpen(false)}>
-                    Connect Store
+                  <Button
+                    onClick={handleConnectStore}
+                    disabled={isConnecting || !storeUrl || !accessToken}
+                  >
+                    {isConnecting ? (
+                      <>
+                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                        Connecting...
+                      </>
+                    ) : (
+                      "Connect Store"
+                    )}
                   </Button>
                 </DialogFooter>
               </DialogContent>
