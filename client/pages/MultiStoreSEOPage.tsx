@@ -256,7 +256,7 @@ export default function MultiStoreSEOPage() {
     },
   ];
 
-  const filteredStores = activeStores.filter((store) => {
+  const filteredStores = stores.filter((store) => {
     const matchesSearch =
       searchTerm === "" ||
       store.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -487,7 +487,7 @@ export default function MultiStoreSEOPage() {
                   <div>
                     <Label>Target Stores</Label>
                     <div className="mt-2 space-y-2">
-                      {activeStores
+                      {stores
                         .filter((s) => s.isConnected)
                         .map((store) => (
                           <div
@@ -604,7 +604,7 @@ export default function MultiStoreSEOPage() {
             <CardContent>
               <div className="text-2xl font-bold">{metrics.totalStores}</div>
               <div className="text-xs text-muted-foreground">
-                {activeStores.filter((s) => s.isConnected).length} active
+                {stores.filter((s) => s.isConnected).length} active
                 connections
               </div>
             </CardContent>
@@ -1107,7 +1107,7 @@ export default function MultiStoreSEOPage() {
                           {campaign.targetStores
                             .map(
                               (id) =>
-                                activeStores.find((s) => s.id === id)?.name,
+                                stores.find((s) => s.id === id)?.name,
                             )
                             .join(", ")}
                         </div>
@@ -1141,7 +1141,7 @@ export default function MultiStoreSEOPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {activeStores.map((store) => {
+                    {stores.map((store) => {
                       const percentage =
                         metrics.totalRevenue > 0
                           ? ((store.monthlyRevenue || 0) /
@@ -1172,7 +1172,7 @@ export default function MultiStoreSEOPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {activeStores.map((store) => (
+                    {stores.map((store) => (
                       <div
                         key={store.id}
                         className="flex items-center justify-between p-3 border rounded"
@@ -1231,11 +1231,11 @@ export default function MultiStoreSEOPage() {
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-blue-600">
-                      {activeStores.length > 0
+                      {stores.length > 0
                         ? Math.round(
-                            (activeStores.filter((s) => (s.seoScore || 0) >= 80)
+                            (stores.filter((s) => (s.seoScore || 0) >= 80)
                               .length /
-                              activeStores.length) *
+                              stores.length) *
                               100,
                           )
                         : 0}
@@ -1387,7 +1387,7 @@ export default function MultiStoreSEOPage() {
                   <div className="md:col-span-2">
                     <Label>Target Stores</Label>
                     <div className="mt-2 grid grid-cols-2 gap-2">
-                      {activeStores
+                      {stores
                         .filter((s) => s.isConnected)
                         .map((store) => (
                           <div
