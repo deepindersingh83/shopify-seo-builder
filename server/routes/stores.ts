@@ -45,10 +45,13 @@ async function saveConnectedStore(storeData: any): Promise<void> {
             topKeywords: storeData.topKeywords,
             connectedAt: storeData.connectedAt,
           }),
-        ]
+        ],
       );
     } catch (error) {
-      console.error("Database store save failed, using memory fallback:", error);
+      console.error(
+        "Database store save failed, using memory fallback:",
+        error,
+      );
       connectedStores.set(storeData.id, storeData);
     }
   } else {
@@ -82,8 +85,15 @@ async function getAllConnectedStores(): Promise<any[]> {
           conversionRate: settings.conversionRate || 0,
           avgOrderValue: settings.avgOrderValue || 0,
           topKeywords: settings.topKeywords || [],
-          lastSync: store.lastSync ? new Date(store.lastSync).toISOString().slice(0, 19).replace("T", " ") : "Never",
-          connectedAt: store.connectedAt ? new Date(store.connectedAt).toISOString().slice(0, 10) : "Unknown",
+          lastSync: store.lastSync
+            ? new Date(store.lastSync)
+                .toISOString()
+                .slice(0, 19)
+                .replace("T", " ")
+            : "Never",
+          connectedAt: store.connectedAt
+            ? new Date(store.connectedAt).toISOString().slice(0, 10)
+            : "Unknown",
         };
       });
     } catch (error) {
@@ -101,7 +111,10 @@ async function removeConnectedStore(storeId: string): Promise<void> {
     try {
       await databaseService.query("DELETE FROM stores WHERE id = ?", [storeId]);
     } catch (error) {
-      console.error("Database store removal failed, using memory fallback:", error);
+      console.error(
+        "Database store removal failed, using memory fallback:",
+        error,
+      );
       connectedStores.delete(storeId);
     }
   } else {

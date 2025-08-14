@@ -146,17 +146,17 @@ export default function MultiStoreSEOPage() {
   const loadStores = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/stores');
+      const response = await fetch("/api/stores");
       if (response.ok) {
         const data = await response.json();
         setStores(data.stores || []);
       } else {
-        console.error('Failed to load stores');
+        console.error("Failed to load stores");
         // Keep stores as empty array if API fails
         setStores([]);
       }
     } catch (error) {
-      console.error('Error loading stores:', error);
+      console.error("Error loading stores:", error);
       setStores([]);
     } finally {
       setIsLoading(false);
@@ -263,19 +263,43 @@ export default function MultiStoreSEOPage() {
   const activeStores = stores.length > 0 ? stores : fallbackStores;
   const metrics: StoreMetrics = {
     totalStores: activeStores.length,
-    totalRevenue: activeStores.reduce((sum, store) => sum + (store.monthlyRevenue || 0), 0),
-    totalTraffic: activeStores.reduce((sum, store) => sum + (store.monthlyTraffic || 0), 0),
-    averageSEOScore: activeStores.length > 0
-      ? Math.round(activeStores.reduce((sum, store) => sum + (store.seoScore || 0), 0) / activeStores.length)
-      : 0,
-    totalProducts: activeStores.reduce((sum, store) => sum + (store.productsCount || 0), 0),
-    totalOrders: activeStores.reduce((sum, store) => sum + (store.ordersCount || 0), 0),
-    bestPerformingStore: activeStores.length > 0
-      ? activeStores.reduce((best, store) => (store.seoScore || 0) > (best.seoScore || 0) ? store : best).name
-      : "None",
-    worstPerformingStore: activeStores.length > 0
-      ? activeStores.reduce((worst, store) => (store.seoScore || 0) < (worst.seoScore || 0) ? store : worst).name
-      : "None",
+    totalRevenue: activeStores.reduce(
+      (sum, store) => sum + (store.monthlyRevenue || 0),
+      0,
+    ),
+    totalTraffic: activeStores.reduce(
+      (sum, store) => sum + (store.monthlyTraffic || 0),
+      0,
+    ),
+    averageSEOScore:
+      activeStores.length > 0
+        ? Math.round(
+            activeStores.reduce(
+              (sum, store) => sum + (store.seoScore || 0),
+              0,
+            ) / activeStores.length,
+          )
+        : 0,
+    totalProducts: activeStores.reduce(
+      (sum, store) => sum + (store.productsCount || 0),
+      0,
+    ),
+    totalOrders: activeStores.reduce(
+      (sum, store) => sum + (store.ordersCount || 0),
+      0,
+    ),
+    bestPerformingStore:
+      activeStores.length > 0
+        ? activeStores.reduce((best, store) =>
+            (store.seoScore || 0) > (best.seoScore || 0) ? store : best,
+          ).name
+        : "None",
+    worstPerformingStore:
+      activeStores.length > 0
+        ? activeStores.reduce((worst, store) =>
+            (store.seoScore || 0) < (worst.seoScore || 0) ? store : worst,
+          ).name
+        : "None",
   };
 
   // Mock SEO campaigns
@@ -483,7 +507,9 @@ export default function MultiStoreSEOPage() {
               Centralized SEO management and optimization for all your Shopify
               stores
               {isLoading && " (Loading stores...)"}
-              {!isLoading && stores.length === 0 && " (No stores connected - connect your first store below!)"}
+              {!isLoading &&
+                stores.length === 0 &&
+                " (No stores connected - connect your first store below!)"}
             </p>
           </div>
           <div className="flex gap-3">
@@ -675,7 +701,8 @@ export default function MultiStoreSEOPage() {
             <CardContent>
               <div className="text-2xl font-bold">{metrics.totalStores}</div>
               <div className="text-xs text-muted-foreground">
-                {activeStores.filter((s) => s.isConnected).length} active connections
+                {activeStores.filter((s) => s.isConnected).length} active
+                connections
               </div>
             </CardContent>
           </Card>
@@ -1175,7 +1202,10 @@ export default function MultiStoreSEOPage() {
                         <div className="text-sm text-muted-foreground">
                           Target stores:{" "}
                           {campaign.targetStores
-                            .map((id) => activeStores.find((s) => s.id === id)?.name)
+                            .map(
+                              (id) =>
+                                activeStores.find((s) => s.id === id)?.name,
+                            )
                             .join(", ")}
                         </div>
                         <div className="flex gap-2">
@@ -1209,9 +1239,12 @@ export default function MultiStoreSEOPage() {
                 <CardContent>
                   <div className="space-y-4">
                     {activeStores.map((store) => {
-                      const percentage = metrics.totalRevenue > 0
-                        ? ((store.monthlyRevenue || 0) / metrics.totalRevenue) * 100
-                        : 0;
+                      const percentage =
+                        metrics.totalRevenue > 0
+                          ? ((store.monthlyRevenue || 0) /
+                              metrics.totalRevenue) *
+                            100
+                          : 0;
                       return (
                         <div key={store.id} className="space-y-2">
                           <div className="flex justify-between text-sm">
@@ -1246,7 +1279,9 @@ export default function MultiStoreSEOPage() {
                           <span className="font-medium">{store.name}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="font-bold">{store.seoScore || 0}</span>
+                          <span className="font-bold">
+                            {store.seoScore || 0}
+                          </span>
                           {(store.seoScore || 0) >= 80 ? (
                             <TrendingUp className="h-4 w-4 text-green-500" />
                           ) : (
@@ -1293,11 +1328,14 @@ export default function MultiStoreSEOPage() {
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-blue-600">
-                      {activeStores.length > 0 ? Math.round(
-                        (activeStores.filter((s) => (s.seoScore || 0) >= 80).length /
-                          activeStores.length) *
-                          100,
-                      ) : 0}
+                      {activeStores.length > 0
+                        ? Math.round(
+                            (activeStores.filter((s) => (s.seoScore || 0) >= 80)
+                              .length /
+                              activeStores.length) *
+                              100,
+                          )
+                        : 0}
                       %
                     </div>
                     <div className="text-sm text-muted-foreground">
