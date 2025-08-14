@@ -356,10 +356,8 @@ export const getStoreProducts = async (req: Request, res: Response) => {
       allProducts = result.products;
       console.log(`📊 Retrieved ${allProducts.length} products from database`);
     } else {
-      // Get products from memory storage
-      for (const [storeId, products] of storeProducts.entries()) {
-        allProducts = allProducts.concat(products);
-      }
+      // Get products from memory storage using shared service
+      allProducts = storeProductsService.getAllStoreProducts();
       console.log(`📊 Retrieved ${allProducts.length} products from memory storage`);
     }
 
