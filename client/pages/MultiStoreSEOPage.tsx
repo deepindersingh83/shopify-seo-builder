@@ -389,6 +389,53 @@ export default function MultiStoreSEOPage() {
     console.log(`Bulk action: ${action} on stores:`, selectedStores);
   };
 
+  const handleConnectStore = async () => {
+    if (!storeUrl || !accessToken) {
+      alert("Please enter both store URL and access token");
+      return;
+    }
+
+    setIsConnecting(true);
+
+    try {
+      // Mock API call - replace with actual endpoint
+      const response = await fetch("/api/stores/connect", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          storeUrl: storeUrl.trim(),
+          accessToken: accessToken.trim(),
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Store connected successfully:", result);
+
+        // Reset form and close dialog
+        setStoreUrl("");
+        setAccessToken("");
+        setIsAddStoreDialogOpen(false);
+
+        // Show success message
+        alert("Store connected successfully! The page will refresh to show your new store.");
+
+        // Refresh the page to show the new store
+        window.location.reload();
+      } else {
+        const error = await response.json();
+        alert(`Failed to connect store: ${error.message || "Unknown error"}`);
+      }
+    } catch (error) {
+      console.error("Error connecting store:", error);
+      alert("Failed to connect store. Please check your network connection and try again.");
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
   return (
     <Layout>
       <div className="space-y-6">
