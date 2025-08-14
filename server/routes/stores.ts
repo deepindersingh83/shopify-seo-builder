@@ -133,9 +133,8 @@ async function importSampleProducts(storeId: string, domain: string) {
     }
   }
 
-  // Store all imported products in memory for this store
-  storeProducts.set(storeId, importedProducts);
-  console.log(`💾 Stored ${importedProducts.length} products in memory for store ${storeId}`);
+  // Store all imported products using shared service
+  storeProductsService.setStoreProducts(storeId, importedProducts);
 
   return importedProducts;
 }
