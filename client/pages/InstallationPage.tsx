@@ -266,6 +266,11 @@ export default function InstallationPage() {
     }
   };
 
+  const skipInstallation = () => {
+    // Navigate directly to the main app
+    window.location.href = "/";
+  };
+
   const getStepStatus = (stepIndex: number) => {
     if (stepIndex < currentStep) return "completed";
     if (stepIndex === currentStep) return "current";
