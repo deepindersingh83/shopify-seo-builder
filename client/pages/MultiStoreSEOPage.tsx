@@ -1195,15 +1195,16 @@ export default function MultiStoreSEOPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {stores.map((store) => {
-                      const percentage =
-                        (store.monthlyRevenue / metrics.totalRevenue) * 100;
+                    {activeStores.map((store) => {
+                      const percentage = metrics.totalRevenue > 0
+                        ? ((store.monthlyRevenue || 0) / metrics.totalRevenue) * 100
+                        : 0;
                       return (
                         <div key={store.id} className="space-y-2">
                           <div className="flex justify-between text-sm">
                             <span className="font-medium">{store.name}</span>
                             <span>
-                              ${store.monthlyRevenue.toLocaleString()} (
+                              ${(store.monthlyRevenue || 0).toLocaleString()} (
                               {percentage.toFixed(1)}%)
                             </span>
                           </div>
