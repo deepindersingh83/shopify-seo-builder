@@ -348,66 +348,7 @@ class DatabaseService {
 
       // No default demo stores - users must connect their own stores
 
-      // Seed some sample products for testing
-      const sampleProducts = [
-        {
-          id: "product-1",
-          title: "Premium Wireless Headphones",
-          handle: "premium-wireless-headphones",
-          description:
-            "High-quality wireless headphones with noise cancellation and premium sound quality.",
-          vendor: "AudioTech",
-          product_type: "Electronics",
-          price: 299.99,
-          seo_score: 85,
-        },
-        {
-          id: "product-2",
-          title: "Eco-Friendly Water Bottle",
-          handle: "eco-friendly-water-bottle",
-          description:
-            "Sustainable and reusable water bottle made from recycled materials.",
-          vendor: "EcoLife",
-          product_type: "Accessories",
-          price: 24.99,
-          seo_score: 72,
-        },
-        {
-          id: "product-3",
-          title: "Smart Fitness Tracker",
-          handle: "smart-fitness-tracker",
-          description:
-            "Advanced fitness tracker with heart rate monitoring and GPS.",
-          vendor: "FitTech",
-          product_type: "Electronics",
-          price: 199.99,
-          seo_score: 91,
-        },
-      ];
-
-      for (const product of sampleProducts) {
-        await this.query(
-          `
-          INSERT IGNORE INTO products (
-            id, title, handle, description, vendor, product_type, price, seo_score,
-            tags, inventory, image_url
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `,
-          [
-            product.id,
-            product.title,
-            product.handle,
-            product.description,
-            product.vendor,
-            product.product_type,
-            product.price,
-            product.seo_score,
-            JSON.stringify(["demo", "sample", product.vendor.toLowerCase()]),
-            Math.floor(Math.random() * 100) + 10,
-            `https://picsum.photos/400/400?random=${product.id.split("-")[1]}`,
-          ],
-        );
-      }
+      // No demo products - products will be imported from connected Shopify stores
 
       console.log("✅ Initial data seeded successfully");
     } catch (error) {
