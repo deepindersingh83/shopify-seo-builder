@@ -6,6 +6,130 @@ import { productRepository } from "../repositories/productRepository";
 // In-memory store for when database is not available
 const connectedStores = new Map<string, any>();
 
+// Simulate Shopify store connection and product import
+async function simulateShopifyStoreConnection(domain: string, accessToken: string) {
+  console.log(`🔗 Simulating Shopify connection for: ${domain}`);
+
+  // Generate store data based on the actual domain
+  const storeName = domain.split(".")[0]
+    .split("-")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+  const storeData = {
+    id: `store-${Date.now()}`,
+    name: storeName,
+    domain: domain,
+    plan: "basic",
+    status: "active",
+    country: "Unknown",
+    currency: "USD",
+    timezone: "UTC",
+    lastSync: new Date().toISOString().slice(0, 19).replace("T", " "),
+    seoScore: Math.floor(Math.random() * 40) + 40,
+    monthlyRevenue: Math.floor(Math.random() * 50000) + 10000,
+    monthlyTraffic: Math.floor(Math.random() * 20000) + 5000,
+    productsCount: 0, // Will be updated after importing products
+    ordersCount: Math.floor(Math.random() * 300) + 50,
+    conversionRate: +(Math.random() * 3 + 1).toFixed(1),
+    avgOrderValue: +(Math.random() * 100 + 50).toFixed(2),
+    topKeywords: ["product keyword", "brand name", "category term"],
+    connectedAt: new Date().toISOString().slice(0, 10),
+    isConnected: true,
+    accessToken: accessToken,
+  };
+
+  // Import sample products for the connected store
+  const importedProducts = await importSampleProducts(storeData.id, domain);
+  storeData.productsCount = importedProducts.length;
+
+  console.log(`✅ Store ${storeName} connected with ${importedProducts.length} products imported`);
+
+  return storeData;
+}
+
+// Import sample products for a connected store
+async function importSampleProducts(storeId: string, domain: string) {
+  const storeName = domain.split(".")[0].replace("-", " ");
+
+  // Generate realistic products based on store name
+  const productTemplates = [
+    {
+      title: `${storeName} Premium Collection Item`,
+      category: "Featured",
+      description: "Premium quality product from our signature collection with exceptional craftsmanship.",
+      price: 89.99,
+      seoScore: 85
+    },
+    {
+      title: `${storeName} Essential Daily Use`,
+      category: "Essentials",
+      description: "Perfect for everyday use with reliable performance and modern design.",
+      price: 34.99,
+      seoScore: 72
+    },
+    {
+      title: `${storeName} Professional Grade`,
+      category: "Professional",
+      description: "Professional-grade solution designed for demanding applications.",
+      price: 156.99,
+      seoScore: 91
+    },
+    {
+      title: `${storeName} Eco-Friendly Option`,
+      category: "Sustainable",
+      description: "Environmentally conscious choice without compromising on quality.",
+      price: 67.99,
+      seoScore: 78
+    },
+    {
+      title: `${storeName} Limited Edition`,
+      category: "Limited",
+      description: "Exclusive limited edition item with unique features and premium materials.",
+      price: 199.99,
+      seoScore: 88
+    }
+  ];
+
+  const importedProducts = [];
+
+  for (let i = 0; i < productTemplates.length; i++) {
+    const template = productTemplates[i];
+    const productId = `${storeId}-product-${i + 1}`;
+
+    const product = {
+      id: productId,
+      shopify_id: 10000 + i,
+      title: template.title,
+      handle: template.title.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-"),
+      description: template.description,
+      status: "active" as const,
+      vendor: storeName,
+      product_type: template.category,
+      tags: [storeName.toLowerCase(), template.category.toLowerCase(), "imported"],
+      price: template.price,
+      inventory: Math.floor(Math.random() * 100) + 10,
+      image_url: `https://picsum.photos/400/400?random=${productId}`,
+      meta_title: `${template.title} | ${storeName}`,
+      meta_description: template.description.substring(0, 150),
+      seo_score: template.seoScore,
+    };
+
+    try {
+      // Save product to database if connected
+      if (databaseService.isConnected()) {
+        await productRepository.create(product);
+        console.log(`📦 Imported product: ${product.title}`);
+      }
+      importedProducts.push(product);
+    } catch (error) {
+      console.error(`❌ Failed to import product ${product.title}:`, error);
+    }
+  }
+
+  return importedProducts;
+}
+
 // Helper functions for store management
 async function saveConnectedStore(storeData: any): Promise<void> {
   if (databaseService.isConnected()) {
