@@ -163,43 +163,43 @@ export default function MultiStoreSEOPage() {
     }
   };
 
-  // Use only real connected stores - no demo data
+  // Calculate metrics from real connected stores only
   const metrics: StoreMetrics = {
-    totalStores: activeStores.length,
-    totalRevenue: activeStores.reduce(
+    totalStores: stores.length,
+    totalRevenue: stores.reduce(
       (sum, store) => sum + (store.monthlyRevenue || 0),
       0,
     ),
-    totalTraffic: activeStores.reduce(
+    totalTraffic: stores.reduce(
       (sum, store) => sum + (store.monthlyTraffic || 0),
       0,
     ),
     averageSEOScore:
-      activeStores.length > 0
+      stores.length > 0
         ? Math.round(
-            activeStores.reduce(
+            stores.reduce(
               (sum, store) => sum + (store.seoScore || 0),
               0,
-            ) / activeStores.length,
+            ) / stores.length,
           )
         : 0,
-    totalProducts: activeStores.reduce(
+    totalProducts: stores.reduce(
       (sum, store) => sum + (store.productsCount || 0),
       0,
     ),
-    totalOrders: activeStores.reduce(
+    totalOrders: stores.reduce(
       (sum, store) => sum + (store.ordersCount || 0),
       0,
     ),
     bestPerformingStore:
-      activeStores.length > 0
-        ? activeStores.reduce((best, store) =>
+      stores.length > 0
+        ? stores.reduce((best, store) =>
             (store.seoScore || 0) > (best.seoScore || 0) ? store : best,
           ).name
         : "None",
     worstPerformingStore:
-      activeStores.length > 0
-        ? activeStores.reduce((worst, store) =>
+      stores.length > 0
+        ? stores.reduce((worst, store) =>
             (store.seoScore || 0) < (worst.seoScore || 0) ? store : worst,
           ).name
         : "None",
