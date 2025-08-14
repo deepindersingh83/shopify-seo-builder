@@ -393,7 +393,7 @@ export const getProductsForStore = async (req: Request, res: Response) => {
       products = result.products;
     } else {
       // Get products from memory storage for this specific store
-      products = storeProducts.get(storeId) || [];
+      products = storeProductsService.getStoreProducts(storeId);
     }
 
     res.json({
