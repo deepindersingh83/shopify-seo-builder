@@ -329,7 +329,7 @@ export default function MultiStoreSEOPage() {
     },
   ];
 
-  const filteredStores = stores.filter((store) => {
+  const filteredStores = activeStores.filter((store) => {
     const matchesSearch =
       searchTerm === "" ||
       store.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
