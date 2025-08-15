@@ -92,6 +92,7 @@ export function createServer() {
   app.get("/api/stores", storeRoutes.getStores);
   app.get("/api/stores/products", storeRoutes.getStoreProducts);
   app.get("/api/stores/:storeId/products", storeRoutes.getProductsForStore);
+  app.post("/api/stores/:storeId/sync", storeRoutes.syncStore);
   app.delete("/api/stores/:storeId", storeRoutes.disconnectStore);
 
   // Database health check
