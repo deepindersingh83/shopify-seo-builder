@@ -1,5 +1,12 @@
-import { parseDatabaseConfig, validateDatabaseConfig, type DatabaseConfig } from "./databaseConfig";
-import { createDatabaseAdapter, type DatabaseAdapter } from "./databaseAdapters";
+import {
+  parseDatabaseConfig,
+  validateDatabaseConfig,
+  type DatabaseConfig,
+} from "./databaseConfig";
+import {
+  createDatabaseAdapter,
+  type DatabaseAdapter,
+} from "./databaseAdapters";
 
 class DatabaseService {
   private adapter: DatabaseAdapter | null = null;
@@ -25,14 +32,14 @@ class DatabaseService {
     if (this.isInitializing && this.initializationPromise) {
       return this.initializationPromise;
     }
-    
+
     if (this.adapter) {
       return; // Already initialized
     }
-    
+
     this.isInitializing = true;
     this.initializationPromise = this.initializeInternal(false);
-    
+
     try {
       await this.initializationPromise;
     } finally {
@@ -61,7 +68,7 @@ class DatabaseService {
 
       // Create appropriate database adapter
       this.adapter = await createDatabaseAdapter(this.config);
-      
+
       if (!this.adapter) {
         // Database is disabled
         return;
@@ -69,14 +76,17 @@ class DatabaseService {
 
       // Initialize the adapter
       await this.adapter.initialize();
-      
+
       // Run migrations if needed
       await this.runMigrations();
     } catch (error) {
       if (strict) {
         // In strict mode (installation), throw the error
-        console.error(`❌ Database connection failed during installation:`, error);
-        
+        console.error(
+          `❌ Database connection failed during installation:`,
+          error,
+        );
+
         // Clean up the failed adapter
         if (this.adapter) {
           try {
@@ -86,8 +96,10 @@ class DatabaseService {
           }
           this.adapter = null;
         }
-        
-        throw new Error(`Database connection failed: ${error instanceof Error ? error.message : error}`);
+
+        throw new Error(
+          `Database connection failed: ${error instanceof Error ? error.message : error}`,
+        );
       } else {
         // In normal mode, fall back to memory storage
         console.warn(
@@ -129,9 +141,7 @@ class DatabaseService {
     return this.adapter.query(sql, params);
   }
 
-  async transaction<T>(
-    callback: (conn: any) => Promise<T>,
-  ): Promise<T> {
+  async transaction<T>(callback: (conn: any) => Promise<T>): Promise<T> {
     if (!this.adapter) {
       throw new Error("Database not initialized. Call initialize() first.");
     }
@@ -229,10 +239,11 @@ class DatabaseService {
     const textType = this.config.type === "postgresql" ? "TEXT" : "TEXT";
     const jsonType = this.config.type === "postgresql" ? "JSONB" : "JSON";
     const bigintType = this.config.type === "sqlite" ? "INTEGER" : "BIGINT";
-    const decimalType = this.config.type === "sqlite" ? "REAL" : "DECIMAL(10,2)";
+    const decimalType =
+      this.config.type === "sqlite" ? "REAL" : "DECIMAL(10,2)";
     const timestampType = this.getTimestampType();
     const currentTimestamp = this.getCurrentTimestamp();
-    
+
     return [
       {
         name: "001_create_products_table",
@@ -373,7 +384,7 @@ class DatabaseService {
   }
 
   // Get current database configuration (safe for logging)
-  getConfig(): Omit<DatabaseConfig, 'password'> {
+  getConfig(): Omit<DatabaseConfig, "password"> {
     const { password, ...safeConfig } = this.config;
     return safeConfig;
   }

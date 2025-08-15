@@ -11,7 +11,9 @@ export interface DatabaseAdapter {
 }
 
 // Create appropriate database adapter based on configuration
-export async function createDatabaseAdapter(config: DatabaseConfig): Promise<DatabaseAdapter | null> {
+export async function createDatabaseAdapter(
+  config: DatabaseConfig,
+): Promise<DatabaseAdapter | null> {
   if (config.type === "disabled") {
     console.log("📝 Database disabled, using memory storage");
     return null;
@@ -44,13 +46,15 @@ class SQLiteAdapter implements DatabaseAdapter {
       // Dynamic import to handle missing sqlite3 module gracefully
       const sqlite3 = await import("sqlite3").catch(() => null);
       const { open } = await import("sqlite").catch(() => ({ open: null }));
-      
+
       if (!sqlite3 || !open) {
-        throw new Error("SQLite dependencies not found. Install with: npm install sqlite sqlite3");
+        throw new Error(
+          "SQLite dependencies not found. Install with: npm install sqlite sqlite3",
+        );
       }
 
       console.log(`Initializing SQLite database: ${this.config.filename}`);
-      
+
       // Ensure directory exists
       const path = await import("path");
       const fs = await import("fs/promises");
@@ -64,7 +68,7 @@ class SQLiteAdapter implements DatabaseAdapter {
 
       // Enable foreign keys
       await this.db.exec("PRAGMA foreign_keys = ON");
-      
+
       console.log("✅ SQLite database connected successfully");
       await this.runMigrations();
     } catch (error) {
@@ -85,7 +89,7 @@ class SQLiteAdapter implements DatabaseAdapter {
     if (!this.db) {
       throw new Error("Database not initialized");
     }
-    
+
     if (sql.trim().toUpperCase().startsWith("SELECT")) {
       return this.db.all(sql, params);
     } else {
@@ -97,7 +101,7 @@ class SQLiteAdapter implements DatabaseAdapter {
     if (!this.db) {
       throw new Error("Database not initialized");
     }
-    
+
     await this.db.exec("BEGIN TRANSACTION");
     try {
       const result = await callback(this.db);
@@ -156,13 +160,17 @@ class MySQLAdapter implements DatabaseAdapter {
     try {
       // Dynamic import to handle missing mariadb module gracefully
       const mariadb = await import("mariadb").catch(() => null);
-      
+
       if (!mariadb) {
-        throw new Error("MariaDB/MySQL dependencies not found. Install with: npm install mariadb");
+        throw new Error(
+          "MariaDB/MySQL dependencies not found. Install with: npm install mariadb",
+        );
       }
 
-      console.log(`Initializing ${this.config.type} database connection pool...`);
-      
+      console.log(
+        `Initializing ${this.config.type} database connection pool...`,
+      );
+
       this.pool = mariadb.createPool({
         host: this.config.host,
         port: this.config.port,
@@ -207,7 +215,7 @@ class MySQLAdapter implements DatabaseAdapter {
     if (!this.pool) {
       throw new Error("Database not initialized");
     }
-    
+
     const conn = await this.pool.getConnection();
     try {
       const result = await conn.query(sql, params);
@@ -221,7 +229,7 @@ class MySQLAdapter implements DatabaseAdapter {
     if (!this.pool) {
       throw new Error("Database not initialized");
     }
-    
+
     const conn = await this.pool.getConnection();
     try {
       await conn.beginTransaction();
@@ -287,13 +295,15 @@ class PostgreSQLAdapter implements DatabaseAdapter {
     try {
       // Dynamic import to handle missing pg module gracefully
       const { Pool } = await import("pg").catch(() => ({ Pool: null }));
-      
+
       if (!Pool) {
-        throw new Error("PostgreSQL dependencies not found. Install with: npm install pg @types/pg");
+        throw new Error(
+          "PostgreSQL dependencies not found. Install with: npm install pg @types/pg",
+        );
       }
 
       console.log("Initializing PostgreSQL database connection pool...");
-      
+
       this.pool = new Pool({
         host: this.config.host,
         port: this.config.port,
@@ -335,7 +345,7 @@ class PostgreSQLAdapter implements DatabaseAdapter {
     if (!this.pool) {
       throw new Error("Database not initialized");
     }
-    
+
     const result = await this.pool.query(sql, params);
     return result.rows;
   }
@@ -344,7 +354,7 @@ class PostgreSQLAdapter implements DatabaseAdapter {
     if (!this.pool) {
       throw new Error("Database not initialized");
     }
-    
+
     const client = await this.pool.connect();
     try {
       await client.query("BEGIN");

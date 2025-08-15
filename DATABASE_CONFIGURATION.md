@@ -71,16 +71,19 @@ DB_ENABLED=false
 Depending on the database type you choose, you may need to install additional dependencies:
 
 ### SQLite
+
 ```bash
 npm install sqlite sqlite3
 ```
 
 ### MySQL/MariaDB
+
 ```bash
 npm install mariadb
 ```
 
 ### PostgreSQL
+
 ```bash
 npm install pg @types/pg
 ```
@@ -88,21 +91,25 @@ npm install pg @types/pg
 ## Example Configurations
 
 ### Development (SQLite)
+
 ```bash
 DATABASE_URL="sqlite:///data/development.db"
 ```
 
 ### Production (MariaDB)
+
 ```bash
 DATABASE_URL="mysql://app_user:secure_password@db.example.com:3306/production_app?serverVersion=10.11.2-MariaDB&charset=utf8mb4&ssl=true"
 ```
 
 ### Cloud PostgreSQL
+
 ```bash
 DATABASE_URL="postgresql://user:password@cloud-db.example.com:5432/app?serverVersion=16&charset=utf8&ssl=true"
 ```
 
 ### Local MySQL Development
+
 ```bash
 DATABASE_URL="mysql://root:password@localhost:3306/seo_manager?serverVersion=8.0.32&charset=utf8mb4"
 ```
@@ -125,6 +132,7 @@ If the database connection fails, the application will automatically fall back t
 - Network connectivity issues occur
 
 In memory storage mode:
+
 - Connected Shopify stores and their products are stored in memory
 - All SEO tools continue to work with the in-memory data
 - Data is lost when the server restarts
@@ -133,6 +141,7 @@ In memory storage mode:
 ## Migration and Schema
 
 The application automatically:
+
 - Creates necessary database tables on first run
 - Runs database migrations to keep schema up to date
 - Handles schema differences between database types
@@ -141,6 +150,7 @@ The application automatically:
 ## Health Check
 
 You can check database connectivity status through the application's health check endpoint or logs. The application will show:
+
 - Database type and connection status
 - Configuration details (passwords hidden)
 - Migration status
@@ -151,16 +161,19 @@ You can check database connectivity status through the application's health chec
 ### Common Issues
 
 1. **Connection Timeout**
+
    - Check if database server is running
    - Verify network connectivity
    - Confirm firewall settings
 
 2. **Authentication Failed**
+
    - Verify username and password
    - Check user permissions
    - Ensure database exists
 
 3. **Dependencies Missing**
+
    - Install required npm packages for your database type
    - Check package.json for correct versions
 
@@ -171,6 +184,7 @@ You can check database connectivity status through the application's health chec
 ### Debug Mode
 
 Enable debug logging by setting:
+
 ```bash
 NODE_ENV=development
 ```

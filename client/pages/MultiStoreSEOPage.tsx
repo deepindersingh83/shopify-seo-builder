@@ -400,7 +400,7 @@ export default function MultiStoreSEOPage() {
   const handleViewDashboard = (store: ShopifyStore) => {
     console.log("Opening dashboard for store:", store.name);
     // Navigate to store-specific dashboard
-    window.open(`/dashboard/${store.id}`, '_blank');
+    window.open(`/dashboard/${store.id}`, "_blank");
   };
 
   const handleStoreSettings = (store: ShopifyStore) => {
@@ -419,7 +419,9 @@ Monthly Revenue: $${store.monthlyRevenue.toLocaleString()}
 Last Sync: ${store.lastSync}
     `.trim();
 
-    alert(`Store Settings for ${store.name}:\n\n${storeInfo}\n\nNote: Full settings interface coming soon!`);
+    alert(
+      `Store Settings for ${store.name}:\n\n${storeInfo}\n\nNote: Full settings interface coming soon!`,
+    );
   };
 
   const handleSyncStore = async (store: ShopifyStore) => {
@@ -440,21 +442,25 @@ Last Sync: ${store.lastSync}
         await loadStores();
       } else {
         const error = await response.json();
-        alert(`Failed to sync ${store.name}: ${error.message || "Unknown error"}`);
+        alert(
+          `Failed to sync ${store.name}: ${error.message || "Unknown error"}`,
+        );
       }
     } catch (error) {
       console.error("Error syncing store:", error);
-      alert(`Failed to sync ${store.name}. Please check your network connection and try again.`);
+      alert(
+        `Failed to sync ${store.name}. Please check your network connection and try again.`,
+      );
     }
   };
 
   const handleOpenStore = (store: ShopifyStore) => {
     console.log("Opening store:", store.domain);
     // Open store in new tab
-    const storeUrl = store.domain.startsWith('http')
+    const storeUrl = store.domain.startsWith("http")
       ? store.domain
       : `https://${store.domain}`;
-    window.open(storeUrl, '_blank');
+    window.open(storeUrl, "_blank");
   };
 
   return (

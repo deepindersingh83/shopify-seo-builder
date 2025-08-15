@@ -62,22 +62,23 @@ export const getPaginatedProducts = async (req: Request, res: Response) => {
 
       if (productFilters.query) {
         const query = productFilters.query.toLowerCase();
-        filteredProducts = storeProducts.filter(product =>
-          product.title?.toLowerCase().includes(query) ||
-          product.description?.toLowerCase().includes(query) ||
-          product.vendor?.toLowerCase().includes(query)
+        filteredProducts = storeProducts.filter(
+          (product) =>
+            product.title?.toLowerCase().includes(query) ||
+            product.description?.toLowerCase().includes(query) ||
+            product.vendor?.toLowerCase().includes(query),
         );
       }
 
       if (productFilters.status && productFilters.status.length > 0) {
-        filteredProducts = filteredProducts.filter(product =>
-          productFilters.status!.includes(product.status)
+        filteredProducts = filteredProducts.filter((product) =>
+          productFilters.status!.includes(product.status),
         );
       }
 
       if (productFilters.vendor && productFilters.vendor.length > 0) {
-        filteredProducts = filteredProducts.filter(product =>
-          productFilters.vendor!.includes(product.vendor)
+        filteredProducts = filteredProducts.filter((product) =>
+          productFilters.vendor!.includes(product.vendor),
         );
       }
 
@@ -85,7 +86,9 @@ export const getPaginatedProducts = async (req: Request, res: Response) => {
       totalCount = filteredProducts.length;
       allProducts = filteredProducts.slice(startIndex, startIndex + pageSize);
 
-      console.log(`📊 Retrieved ${allProducts.length}/${totalCount} products from store memory`);
+      console.log(
+        `📊 Retrieved ${allProducts.length}/${totalCount} products from store memory`,
+      );
     }
 
     const queryTime = Date.now() - startTime;
@@ -146,7 +149,7 @@ export const searchProducts = async (req: Request, res: Response) => {
         const storeProducts = storeProductsService.getAllStoreProducts();
 
         // Apply basic filtering
-        allProducts = storeProducts.filter(product => {
+        allProducts = storeProducts.filter((product) => {
           // Query filter
           if (query) {
             const searchQuery = query.toLowerCase();
@@ -171,7 +174,10 @@ export const searchProducts = async (req: Request, res: Response) => {
           return true;
         });
       } catch (memoryError) {
-        console.error("Error accessing store products from memory:", memoryError);
+        console.error(
+          "Error accessing store products from memory:",
+          memoryError,
+        );
         allProducts = []; // Return empty array instead of crashing
       }
     }
@@ -224,7 +230,7 @@ export const getProductCount = async (req: Request, res: Response) => {
         const storeProducts = storeProductsService.getAllStoreProducts();
 
         // Apply basic filtering and count
-        const filteredProducts = storeProducts.filter(product => {
+        const filteredProducts = storeProducts.filter((product) => {
           // Query filter
           if (query) {
             const searchQuery = query.toLowerCase();
@@ -251,7 +257,10 @@ export const getProductCount = async (req: Request, res: Response) => {
 
         count = filteredProducts.length;
       } catch (memoryError) {
-        console.error("Error accessing store products count from memory:", memoryError);
+        console.error(
+          "Error accessing store products count from memory:",
+          memoryError,
+        );
         count = 0; // Return 0 instead of crashing
       }
     }
@@ -289,9 +298,10 @@ export const getProductStatus = async (req: Request, res: Response) => {
       databaseProducts: dbProductsCount,
       totalAvailable: dbConnected ? dbProductsCount : storeProductsCount,
       source: dbConnected ? "database" : "memory",
-      message: storeProductsCount === 0 && dbProductsCount === 0
-        ? "No products found. Please connect a Shopify store to import products."
-        : "Products available"
+      message:
+        storeProductsCount === 0 && dbProductsCount === 0
+          ? "No products found. Please connect a Shopify store to import products."
+          : "Products available",
     });
   } catch (error) {
     console.error("Error in getProductStatus:", error);

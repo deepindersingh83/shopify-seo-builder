@@ -458,7 +458,7 @@ export const syncStore = async (req: Request, res: Response) => {
 
     // Find the store to sync
     const stores = await getAllConnectedStores();
-    const store = stores.find(s => s.id === storeId);
+    const store = stores.find((s) => s.id === storeId);
 
     if (!store) {
       return res.status(404).json({
@@ -474,14 +474,19 @@ export const syncStore = async (req: Request, res: Response) => {
       try {
         await databaseService.query(
           `UPDATE stores SET updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
-          [storeId]
+          [storeId],
         );
       } catch (error) {
-        console.warn("Database update failed during sync, continuing with memory storage:", error);
+        console.warn(
+          "Database update failed during sync, continuing with memory storage:",
+          error,
+        );
       }
     }
 
-    console.log(`✅ Sync completed for store: ${store.name || store.domain} (${importedProducts.length} products)`);
+    console.log(
+      `✅ Sync completed for store: ${store.name || store.domain} (${importedProducts.length} products)`,
+    );
 
     res.json({
       success: true,

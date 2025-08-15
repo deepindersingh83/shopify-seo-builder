@@ -1,7 +1,12 @@
 import { z } from "zod";
 
 // Supported database types
-export type DatabaseType = "sqlite" | "mysql" | "mariadb" | "postgresql" | "disabled";
+export type DatabaseType =
+  | "sqlite"
+  | "mysql"
+  | "mariadb"
+  | "postgresql"
+  | "disabled";
 
 // Database configuration schema
 const DatabaseConfigSchema = z.object({
@@ -27,12 +32,12 @@ export type DatabaseConfig = z.infer<typeof DatabaseConfigSchema>;
 // Parse DATABASE_URL or individual environment variables
 export function parseDatabaseConfig(): DatabaseConfig {
   const databaseUrl = process.env.DATABASE_URL;
-  
+
   // If DATABASE_URL is provided, parse it
   if (databaseUrl && databaseUrl !== "") {
     return parseDatabaseUrl(databaseUrl);
   }
-  
+
   // Check if database is explicitly disabled
   if (process.env.DB_ENABLED === "false") {
     return {
@@ -40,36 +45,38 @@ export function parseDatabaseConfig(): DatabaseConfig {
       database: "disabled",
     };
   }
-  
+
   // Fall back to individual environment variables (legacy MariaDB format)
   const type = (process.env.DB_TYPE as DatabaseType) || "mariadb";
-  
+
   const config: DatabaseConfig = {
     type,
     database: process.env.DB_NAME || "app",
   };
-  
+
   // Add connection details for non-SQLite databases
   if (type !== "sqlite" && type !== "disabled") {
     config.host = process.env.DB_HOST || "localhost";
-    config.port = parseInt(process.env.DB_PORT || getDefaultPort(type).toString());
+    config.port = parseInt(
+      process.env.DB_PORT || getDefaultPort(type).toString(),
+    );
     config.user = process.env.DB_USER || "root";
     config.password = process.env.DB_PASSWORD || "";
     config.ssl = process.env.DB_SSL === "true";
   }
-  
+
   // SQLite specific configuration
   if (type === "sqlite") {
     config.filename = process.env.DB_FILENAME || "./data/app.db";
   }
-  
+
   // Additional options
   config.connectionLimit = parseInt(process.env.DB_POOL_SIZE || "10");
   config.acquireTimeout = parseInt(process.env.DB_ACQUIRE_TIMEOUT || "30000");
   config.timeout = parseInt(process.env.DB_TIMEOUT || "30000");
   config.charset = process.env.DB_CHARSET || "utf8mb4";
   config.timezone = process.env.DB_TIMEZONE || "UTC";
-  
+
   return DatabaseConfigSchema.parse(config);
 }
 
@@ -77,7 +84,7 @@ export function parseDatabaseConfig(): DatabaseConfig {
 function parseDatabaseUrl(url: string): DatabaseConfig {
   try {
     const parsed = new URL(url);
-    
+
     let type: DatabaseType;
     switch (parsed.protocol.replace(":", "")) {
       case "sqlite":
@@ -96,21 +103,21 @@ function parseDatabaseUrl(url: string): DatabaseConfig {
       default:
         throw new Error(`Unsupported database protocol: ${parsed.protocol}`);
     }
-    
+
     const config: DatabaseConfig = {
       type,
       database: parsed.pathname.replace("/", "") || "app",
     };
-    
+
     // SQLite uses the pathname as filename
     if (type === "sqlite") {
       // Handle SQLite URL like sqlite:///path/to/db or sqlite:///%kernel.project_dir%/var/data.db
       let filename = parsed.pathname;
       if (filename.startsWith("/")) filename = filename.substring(1);
-      
+
       // Handle special tokens like %kernel.project_dir%
       filename = filename.replace("%kernel.project_dir%", process.cwd());
-      
+
       config.filename = filename || "./data/app.db";
     } else {
       // Network databases
@@ -119,18 +126,20 @@ function parseDatabaseUrl(url: string): DatabaseConfig {
       config.user = parsed.username || "root";
       config.password = parsed.password || "";
     }
-    
+
     // Parse query parameters
     const searchParams = parsed.searchParams;
-    config.ssl = searchParams.get("ssl") === "true" || searchParams.get("sslmode") === "require";
+    config.ssl =
+      searchParams.get("ssl") === "true" ||
+      searchParams.get("sslmode") === "require";
     config.charset = searchParams.get("charset") || "utf8mb4";
     config.timezone = searchParams.get("timezone") || "UTC";
-    
+
     // Parse connection pool settings
     if (searchParams.get("connectionLimit")) {
       config.connectionLimit = parseInt(searchParams.get("connectionLimit")!);
     }
-    
+
     return DatabaseConfigSchema.parse(config);
   } catch (error) {
     console.error("Failed to parse DATABASE_URL:", error);
@@ -156,9 +165,12 @@ function getDefaultPort(type: DatabaseType): number {
 export function getExampleDatabaseUrls(): Record<DatabaseType, string> {
   return {
     sqlite: "sqlite:///%kernel.project_dir%/var/data.db",
-    mysql: "mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=8.0.32&charset=utf8mb4",
-    mariadb: "mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=10.11.2-MariaDB&charset=utf8mb4",
-    postgresql: "postgresql://app:!ChangeMe!@127.0.0.1:5432/app?serverVersion=16&charset=utf8",
+    mysql:
+      "mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=8.0.32&charset=utf8mb4",
+    mariadb:
+      "mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=10.11.2-MariaDB&charset=utf8mb4",
+    postgresql:
+      "postgresql://app:!ChangeMe!@127.0.0.1:5432/app?serverVersion=16&charset=utf8",
     disabled: "", // Not applicable
   };
 }
@@ -166,15 +178,15 @@ export function getExampleDatabaseUrls(): Record<DatabaseType, string> {
 // Validate database configuration
 export function validateDatabaseConfig(config: DatabaseConfig): string[] {
   const errors: string[] = [];
-  
+
   if (config.type === "disabled") {
     return errors; // No validation needed for disabled database
   }
-  
+
   if (!config.database) {
     errors.push("Database name is required");
   }
-  
+
   if (config.type === "sqlite") {
     if (!config.filename) {
       errors.push("SQLite filename is required");
@@ -190,6 +202,6 @@ export function validateDatabaseConfig(config: DatabaseConfig): string[] {
       errors.push("Database user is required");
     }
   }
-  
+
   return errors;
 }
