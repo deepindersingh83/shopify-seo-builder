@@ -381,9 +381,16 @@ class DatabaseService {
 
   async close(): Promise<void> {
     if (this.pool) {
-      await this.pool.end();
-      this.pool = null;
-      console.log("🔌 Database connection closed");
+      try {
+        await this.pool.end();
+        console.log("🔌 Database connection closed");
+      } catch (error) {
+        console.warn("⚠️ Error closing database pool:", error);
+      } finally {
+        this.pool = null;
+        this.isInitializing = false;
+        this.initializationPromise = null;
+      }
     }
   }
 
