@@ -106,6 +106,29 @@ export function createServer() {
   app.post("/api/third-party/integrations/:id/test", thirdPartyRoutes.testIntegrationConnection);
   app.post("/api/third-party/integrations/:id/sync", thirdPartyRoutes.syncIntegration);
 
+  // Filter routes
+  app.get("/api/filters/presets", filterRoutes.getFilterPresets);
+  app.get("/api/filters/presets/:id", filterRoutes.getFilterPreset);
+  app.post("/api/filters/presets", filterRoutes.createFilterPreset);
+  app.put("/api/filters/presets/:id", filterRoutes.updateFilterPreset);
+  app.delete("/api/filters/presets/:id", filterRoutes.deleteFilterPreset);
+  app.post("/api/filters/presets/:id/duplicate", filterRoutes.duplicateFilterPreset);
+  app.post("/api/filters/apply", filterRoutes.applyFilters);
+  app.post("/api/filters/counts", filterRoutes.getFilterCounts);
+  app.post("/api/filters/suggestions", filterRoutes.getFilterSuggestions);
+  app.post("/api/filters/validate", filterRoutes.validateFilter);
+  app.post("/api/filters/preview", filterRoutes.previewFilterResults);
+
+  // Platform integration routes
+  app.get("/api/platforms/integrations", platformRoutes.getPlatformIntegrations);
+  app.get("/api/platforms/integrations/:id", platformRoutes.getPlatformIntegration);
+  app.post("/api/platforms/connect", platformRoutes.connectPlatform);
+  app.put("/api/platforms/integrations/:id", platformRoutes.updatePlatformIntegration);
+  app.delete("/api/platforms/integrations/:id", platformRoutes.deletePlatformIntegration);
+  app.post("/api/platforms/integrations/:id/test", platformRoutes.testConnection);
+  app.post("/api/platforms/integrations/:id/sync", platformRoutes.startSync);
+  app.get("/api/platforms/integrations/:id/sync-history", platformRoutes.getSyncHistory);
+
   // Database health check
   app.get("/api/health/database", async (req, res) => {
     try {
