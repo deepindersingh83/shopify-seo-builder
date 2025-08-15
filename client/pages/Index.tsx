@@ -695,11 +695,8 @@ export default function Index() {
             </DialogHeader>
 
             <BulkOperations
-              selectedCount={selectedProducts.length}
-              operation={bulkOperation}
-              onOperationChange={setBulkOperation}
-              onExecute={handleBulkOperation}
-              onCancel={() => setShowBulkDialog(false)}
+              selectedProducts={selectedProducts}
+              onClearSelection={() => setSelectedProducts([])}
             />
           </DialogContent>
         </Dialog>
