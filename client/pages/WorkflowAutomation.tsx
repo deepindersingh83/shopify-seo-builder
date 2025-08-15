@@ -102,9 +102,43 @@ export default function WorkflowAutomation() {
       setThirdParty(thirdPartyData);
     } catch (error) {
       console.error("Failed to load data:", error);
+      alert("Failed to load workflow data. Please refresh the page.");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleRunWorkflow = async (workflowId: string) => {
+    try {
+      const workflow = workflows.find(w => w.id === workflowId);
+      if (!workflow) return;
+
+      alert(`Running workflow: ${workflow.name}. This would trigger the workflow execution.`);
+      // In a real app, this would call the workflow execution API
+      await workflowService.executeWorkflow(workflowId, {});
+      loadData(); // Refresh data
+    } catch (error) {
+      console.error("Failed to run workflow:", error);
+      alert("Failed to run workflow. Please try again.");
+    }
+  };
+
+  const handleSyncPlatform = async (platformId: string) => {
+    try {
+      const platform = platforms.find(p => p.id === platformId);
+      if (!platform) return;
+
+      alert(`Syncing with ${platform.platform}. This would trigger a platform sync.`);
+      // In a real app, this would call the platform sync API
+    } catch (error) {
+      console.error("Failed to sync platform:", error);
+      alert("Failed to sync platform. Please try again.");
+    }
+  };
+
+  const handleCreateWorkflow = () => {
+    alert("This would open the workflow builder to create a new workflow.");
+    // In a real app, this would navigate to the workflow builder
   };
 
   const getStatusBadge = (status: string) => {
