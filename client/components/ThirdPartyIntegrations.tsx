@@ -741,9 +741,10 @@ export function ThirdPartyIntegrations() {
                         size="sm"
                         variant="outline"
                         onClick={() => handleSync(integration.id)}
+                        disabled={isLoading(`sync-${integration.id}`)}
                       >
-                        <RefreshCw className="h-3 w-3 mr-1" />
-                        Sync Now
+                        <RefreshCw className={`h-3 w-3 mr-1 ${isLoading(`sync-${integration.id}`) ? 'animate-spin' : ''}`} />
+                        {isLoading(`sync-${integration.id}`) ? 'Syncing...' : 'Sync Now'}
                       </Button>
                       <Button size="sm" variant="outline">
                         <Eye className="h-3 w-3 mr-1" />
