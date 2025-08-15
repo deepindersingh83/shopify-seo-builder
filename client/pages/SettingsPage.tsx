@@ -1516,13 +1516,13 @@ export default function SettingsPage() {
                   </p>
                 </div>
                 <div className="flex space-x-2">
-                  <Button size="sm" variant="outline">
+                  <Button size="sm" variant="outline" onClick={handleShowWebhookSecret}>
                     <Eye className="h-4 w-4" />
                   </Button>
-                  <Button size="sm" variant="outline">
+                  <Button size="sm" variant="outline" onClick={handleCopyWebhookSecret}>
                     <Copy className="h-4 w-4" />
                   </Button>
-                  <Button size="sm" variant="outline">
+                  <Button size="sm" variant="outline" onClick={handleRegenerateWebhookSecret}>
                     <RefreshCw className="h-4 w-4" />
                   </Button>
                 </div>
