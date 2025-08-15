@@ -253,6 +253,42 @@ export const getProductCount = async (req: Request, res: Response) => {
   }
 };
 
+// Debug endpoint to check product status
+export const getProductStatus = async (req: Request, res: Response) => {
+  try {
+    const dbConnected = databaseService.isConnected();
+    let storeProductsCount = 0;
+    let dbProductsCount = 0;
+
+    // Check store products in memory
+    const storeProducts = storeProductsService.getAllStoreProducts();
+    storeProductsCount = storeProducts.length;
+
+    // Check database products if connected
+    if (dbConnected) {
+      try {
+        dbProductsCount = await productRepository.getCount({});
+      } catch (error) {
+        console.error("Failed to get database product count:", error);
+      }
+    }
+
+    res.json({
+      databaseConnected: dbConnected,
+      storeProductsInMemory: storeProductsCount,
+      databaseProducts: dbProductsCount,
+      totalAvailable: dbConnected ? dbProductsCount : storeProductsCount,
+      source: dbConnected ? "database" : "memory",
+      message: storeProductsCount === 0 && dbProductsCount === 0
+        ? "No products found. Please connect a Shopify store to import products."
+        : "Products available"
+    });
+  } catch (error) {
+    console.error("Error in getProductStatus:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 // Lazy load products endpoint
 export const lazyLoadProducts = async (req: Request, res: Response) => {
   try {
