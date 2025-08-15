@@ -117,31 +117,63 @@ export const searchProducts = async (req: Request, res: Response) => {
     const startTime = Date.now();
 
     const searchLimit = Math.min(parseInt(limit as string), 200);
+    let allProducts: any[] = [];
 
-    // Convert frontend filters to repository filters
-    const productFilters: ProductFilters = {
-      status: filters.status,
-      vendor: filters.vendor,
-      product_type: filters.productType,
-      seo_score_min: filters.seoScoreRange?.[0],
-      seo_score_max: filters.seoScoreRange?.[1],
-      price_min: filters.priceRange?.[0],
-      price_max: filters.priceRange?.[1],
-      tags: filters.tags,
-      query,
-      has_meta_title: filters.hasMetaTitle,
-      has_meta_description: filters.hasMetaDescription,
-    };
+    if (databaseService.isConnected()) {
+      // Get products from database
+      const productFilters: ProductFilters = {
+        status: filters.status,
+        vendor: filters.vendor,
+        product_type: filters.productType,
+        seo_score_min: filters.seoScoreRange?.[0],
+        seo_score_max: filters.seoScoreRange?.[1],
+        price_min: filters.priceRange?.[0],
+        price_max: filters.priceRange?.[1],
+        tags: filters.tags,
+        query,
+        has_meta_title: filters.hasMetaTitle,
+        has_meta_description: filters.hasMetaDescription,
+      };
 
-    const products = await productRepository.search(
-      query,
-      productFilters,
-      searchLimit,
-    );
+      allProducts = await productRepository.search(
+        query,
+        productFilters,
+        searchLimit,
+      );
+    } else {
+      // Get products from store memory storage
+      const storeProducts = storeProductsService.getAllStoreProducts();
+
+      // Apply basic filtering
+      allProducts = storeProducts.filter(product => {
+        // Query filter
+        if (query) {
+          const searchQuery = query.toLowerCase();
+          const matchesQuery =
+            product.title?.toLowerCase().includes(searchQuery) ||
+            product.description?.toLowerCase().includes(searchQuery) ||
+            product.vendor?.toLowerCase().includes(searchQuery) ||
+            product.product_type?.toLowerCase().includes(searchQuery);
+          if (!matchesQuery) return false;
+        }
+
+        // Status filter
+        if (filters.status && filters.status.length > 0) {
+          if (!filters.status.includes(product.status)) return false;
+        }
+
+        // Vendor filter
+        if (filters.vendor && filters.vendor.length > 0) {
+          if (!filters.vendor.includes(product.vendor)) return false;
+        }
+
+        return true;
+      });
+    }
 
     // Apply sorting if requested
     if (sortBy.field) {
-      products.sort((a: any, b: any) => {
+      allProducts.sort((a: any, b: any) => {
         const aVal = a[sortBy.field];
         const bVal = b[sortBy.field];
 
@@ -155,8 +187,8 @@ export const searchProducts = async (req: Request, res: Response) => {
     const queryTime = Date.now() - startTime;
 
     res.json({
-      products: products.slice(0, limit),
-      totalCount: products.length,
+      products: allProducts.slice(0, limit),
+      totalCount: allProducts.length,
       queryTime,
     });
   } catch (error) {
