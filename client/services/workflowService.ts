@@ -185,33 +185,11 @@ class WorkflowService {
 
   // Platform Integrations
   async getPlatformIntegrations(): Promise<PlatformIntegration[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/integrations/platforms`);
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      return [
-        {
-          id: "1",
-          name: "Main Shopify Store",
-          type: "shopify",
-          status: "connected",
-          credentials: { shopifyDomain: "mystore.myshopify.com" },
-          syncSettings: {
-            autoSync: true,
-            syncInterval: 60,
-            syncFields: ["title", "description", "price", "inventory"],
-            conflictResolution: "newest_wins",
-            enableWebhooks: true,
-          },
-          lastSync: new Date(Date.now() - 1800000).toISOString(),
-          syncHistory: [],
-        },
-      ];
+    const response = await fetch(`${this.baseUrl}/integrations/platforms`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch platform integrations: ${response.status} ${response.statusText}`);
     }
+    return response.json();
   }
 
   async connectPlatform(
