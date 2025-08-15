@@ -43,7 +43,24 @@ class DatabaseService {
   }
 
   async initialize(): Promise<void> {
-    return this.initializeInternal(false);
+    // Prevent multiple concurrent initializations
+    if (this.isInitializing && this.initializationPromise) {
+      return this.initializationPromise;
+    }
+
+    if (this.pool) {
+      return; // Already initialized
+    }
+
+    this.isInitializing = true;
+    this.initializationPromise = this.initializeInternal(false);
+
+    try {
+      await this.initializationPromise;
+    } finally {
+      this.isInitializing = false;
+      this.initializationPromise = null;
+    }
   }
 
   async initializeStrict(): Promise<void> {
