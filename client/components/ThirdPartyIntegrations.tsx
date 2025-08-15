@@ -307,6 +307,52 @@ export function ThirdPartyIntegrations() {
     setShowConnectDialog(true);
   };
 
+  const handleSyncAll = async () => {
+    const connectedIntegrations = integrations.filter(i => i.status === 'connected');
+
+    if (connectedIntegrations.length === 0) {
+      alert('No connected integrations to sync.');
+      return;
+    }
+
+    if (!confirm(`Sync data from ${connectedIntegrations.length} connected services? This may take several minutes.`)) {
+      return;
+    }
+
+    try {
+      let totalProcessed = 0;
+      let totalErrors = 0;
+
+      for (const integration of connectedIntegrations) {
+        try {
+          const response = await fetch(`/api/third-party/integrations/${integration.id}/sync`, {
+            method: 'POST',
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            totalProcessed += result.recordsProcessed || 0;
+          } else {
+            totalErrors++;
+          }
+        } catch (error) {
+          totalErrors++;
+        }
+      }
+
+      await loadIntegrations();
+      await loadDashboardData();
+
+      alert(`✅ Sync completed!
+Processed: ${totalProcessed} records
+Services synced: ${connectedIntegrations.length}
+Errors: ${totalErrors}`);
+    } catch (error) {
+      console.error('Sync all failed:', error);
+      alert('❌ Failed to sync all services. Please try individual sync operations.');
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
