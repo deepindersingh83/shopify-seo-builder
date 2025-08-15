@@ -58,10 +58,11 @@ import { useLoading } from "@/hooks/use-loading";
 export function ThirdPartyIntegrations() {
   const [integrations, setIntegrations] = useState<ThirdPartyIntegration[]>([]);
   const [selectedIntegration, setSelectedIntegration] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const [showConnectDialog, setShowConnectDialog] = useState(false);
   const [selectedService, setSelectedService] = useState("");
   const [dashboardData, setDashboardData] = useState<any>({});
+  const { isLoading, withLoading } = useLoading();
 
   useEffect(() => {
     loadIntegrations();
