@@ -397,6 +397,53 @@ export default function MultiStoreSEOPage() {
     }
   };
 
+  const handleViewDashboard = (store: ShopifyStore) => {
+    console.log("Opening dashboard for store:", store.name);
+    // Navigate to store-specific dashboard
+    window.open(`/dashboard/${store.id}`, '_blank');
+  };
+
+  const handleStoreSettings = (store: ShopifyStore) => {
+    console.log("Opening settings for store:", store.name);
+    // Open store settings dialog or navigate to settings page
+    alert(`Opening settings for ${store.name}`);
+  };
+
+  const handleSyncStore = async (store: ShopifyStore) => {
+    console.log("Syncing store:", store.name);
+    try {
+      const response = await fetch(`/api/stores/${store.id}/sync`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Store synced successfully:", result);
+        alert(`${store.name} synced successfully!`);
+        // Reload stores to get updated data
+        await loadStores();
+      } else {
+        const error = await response.json();
+        alert(`Failed to sync ${store.name}: ${error.message || "Unknown error"}`);
+      }
+    } catch (error) {
+      console.error("Error syncing store:", error);
+      alert(`Failed to sync ${store.name}. Please check your network connection and try again.`);
+    }
+  };
+
+  const handleOpenStore = (store: ShopifyStore) => {
+    console.log("Opening store:", store.domain);
+    // Open store in new tab
+    const storeUrl = store.domain.startsWith('http')
+      ? store.domain
+      : `https://${store.domain}`;
+    window.open(storeUrl, '_blank');
+  };
+
   return (
     <Layout>
       <div className="space-y-6">
@@ -974,6 +1021,7 @@ export default function MultiStoreSEOPage() {
                                 size="sm"
                                 variant="ghost"
                                 title="View Dashboard"
+                                onClick={() => handleViewDashboard(store)}
                               >
                                 <Eye className="h-4 w-4" />
                               </Button>
@@ -981,6 +1029,7 @@ export default function MultiStoreSEOPage() {
                                 size="sm"
                                 variant="ghost"
                                 title="Store Settings"
+                                onClick={() => handleStoreSettings(store)}
                               >
                                 <Settings className="h-4 w-4" />
                               </Button>
@@ -988,6 +1037,8 @@ export default function MultiStoreSEOPage() {
                                 size="sm"
                                 variant="ghost"
                                 title="Sync Now"
+                                onClick={() => handleSyncStore(store)}
+                                disabled={!store.isConnected}
                               >
                                 <RefreshCw className="h-4 w-4" />
                               </Button>
@@ -995,6 +1046,7 @@ export default function MultiStoreSEOPage() {
                                 size="sm"
                                 variant="ghost"
                                 title="Open Store"
+                                onClick={() => handleOpenStore(store)}
                               >
                                 <ExternalLink className="h-4 w-4" />
                               </Button>
