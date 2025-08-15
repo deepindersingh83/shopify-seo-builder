@@ -10,6 +10,7 @@ import * as storeRoutes from "./routes/stores";
 import * as thirdPartyRoutes from "./routes/thirdPartyIntegrations";
 import * as filterRoutes from "./routes/filters";
 import * as platformRoutes from "./routes/platforms";
+import * as collectionRoutes from "./routes/collections";
 import { databaseService } from "./services/database";
 import { installationService } from "./services/installationService";
 
@@ -128,6 +129,17 @@ export function createServer() {
   app.post("/api/platforms/integrations/:id/test", platformRoutes.testConnection);
   app.post("/api/platforms/integrations/:id/sync", platformRoutes.startSync);
   app.get("/api/platforms/integrations/:id/sync-history", platformRoutes.getSyncHistory);
+
+  // Collections routes
+  app.get("/api/collections/seo-data", collectionRoutes.getCollectionsSEOData);
+  app.post("/api/collections/sync-from-platforms", collectionRoutes.syncCollectionsFromPlatforms);
+  app.get("/api/collections/:id", collectionRoutes.getCollection);
+  app.put("/api/collections/:id/seo", collectionRoutes.updateCollectionSEO);
+  app.post("/api/collections/:id/ai-recommendations", collectionRoutes.generateSEORecommendations);
+  app.post("/api/collections/:id/ai-optimize", collectionRoutes.applySEOOptimization);
+  app.post("/api/collections", collectionRoutes.createCollection);
+  app.delete("/api/collections/:id", collectionRoutes.deleteCollection);
+  app.post("/api/collections/bulk-optimize", collectionRoutes.bulkOptimizeCollections);
 
   // Database health check
   app.get("/api/health/database", async (req, res) => {

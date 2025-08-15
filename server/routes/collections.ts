@@ -1,8 +1,6 @@
-import express, { Request, Response } from "express";
+import { Request, Response } from "express";
 import { databaseService } from "../services/database";
 import { z } from "zod";
-
-const router = express.Router();
 
 // Validation schemas
 const CollectionSchema = z.object({
@@ -708,15 +706,15 @@ export const bulkOptimizeCollections = async (req: Request, res: Response) => {
   }
 };
 
-// Routes
-router.get("/seo-data", getCollectionsSEOData);
-router.post("/sync-from-platforms", syncCollectionsFromPlatforms);
-router.get("/:id", getCollection);
-router.put("/:id/seo", updateCollectionSEO);
-router.post("/:id/ai-recommendations", generateSEORecommendations);
-router.post("/:id/ai-optimize", applySEOOptimization);
-router.post("/", createCollection);
-router.delete("/:id", deleteCollection);
-router.post("/bulk-optimize", bulkOptimizeCollections);
-
-export default router;
+// Export individual route handlers
+export {
+  getCollectionsSEOData,
+  syncCollectionsFromPlatforms,
+  getCollection,
+  updateCollectionSEO,
+  generateSEORecommendations,
+  applySEOOptimization,
+  createCollection,
+  deleteCollection,
+  bulkOptimizeCollections,
+};
