@@ -339,7 +339,7 @@ export function ThirdPartyIntegrations() {
     const connectedIntegrations = integrations.filter(i => i.status === 'connected');
 
     if (connectedIntegrations.length === 0) {
-      alert('No connected integrations to sync.');
+      showWarning('No connected integrations to sync.');
       return;
     }
 
