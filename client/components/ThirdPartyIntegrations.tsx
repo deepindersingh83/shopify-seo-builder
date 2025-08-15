@@ -245,31 +245,33 @@ export function ThirdPartyIntegrations() {
   };
 
   const handleSync = async (integrationId: string) => {
-    try {
-      const response = await fetch(`/api/third-party/integrations/${integrationId}/sync`, {
-        method: 'POST',
-      });
+    await withLoading(`sync-${integrationId}`, async () => {
+      try {
+        const response = await fetch(`/api/third-party/integrations/${integrationId}/sync`, {
+          method: 'POST',
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Sync failed');
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Sync failed');
+        }
+
+        const result = await response.json();
+        showSuccess(
+          'Sync completed!',
+          `Processed ${result.recordsProcessed || 0} records. Last sync: ${new Date(result.lastSync).toLocaleString()}`
+        );
+
+        await loadIntegrations();
+        await loadDashboardData();
+      } catch (error) {
+        console.error("Sync failed:", error);
+        showError(
+          'Sync failed',
+          error instanceof Error ? error.message : 'Unknown error'
+        );
       }
-
-      const result = await response.json();
-      showSuccess(
-        'Sync completed!',
-        `Processed ${result.recordsProcessed || 0} records. Last sync: ${new Date(result.lastSync).toLocaleString()}`
-      );
-
-      await loadIntegrations();
-      await loadDashboardData();
-    } catch (error) {
-      console.error("Sync failed:", error);
-      showError(
-        'Sync failed',
-        error instanceof Error ? error.message : 'Unknown error'
-      );
-    }
+    });
   };
 
   const handleDisconnect = async (integrationId: string, integrationName: string) => {
