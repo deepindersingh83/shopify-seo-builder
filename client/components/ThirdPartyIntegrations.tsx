@@ -371,13 +371,16 @@ export function ThirdPartyIntegrations() {
       await loadIntegrations();
       await loadDashboardData();
 
-      alert(`✅ Sync completed!
-Processed: ${totalProcessed} records
-Services synced: ${connectedIntegrations.length}
-Errors: ${totalErrors}`);
+      showSuccess(
+        'Sync completed!',
+        `Processed: ${totalProcessed} records, Services synced: ${connectedIntegrations.length}, Errors: ${totalErrors}`
+      );
     } catch (error) {
       console.error('Sync all failed:', error);
-      alert('❌ Failed to sync all services. Please try individual sync operations.');
+      showError(
+        'Failed to sync all services',
+        'Please try individual sync operations.'
+      );
     }
   };
 
