@@ -19,6 +19,8 @@ type DatabaseConfig = z.infer<typeof DatabaseConfigSchema>;
 class DatabaseService {
   private pool: mariadb.Pool | null = null;
   private config: DatabaseConfig;
+  private isInitializing = false;
+  private initializationPromise: Promise<void> | null = null;
 
   constructor() {
     this.config = this.loadConfig();
