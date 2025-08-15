@@ -51,6 +51,7 @@ import {
 } from "@/components/ui/select";
 import { thirdPartyService } from "@/services/thirdPartyService";
 import { ThirdPartyIntegration } from "@shared/workflows";
+import { IntegrationsTestPanel } from "./IntegrationsTestPanel";
 
 export function ThirdPartyIntegrations() {
   const [integrations, setIntegrations] = useState<ThirdPartyIntegration[]>([]);
@@ -406,6 +407,7 @@ export function ThirdPartyIntegrations() {
           <TabsTrigger value="services">Services</TabsTrigger>
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsTrigger value="test">API Test</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -933,6 +935,11 @@ export function ThirdPartyIntegrations() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Test Tab */}
+        <TabsContent value="test" className="space-y-4">
+          <IntegrationsTestPanel />
         </TabsContent>
       </Tabs>
     </div>
