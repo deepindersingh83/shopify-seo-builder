@@ -57,6 +57,7 @@ export function createServer() {
   app.post("/api/products/paginated", productRoutes.getPaginatedProducts);
   app.post("/api/products/search", productRoutes.searchProducts);
   app.post("/api/products/count", productRoutes.getProductCount);
+  app.get("/api/products/status", productRoutes.getProductStatus);
   app.post("/api/products/lazy-load", productRoutes.lazyLoadProducts);
   app.post("/api/products/bulk-update", productRoutes.bulkUpdateProducts);
   app.get("/api/products/vendors", productRoutes.getVendors);
