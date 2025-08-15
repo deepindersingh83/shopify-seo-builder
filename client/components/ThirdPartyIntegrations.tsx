@@ -322,7 +322,10 @@ export function ThirdPartyIntegrations() {
       await loadIntegrations();
     } catch (error) {
       console.error("Test failed:", error);
-      alert(`❌ Connection test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      showError(
+        'Connection test failed',
+        error instanceof Error ? error.message : 'Unknown error'
+      );
     }
   };
 
