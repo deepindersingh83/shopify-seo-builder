@@ -948,18 +948,66 @@ function ConnectServiceForm({
 }) {
   const [service, setService] = useState("");
   const [credentials, setCredentials] = useState<any>({});
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = (): boolean => {
+    const errors: {[key: string]: string} = {};
+
+    if (!service) {
+      errors.service = 'Please select a service type';
+    }
+
+    // Service-specific validation
+    if (service === 'semrush' || service === 'ahrefs') {
+      if (!credentials.apiKey?.trim()) {
+        errors.apiKey = 'API key is required';
+      }
+    }
+
+    if (service === 'linkedin_ads' || service === 'facebook') {
+      if (!credentials.accessToken?.trim()) {
+        errors.accessToken = 'Access token is required';
+      }
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onConnect(service, credentials);
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsConnecting(true);
+    try {
+      await onConnect(service, credentials);
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
+  const handleCredentialChange = (key: string, value: string) => {
+    setCredentials({ ...credentials, [key]: value });
+    // Clear validation error when user starts typing
+    if (validationErrors[key]) {
+      setValidationErrors({ ...validationErrors, [key]: '' });
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <Label>Service Type</Label>
-        <Select value={service} onValueChange={setService}>
-          <SelectTrigger>
+        <Select value={service} onValueChange={(value) => {
+          setService(value);
+          setCredentials({});
+          setValidationErrors({});
+        }}>
+          <SelectTrigger className={validationErrors.service ? 'border-red-500' : ''}>
             <SelectValue placeholder="Choose service" />
           </SelectTrigger>
           <SelectContent>
@@ -979,6 +1027,9 @@ function ConnectServiceForm({
             <SelectItem value="twitter">Twitter/X</SelectItem>
           </SelectContent>
         </Select>
+        {validationErrors.service && (
+          <p className="text-sm text-red-500 mt-1">{validationErrors.service}</p>
+        )}
       </div>
 
       {(service === "semrush" || service === "ahrefs") && (
@@ -988,10 +1039,12 @@ function ConnectServiceForm({
             type="password"
             placeholder="Enter your API key"
             value={credentials.apiKey || ""}
-            onChange={(e) =>
-              setCredentials({ ...credentials, apiKey: e.target.value })
-            }
+            onChange={(e) => handleCredentialChange('apiKey', e.target.value)}
+            className={validationErrors.apiKey ? 'border-red-500' : ''}
           />
+          {validationErrors.apiKey && (
+            <p className="text-sm text-red-500 mt-1">{validationErrors.apiKey}</p>
+          )}
         </div>
       )}
 
@@ -1034,10 +1087,12 @@ function ConnectServiceForm({
               type="password"
               placeholder="LinkedIn Ads API access token"
               value={credentials.accessToken || ""}
-              onChange={(e) =>
-                setCredentials({ ...credentials, accessToken: e.target.value })
-              }
+              onChange={(e) => handleCredentialChange('accessToken', e.target.value)}
+              className={validationErrors.accessToken ? 'border-red-500' : ''}
             />
+            {validationErrors.accessToken && (
+              <p className="text-sm text-red-500 mt-1">{validationErrors.accessToken}</p>
+            )}
           </div>
           <div className="p-4 bg-muted/50 rounded-lg">
             <p className="text-sm text-muted-foreground">
@@ -1055,10 +1110,12 @@ function ConnectServiceForm({
             type="password"
             placeholder="Facebook access token"
             value={credentials.accessToken || ""}
-            onChange={(e) =>
-              setCredentials({ ...credentials, accessToken: e.target.value })
-            }
+            onChange={(e) => handleCredentialChange('accessToken', e.target.value)}
+            className={validationErrors.accessToken ? 'border-red-500' : ''}
           />
+          {validationErrors.accessToken && (
+            <p className="text-sm text-red-500 mt-1">{validationErrors.accessToken}</p>
+          )}
         </div>
       )}
 
@@ -1066,14 +1123,21 @@ function ConnectServiceForm({
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" disabled={!service}>
-          {service === "google_search_console" || service === "google_analytics"
-            ? "Authenticate with Google"
-            : service === "microsoft_clarity" ||
-                service === "microsoft_ads" ||
-                service === "azure_insights"
-              ? "Authenticate with Microsoft"
-              : "Connect Service"}
+        <Button type="submit" disabled={!service || isConnecting}>
+          {isConnecting ? (
+            <>
+              <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+              Connecting...
+            </>
+          ) : (
+            service === "google_search_console" || service === "google_analytics"
+              ? "Authenticate with Google"
+              : service === "microsoft_clarity" ||
+                  service === "microsoft_ads" ||
+                  service === "azure_insights"
+                ? "Authenticate with Microsoft"
+                : "Connect Service"
+          )}
         </Button>
       </DialogFooter>
     </form>
