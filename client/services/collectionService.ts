@@ -1,5 +1,3 @@
-import { useNotifications } from "@/hooks/use-notifications";
-
 interface Collection {
   id: string;
   name: string;
@@ -68,7 +66,6 @@ interface ShopifyPage {
 
 class CollectionService {
   private baseUrl = "/api/collections";
-  private notifications = useNotifications();
 
   // Get all collections, categories, CMS pages, and brand pages
   async getCollectionsSEOData(): Promise<CollectionSEOData> {
@@ -79,7 +76,6 @@ class CollectionService {
       }
       return response.json();
     } catch (error) {
-      this.notifications.showError("Failed to load collections data");
       throw error;
     }
   }
@@ -101,16 +97,8 @@ class CollectionService {
       }
       
       const result = await response.json();
-      
-      if (result.success) {
-        this.notifications.showSuccess(`Successfully synced ${result.synced} collections`);
-      } else {
-        this.notifications.showWarning("Sync completed with some issues");
-      }
-      
       return result;
     } catch (error) {
-      this.notifications.showError("Failed to sync collections from platforms");
       throw error;
     }
   }
@@ -124,7 +112,6 @@ class CollectionService {
       }
       return response.json();
     } catch (error) {
-      this.notifications.showError("Failed to load Shopify collections");
       throw error;
     }
   }
@@ -138,7 +125,6 @@ class CollectionService {
       }
       return response.json();
     } catch (error) {
-      this.notifications.showError("Failed to load Shopify pages");
       throw error;
     }
   }
@@ -165,10 +151,8 @@ class CollectionService {
       }
       
       const result = await response.json();
-      this.notifications.showSuccess("Collection SEO updated successfully");
       return result;
     } catch (error) {
-      this.notifications.showError("Failed to update collection SEO");
       throw error;
     }
   }
@@ -186,10 +170,8 @@ class CollectionService {
       }
       
       const recommendations = await response.json();
-      this.notifications.showSuccess("AI recommendations generated successfully");
       return recommendations;
     } catch (error) {
-      this.notifications.showError("Failed to generate AI recommendations");
       throw error;
     }
   }
@@ -211,10 +193,8 @@ class CollectionService {
       }
       
       const result = await response.json();
-      this.notifications.showSuccess("AI optimization applied successfully");
       return result;
     } catch (error) {
-      this.notifications.showError("Failed to apply AI optimization");
       throw error;
     }
   }
@@ -241,16 +221,8 @@ class CollectionService {
       }
       
       const result = await response.json();
-      
-      if (result.success) {
-        this.notifications.showSuccess(`Successfully optimized ${result.processed} collections`);
-      } else {
-        this.notifications.showWarning("Bulk optimization completed with some issues");
-      }
-      
       return result;
     } catch (error) {
-      this.notifications.showError("Failed to perform bulk optimization");
       throw error;
     }
   }
@@ -264,7 +236,6 @@ class CollectionService {
       }
       return response.json();
     } catch (error) {
-      this.notifications.showError("Failed to load collection");
       throw error;
     }
   }
@@ -280,9 +251,7 @@ class CollectionService {
         throw new Error(`Failed to delete collection: ${response.statusText}`);
       }
       
-      this.notifications.showSuccess("Collection deleted successfully");
     } catch (error) {
-      this.notifications.showError("Failed to delete collection");
       throw error;
     }
   }
@@ -301,10 +270,8 @@ class CollectionService {
       }
       
       const result = await response.json();
-      this.notifications.showSuccess("Collection created successfully");
       return result;
     } catch (error) {
-      this.notifications.showError("Failed to create collection");
       throw error;
     }
   }
@@ -326,16 +293,8 @@ class CollectionService {
       }
       
       const result = await response.json();
-      
-      if (result.success) {
-        this.notifications.showSuccess("Collection synced to platform successfully");
-      } else {
-        this.notifications.showError("Failed to sync collection to platform");
-      }
-      
       return result;
     } catch (error) {
-      this.notifications.showError("Failed to sync collection to platform");
       throw error;
     }
   }
