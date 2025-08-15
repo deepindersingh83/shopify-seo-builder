@@ -64,6 +64,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <NotificationSystem />
+      <ConfirmationDialog />
       <BrowserRouter>
         <InstallationCheck>
           <Routes>
