@@ -1,20 +1,5 @@
-import mariadb from "mariadb";
-import { z } from "zod";
-
-// Database configuration schema
-const DatabaseConfigSchema = z.object({
-  host: z.string().default("localhost"),
-  port: z.number().default(3306),
-  user: z.string().default("root"),
-  password: z.string().default(""),
-  database: z.string().default("seo_manager"),
-  connectionLimit: z.number().default(10),
-  acquireTimeout: z.number().default(30000),
-  timeout: z.number().default(30000),
-  ssl: z.boolean().default(false),
-});
-
-type DatabaseConfig = z.infer<typeof DatabaseConfigSchema>;
+import { parseDatabaseConfig, validateDatabaseConfig, type DatabaseConfig } from "./databaseConfig";
+import { createDatabaseAdapter, type DatabaseAdapter } from "./databaseAdapters";
 
 class DatabaseService {
   private pool: mariadb.Pool | null = null;
