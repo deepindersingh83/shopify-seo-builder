@@ -433,6 +433,22 @@ class ThirdPartyService {
   // Integration Management
   async getThirdPartyIntegrations(): Promise<ThirdPartyIntegration[]> {
     const response = await fetch(`${this.baseUrl}/integrations`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch integrations: ${response.statusText}`);
+    }
+    return response.json();
+  }
+
+  async connectService(service: string, credentials: any, settings?: any): Promise<ThirdPartyIntegration> {
+    const response = await fetch(`${this.baseUrl}/connect`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ service, credentials, settings }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to connect service');
+    }
     return response.json();
   }
 
@@ -445,13 +461,19 @@ class ThirdPartyService {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updates),
     });
+    if (!response.ok) {
+      throw new Error(`Failed to update integration: ${response.statusText}`);
+    }
     return response.json();
   }
 
   async deleteIntegration(id: string): Promise<void> {
-    await fetch(`${this.baseUrl}/integrations/${id}`, {
+    const response = await fetch(`${this.baseUrl}/integrations/${id}`, {
       method: "DELETE",
     });
+    if (!response.ok) {
+      throw new Error(`Failed to delete integration: ${response.statusText}`);
+    }
   }
 
   async testIntegration(
@@ -460,6 +482,19 @@ class ThirdPartyService {
     const response = await fetch(`${this.baseUrl}/integrations/${id}/test`, {
       method: "POST",
     });
+    if (!response.ok) {
+      throw new Error(`Failed to test integration: ${response.statusText}`);
+    }
+    return response.json();
+  }
+
+  async syncIntegration(id: string): Promise<{ success: boolean; message: string; recordsProcessed?: number; lastSync?: string }> {
+    const response = await fetch(`${this.baseUrl}/integrations/${id}/sync`, {
+      method: "POST",
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to sync integration: ${response.statusText}`);
+    }
     return response.json();
   }
 
