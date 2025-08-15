@@ -70,7 +70,7 @@ export function ThirdPartyIntegrations() {
   }, []);
 
   const loadIntegrations = async () => {
-    setIsLoading(true);
+    setIsPageLoading(true);
     try {
       const response = await fetch('/api/third-party/integrations');
       if (!response.ok) {
@@ -80,8 +80,9 @@ export function ThirdPartyIntegrations() {
       setIntegrations(data);
     } catch (error) {
       console.error("Failed to load integrations:", error);
+      showError('Failed to load integrations', error instanceof Error ? error.message : 'Unknown error');
     } finally {
-      setIsLoading(false);
+      setIsPageLoading(false);
     }
   };
 
