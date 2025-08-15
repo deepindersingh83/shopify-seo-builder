@@ -72,33 +72,14 @@ class WorkflowService {
 
   // Workflow Executions
   async getWorkflowExecutions(ruleId?: string): Promise<WorkflowExecution[]> {
-    try {
-      const url = ruleId
-        ? `${this.baseUrl}/workflows/executions?ruleId=${ruleId}`
-        : `${this.baseUrl}/workflows/executions`;
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      return [
-        {
-          id: "1",
-          workflowId: "1",
-          status: "completed",
-          startedAt: new Date(Date.now() - 3600000).toISOString(),
-          completedAt: new Date(Date.now() - 3000000).toISOString(),
-          progress: 100,
-          totalItems: 25,
-          processedItems: 25,
-          errors: [],
-          results: [],
-          canCancel: false,
-        },
-      ];
+    const url = ruleId
+      ? `${this.baseUrl}/workflows/executions?ruleId=${ruleId}`
+      : `${this.baseUrl}/workflows/executions`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch workflow executions: ${response.status} ${response.statusText}`);
     }
+    return response.json();
   }
 
   async getWorkflowExecution(id: string): Promise<WorkflowExecution> {
