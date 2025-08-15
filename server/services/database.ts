@@ -401,6 +401,9 @@ class DatabaseService {
   }
 
   isConnected(): boolean {
+    if (process.env.DB_ENABLED === "false") {
+      return false;
+    }
     return this.pool !== null;
   }
 
