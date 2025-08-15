@@ -69,7 +69,7 @@ export function ThirdPartyIntegrations() {
   const loadIntegrations = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/third-party/integrations");
+      const response = await fetch('/api/third-party/integrations');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -197,10 +197,10 @@ export function ThirdPartyIntegrations() {
 
   const handleConnect = async (service: string, credentials: any) => {
     try {
-      const response = await fetch("/api/third-party/connect", {
-        method: "POST",
+      const response = await fetch('/api/third-party/connect', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           service,
@@ -211,16 +211,14 @@ export function ThirdPartyIntegrations() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to connect service");
+        throw new Error(errorData.error || 'Failed to connect service');
       }
 
       const result = await response.json();
 
       // Show connection result
       if (result.testResult.success) {
-        alert(
-          `✅ Successfully connected to ${service}!\n${result.testResult.message}`,
-        );
+        alert(`✅ Successfully connected to ${service}!\n${result.testResult.message}`);
       } else {
         alert(`⚠️ Connected but with warnings:\n${result.testResult.message}`);
       }
@@ -229,121 +227,83 @@ export function ThirdPartyIntegrations() {
       setShowConnectDialog(false);
     } catch (error) {
       console.error("Failed to connect:", error);
-      alert(
-        `❌ Failed to connect: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
+      alert(`❌ Failed to connect: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
   const handleSync = async (integrationId: string) => {
     try {
-      const response = await fetch(
-        `/api/third-party/integrations/${integrationId}/sync`,
-        {
-          method: "POST",
-        },
-      );
+      const response = await fetch(`/api/third-party/integrations/${integrationId}/sync`, {
+        method: 'POST',
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Sync failed");
+        throw new Error(errorData.error || 'Sync failed');
       }
 
       const result = await response.json();
-      alert(
-        `✅ Sync completed!\nProcessed ${result.recordsProcessed || 0} records\nLast sync: ${new Date(result.lastSync).toLocaleString()}`,
-      );
+      alert(`✅ Sync completed!\nProcessed ${result.recordsProcessed || 0} records\nLast sync: ${new Date(result.lastSync).toLocaleString()}`);
 
       await loadIntegrations();
       await loadDashboardData();
     } catch (error) {
       console.error("Sync failed:", error);
-      alert(
-        `❌ Sync failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
+      alert(`❌ Sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
-  const handleDisconnect = async (
-    integrationId: string,
-    integrationName: string,
-  ) => {
-    if (
-      !confirm(
-        `Are you sure you want to disconnect ${integrationName}? This will remove all stored credentials and stop data synchronization.`,
-      )
-    ) {
+  const handleDisconnect = async (integrationId: string, integrationName: string) => {
+    if (!confirm(`Are you sure you want to disconnect ${integrationName}? This will remove all stored credentials and stop data synchronization.`)) {
       return;
     }
 
     try {
-      const response = await fetch(
-        `/api/third-party/integrations/${integrationId}`,
-        {
-          method: "DELETE",
-        },
-      );
+      const response = await fetch(`/api/third-party/integrations/${integrationId}`, {
+        method: 'DELETE',
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to disconnect");
+        throw new Error(errorData.error || 'Failed to disconnect');
       }
 
       alert(`✅ Successfully disconnected ${integrationName}`);
       await loadIntegrations();
     } catch (error) {
       console.error("Failed to disconnect:", error);
-      alert(
-        `❌ Failed to disconnect: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
+      alert(`❌ Failed to disconnect: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
-  const handleTestConnection = async (
-    integrationId: string,
-    integrationName: string,
-  ) => {
+  const handleTestConnection = async (integrationId: string, integrationName: string) => {
     try {
-      const response = await fetch(
-        `/api/third-party/integrations/${integrationId}/test`,
-        {
-          method: "POST",
-        },
-      );
+      const response = await fetch(`/api/third-party/integrations/${integrationId}/test`, {
+        method: 'POST',
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Test failed");
+        throw new Error(errorData.error || 'Test failed');
       }
 
       const result = await response.json();
       if (result.success) {
-        alert(
-          `✅ Connection test successful for ${integrationName}!\n${result.message}`,
-        );
+        alert(`✅ Connection test successful for ${integrationName}!\n${result.message}`);
       } else {
-        alert(
-          `❌ Connection test failed for ${integrationName}:\n${result.message}`,
-        );
+        alert(`❌ Connection test failed for ${integrationName}:\n${result.message}`);
       }
 
       await loadIntegrations();
     } catch (error) {
       console.error("Test failed:", error);
-      alert(
-        `❌ Connection test failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
+      alert(`❌ Connection test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
-  const handleReconnect = async (
-    integrationId: string,
-    integrationName: string,
-  ) => {
+  const handleReconnect = async (integrationId: string, integrationName: string) => {
     // For reconnection, we'll use the same connect flow
-    setSelectedService(
-      integrations.find((i) => i.id === integrationId)?.type || "",
-    );
+    setSelectedService(integrations.find(i => i.id === integrationId)?.type || '');
     setShowConnectDialog(true);
   };
 
@@ -624,7 +584,7 @@ export function ThirdPartyIntegrations() {
                 <Button
                   variant="outline"
                   className="h-20 flex-col"
-                  onClick={() => handleSync("all")}
+                  onClick={handleSyncAll}
                 >
                   <RefreshCw className="h-6 w-6 mb-2" />
                   Sync All Data
@@ -633,16 +593,12 @@ export function ThirdPartyIntegrations() {
                   variant="outline"
                   className="h-20 flex-col"
                   onClick={() => {
-                    const connectedIntegrations = integrations.filter(
-                      (i) => i.status === "connected",
-                    );
+                    const connectedIntegrations = integrations.filter(i => i.status === 'connected');
                     if (connectedIntegrations.length === 0) {
-                      alert("No connected integrations to export data from.");
+                      alert('No connected integrations to export data from.');
                       return;
                     }
-                    alert(
-                      `Exporting data from ${connectedIntegrations.length} connected services...`,
-                    );
+                    alert(`Exporting data from ${connectedIntegrations.length} connected services...`);
                   }}
                 >
                   <Download className="h-6 w-6 mb-2" />
@@ -716,9 +672,7 @@ export function ThirdPartyIntegrations() {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() =>
-                      handleTestConnection(integration.id, integration.name)
-                    }
+                    onClick={() => handleTestConnection(integration.id, integration.name)}
                   >
                     <Settings className="h-3 w-3 mr-1" />
                     Test Connection
@@ -728,9 +682,7 @@ export function ThirdPartyIntegrations() {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() =>
-                        handleDisconnect(integration.id, integration.name)
-                      }
+                      onClick={() => handleDisconnect(integration.id, integration.name)}
                     >
                       <XCircle className="h-3 w-3 mr-1" />
                       Disconnect
@@ -740,9 +692,7 @@ export function ThirdPartyIntegrations() {
                   {integration.status !== "connected" && (
                     <Button
                       size="sm"
-                      onClick={() =>
-                        handleReconnect(integration.id, integration.name)
-                      }
+                      onClick={() => handleReconnect(integration.id, integration.name)}
                     >
                       <CheckCircle className="h-3 w-3 mr-1" />
                       {integration.status === "error" ? "Reconnect" : "Connect"}
@@ -1006,27 +956,25 @@ function ConnectServiceForm({
   const [service, setService] = useState("");
   const [credentials, setCredentials] = useState<any>({});
   const [isConnecting, setIsConnecting] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<{
-    [key: string]: string;
-  }>({});
+  const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
 
   const validateForm = (): boolean => {
-    const errors: { [key: string]: string } = {};
+    const errors: {[key: string]: string} = {};
 
     if (!service) {
-      errors.service = "Please select a service type";
+      errors.service = 'Please select a service type';
     }
 
     // Service-specific validation
-    if (service === "semrush" || service === "ahrefs") {
+    if (service === 'semrush' || service === 'ahrefs') {
       if (!credentials.apiKey?.trim()) {
-        errors.apiKey = "API key is required";
+        errors.apiKey = 'API key is required';
       }
     }
 
-    if (service === "linkedin_ads" || service === "facebook") {
+    if (service === 'linkedin_ads' || service === 'facebook') {
       if (!credentials.accessToken?.trim()) {
-        errors.accessToken = "Access token is required";
+        errors.accessToken = 'Access token is required';
       }
     }
 
@@ -1053,7 +1001,7 @@ function ConnectServiceForm({
     setCredentials({ ...credentials, [key]: value });
     // Clear validation error when user starts typing
     if (validationErrors[key]) {
-      setValidationErrors({ ...validationErrors, [key]: "" });
+      setValidationErrors({ ...validationErrors, [key]: '' });
     }
   };
 
@@ -1061,17 +1009,12 @@ function ConnectServiceForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <Label>Service Type</Label>
-        <Select
-          value={service}
-          onValueChange={(value) => {
-            setService(value);
-            setCredentials({});
-            setValidationErrors({});
-          }}
-        >
-          <SelectTrigger
-            className={validationErrors.service ? "border-red-500" : ""}
-          >
+        <Select value={service} onValueChange={(value) => {
+          setService(value);
+          setCredentials({});
+          setValidationErrors({});
+        }}>
+          <SelectTrigger className={validationErrors.service ? 'border-red-500' : ''}>
             <SelectValue placeholder="Choose service" />
           </SelectTrigger>
           <SelectContent>
@@ -1092,9 +1035,7 @@ function ConnectServiceForm({
           </SelectContent>
         </Select>
         {validationErrors.service && (
-          <p className="text-sm text-red-500 mt-1">
-            {validationErrors.service}
-          </p>
+          <p className="text-sm text-red-500 mt-1">{validationErrors.service}</p>
         )}
       </div>
 
@@ -1105,13 +1046,11 @@ function ConnectServiceForm({
             type="password"
             placeholder="Enter your API key"
             value={credentials.apiKey || ""}
-            onChange={(e) => handleCredentialChange("apiKey", e.target.value)}
-            className={validationErrors.apiKey ? "border-red-500" : ""}
+            onChange={(e) => handleCredentialChange('apiKey', e.target.value)}
+            className={validationErrors.apiKey ? 'border-red-500' : ''}
           />
           {validationErrors.apiKey && (
-            <p className="text-sm text-red-500 mt-1">
-              {validationErrors.apiKey}
-            </p>
+            <p className="text-sm text-red-500 mt-1">{validationErrors.apiKey}</p>
           )}
         </div>
       )}
@@ -1155,15 +1094,11 @@ function ConnectServiceForm({
               type="password"
               placeholder="LinkedIn Ads API access token"
               value={credentials.accessToken || ""}
-              onChange={(e) =>
-                handleCredentialChange("accessToken", e.target.value)
-              }
-              className={validationErrors.accessToken ? "border-red-500" : ""}
+              onChange={(e) => handleCredentialChange('accessToken', e.target.value)}
+              className={validationErrors.accessToken ? 'border-red-500' : ''}
             />
             {validationErrors.accessToken && (
-              <p className="text-sm text-red-500 mt-1">
-                {validationErrors.accessToken}
-              </p>
+              <p className="text-sm text-red-500 mt-1">{validationErrors.accessToken}</p>
             )}
           </div>
           <div className="p-4 bg-muted/50 rounded-lg">
@@ -1182,15 +1117,11 @@ function ConnectServiceForm({
             type="password"
             placeholder="Facebook access token"
             value={credentials.accessToken || ""}
-            onChange={(e) =>
-              handleCredentialChange("accessToken", e.target.value)
-            }
-            className={validationErrors.accessToken ? "border-red-500" : ""}
+            onChange={(e) => handleCredentialChange('accessToken', e.target.value)}
+            className={validationErrors.accessToken ? 'border-red-500' : ''}
           />
           {validationErrors.accessToken && (
-            <p className="text-sm text-red-500 mt-1">
-              {validationErrors.accessToken}
-            </p>
+            <p className="text-sm text-red-500 mt-1">{validationErrors.accessToken}</p>
           )}
         </div>
       )}
@@ -1205,15 +1136,14 @@ function ConnectServiceForm({
               <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
               Connecting...
             </>
-          ) : service === "google_search_console" ||
-            service === "google_analytics" ? (
-            "Authenticate with Google"
-          ) : service === "microsoft_clarity" ||
-            service === "microsoft_ads" ||
-            service === "azure_insights" ? (
-            "Authenticate with Microsoft"
           ) : (
-            "Connect Service"
+            service === "google_search_console" || service === "google_analytics"
+              ? "Authenticate with Google"
+              : service === "microsoft_clarity" ||
+                  service === "microsoft_ads" ||
+                  service === "azure_insights"
+                ? "Authenticate with Microsoft"
+                : "Connect Service"
           )}
         </Button>
       </DialogFooter>
