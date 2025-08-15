@@ -437,7 +437,29 @@ class DatabaseService {
         `,
       },
       {
-        name: "012_create_bulk_operations_table",
+        name: "012_create_collections_table",
+        sql: `
+          CREATE TABLE IF NOT EXISTS collections (
+            id VARCHAR(50) PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            type VARCHAR(20) NOT NULL,
+            slug VARCHAR(255) NOT NULL,
+            meta_title VARCHAR(255),
+            meta_description ${textType},
+            keywords ${jsonType},
+            content ${textType},
+            is_published BOOLEAN DEFAULT TRUE,
+            template_suffix VARCHAR(100),
+            platform VARCHAR(50),
+            platform_id VARCHAR(50),
+            product_count INT DEFAULT 0,
+            created_at ${timestampType} DEFAULT ${currentTimestamp},
+            updated_at ${timestampType} DEFAULT ${currentTimestamp}
+          )
+        `,
+      },
+      {
+        name: "013_create_bulk_operations_table",
         sql: `
           CREATE TABLE IF NOT EXISTS bulk_operations (
             id VARCHAR(50) PRIMARY KEY,
