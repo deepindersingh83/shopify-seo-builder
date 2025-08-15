@@ -132,33 +132,11 @@ class WorkflowService {
 
   // Bulk Operations
   async getBulkOperations(): Promise<BulkOperation[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/bulk/operations`);
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      return [
-        {
-          id: "1",
-          type: "optimize",
-          name: "SEO Optimization Batch",
-          status: "completed",
-          progress: 100,
-          totalItems: 500,
-          processedItems: 500,
-          successfulItems: 485,
-          failedItems: 15,
-          startedAt: new Date(Date.now() - 3600000).toISOString(),
-          completedAt: new Date(Date.now() - 3300000).toISOString(),
-          canCancel: false,
-          results: [],
-          errors: [],
-        },
-      ];
+    const response = await fetch(`${this.baseUrl}/bulk/operations`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch bulk operations: ${response.status} ${response.statusText}`);
     }
+    return response.json();
   }
 
   async getBulkOperation(id: string): Promise<BulkOperation> {
