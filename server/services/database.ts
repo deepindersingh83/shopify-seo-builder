@@ -68,6 +68,12 @@ class DatabaseService {
   }
 
   private async initializeInternal(strict: boolean = false): Promise<void> {
+    // Check if database is disabled via environment variable
+    if (process.env.DB_ENABLED === "false") {
+      console.log("📝 Database disabled via DB_ENABLED=false, using memory storage");
+      return;
+    }
+
     try {
       console.log("Initializing MariaDB connection pool...");
 
