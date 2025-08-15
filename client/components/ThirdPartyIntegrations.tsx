@@ -253,13 +253,19 @@ export function ThirdPartyIntegrations() {
       }
 
       const result = await response.json();
-      alert(`✅ Sync completed!\nProcessed ${result.recordsProcessed || 0} records\nLast sync: ${new Date(result.lastSync).toLocaleString()}`);
+      showSuccess(
+        'Sync completed!',
+        `Processed ${result.recordsProcessed || 0} records. Last sync: ${new Date(result.lastSync).toLocaleString()}`
+      );
 
       await loadIntegrations();
       await loadDashboardData();
     } catch (error) {
       console.error("Sync failed:", error);
-      alert(`❌ Sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      showError(
+        'Sync failed',
+        error instanceof Error ? error.message : 'Unknown error'
+      );
     }
   };
 
