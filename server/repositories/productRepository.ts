@@ -145,8 +145,8 @@ class ProductRepository {
     }
 
     if (filters.query) {
+      // Use LIKE search for better compatibility across database types
       whereClauses.push(`(
-        MATCH(title, description) AGAINST(? IN NATURAL LANGUAGE MODE) OR
         title LIKE ? OR
         description LIKE ? OR
         vendor LIKE ? OR
@@ -154,7 +154,6 @@ class ProductRepository {
       )`);
       const queryParam = `%${filters.query}%`;
       params.push(
-        filters.query,
         queryParam,
         queryParam,
         queryParam,
@@ -422,14 +421,15 @@ class ProductRepository {
     }
 
     if (filters.query) {
+      // Use LIKE search for better compatibility across database types
       whereClauses.push(`(
-        MATCH(title, description) AGAINST(? IN NATURAL LANGUAGE MODE) OR
         title LIKE ? OR
         description LIKE ? OR
-        vendor LIKE ?
+        vendor LIKE ? OR
+        product_type LIKE ?
       )`);
       const queryParam = `%${filters.query}%`;
-      params.push(filters.query, queryParam, queryParam, queryParam);
+      params.push(queryParam, queryParam, queryParam, queryParam);
     }
 
     if (whereClauses.length > 0) {
