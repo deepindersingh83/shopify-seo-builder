@@ -26,7 +26,7 @@ class DatabaseService {
       return this.initializationPromise;
     }
 
-    if (this.pool) {
+    if (this.adapter) {
       return; // Already initialized
     }
 
