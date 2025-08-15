@@ -64,10 +64,9 @@ class ProductRepository {
     if (!databaseService.isConnected()) {
       return {
         products: [],
-        total: 0,
-        hasMore: false,
-        page: Math.floor(pagination.offset / pagination.limit) + 1,
-        totalPages: 0,
+        totalCount: 0,
+        hasNextPage: false,
+        hasPreviousPage: false,
       };
     }
 
