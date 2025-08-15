@@ -362,9 +362,57 @@ export default function SettingsPage() {
     },
   ]);
 
-  const handleSaveSettings = (section: string) => {
-    console.log(`Saving ${section} settings`);
-    // Implementation would save to backend
+  const handleSaveSettings = async (section: string) => {
+    try {
+      // In a real app, this would save to the backend
+      console.log(`Saving ${section} settings`);
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      alert(`${section} settings saved successfully!`);
+    } catch (error) {
+      console.error(`Error saving ${section} settings:`, error);
+      alert(`Failed to save ${section} settings. Please try again.`);
+    }
+  };
+
+  const handleShowApiKey = () => {
+    alert('API Key: sk_live_4f3e2d1c9b8a7g6h5j4k3l2m1n0p9o8i');
+  };
+
+  const handleCopyApiKey = async () => {
+    try {
+      await navigator.clipboard.writeText('sk_live_4f3e2d1c9b8a7g6h5j4k3l2m1n0p9o8i');
+      alert('API key copied to clipboard!');
+    } catch (error) {
+      console.error('Failed to copy:', error);
+      alert('Failed to copy API key. Please copy manually.');
+    }
+  };
+
+  const handleRegenerateApiKey = () => {
+    if (confirm('Are you sure you want to regenerate your API key? This will invalidate the current key.')) {
+      alert('API key regenerated successfully! New key: sk_live_9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k');
+    }
+  };
+
+  const handleShowWebhookSecret = () => {
+    alert('Webhook Secret: whsec_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6');
+  };
+
+  const handleCopyWebhookSecret = async () => {
+    try {
+      await navigator.clipboard.writeText('whsec_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6');
+      alert('Webhook secret copied to clipboard!');
+    } catch (error) {
+      console.error('Failed to copy:', error);
+      alert('Failed to copy webhook secret. Please copy manually.');
+    }
+  };
+
+  const handleRegenerateWebhookSecret = () => {
+    if (confirm('Are you sure you want to regenerate your webhook secret? This will invalidate the current secret.')) {
+      alert('Webhook secret regenerated successfully! New secret: whsec_p6o5n4m3l2k1j0i9h8g7f6e5d4c3b2a1');
+    }
   };
 
   const handleAPIConnect = (api: APIIntegration) => {
