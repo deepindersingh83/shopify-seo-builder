@@ -405,8 +405,21 @@ export default function MultiStoreSEOPage() {
 
   const handleStoreSettings = (store: ShopifyStore) => {
     console.log("Opening settings for store:", store.name);
-    // Open store settings dialog or navigate to settings page
-    alert(`Opening settings for ${store.name}`);
+    // Show store configuration details
+    const storeInfo = `
+Store: ${store.name}
+Domain: ${store.domain}
+Plan: ${store.plan.toUpperCase()}
+Status: ${store.status}
+Country: ${store.country}
+Currency: ${store.currency}
+SEO Score: ${store.seoScore}
+Products: ${store.productsCount}
+Monthly Revenue: $${store.monthlyRevenue.toLocaleString()}
+Last Sync: ${store.lastSync}
+    `.trim();
+
+    alert(`Store Settings for ${store.name}:\n\n${storeInfo}\n\nNote: Full settings interface coming soon!`);
   };
 
   const handleSyncStore = async (store: ShopifyStore) => {
