@@ -555,7 +555,7 @@ export default function WorkflowAutomation() {
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Button size="sm" variant="outline">
+                          <Button size="sm" variant="outline" onClick={() => handleRunWorkflow(workflow.id)}>
                             <Play className="h-4 w-4 mr-2" />
                             Run Now
                           </Button>
