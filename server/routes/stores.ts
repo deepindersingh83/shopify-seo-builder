@@ -443,6 +443,65 @@ export const getProductsForStore = async (req: Request, res: Response) => {
   }
 };
 
+// Sync a specific store
+export const syncStore = async (req: Request, res: Response) => {
+  try {
+    const { storeId } = req.params;
+
+    if (!storeId) {
+      return res.status(400).json({
+        error: "Store ID is required",
+      });
+    }
+
+    console.log(`🔄 Starting sync for store: ${storeId}`);
+
+    // Find the store to sync
+    const stores = await getAllConnectedStores();
+    const store = stores.find(s => s.id === storeId);
+
+    if (!store) {
+      return res.status(404).json({
+        error: "Store not found",
+      });
+    }
+
+    // Simulate re-importing products for this specific store
+    const importedProducts = await importSampleProducts(storeId, store.domain);
+
+    // Update store's last sync time
+    if (databaseService.isConnected()) {
+      try {
+        await databaseService.query(
+          `UPDATE stores SET updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+          [storeId]
+        );
+      } catch (error) {
+        console.warn("Database update failed during sync, continuing with memory storage:", error);
+      }
+    }
+
+    console.log(`✅ Sync completed for store: ${store.name || store.domain} (${importedProducts.length} products)`);
+
+    res.json({
+      success: true,
+      message: `Store ${store.name || store.domain} synced successfully`,
+      data: {
+        storeId,
+        storeName: store.name || store.domain,
+        productsImported: importedProducts.length,
+        lastSync: new Date().toISOString(),
+      },
+    });
+  } catch (error) {
+    console.error("Error syncing store:", error);
+    res.status(500).json({
+      error: "Failed to sync store",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
+  }
+};
+
 // Disconnect a store
 export const disconnectStore = async (req: Request, res: Response) => {
   try {
@@ -457,6 +516,8 @@ export const disconnectStore = async (req: Request, res: Response) => {
     // Remove store from storage
     try {
       await removeConnectedStore(storeId);
+      // Also remove products for this store from memory
+      storeProductsService.removeStoreProducts(storeId);
       console.log(`Store disconnected and removed: ${storeId}`);
     } catch (error) {
       console.error("Failed to remove store:", error);
