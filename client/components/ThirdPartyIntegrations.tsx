@@ -52,7 +52,8 @@ import {
 import { thirdPartyService } from "@/services/thirdPartyService";
 import { ThirdPartyIntegration } from "@shared/workflows";
 import { IntegrationsTestPanel } from "./IntegrationsTestPanel";
-import { showSuccess, showError, showWarning } from "@/hooks/use-notifications";
+import { showSuccess, showError, showWarning, showInfo } from "@/hooks/use-notifications";
+import { useLoading } from "@/hooks/use-loading";
 
 export function ThirdPartyIntegrations() {
   const [integrations, setIntegrations] = useState<ThirdPartyIntegration[]>([]);
