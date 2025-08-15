@@ -231,35 +231,11 @@ class WorkflowService {
 
   // Third-party Integrations
   async getThirdPartyIntegrations(): Promise<ThirdPartyIntegration[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/integrations/third-party`);
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      return [
-        {
-          id: "1",
-          name: "Google Search Console",
-          type: "google_search_console",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true },
-          lastSync: new Date(Date.now() - 3600000).toISOString(),
-        },
-        {
-          id: "2",
-          name: "Google Analytics 4",
-          type: "google_analytics",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true },
-          lastSync: new Date(Date.now() - 7200000).toISOString(),
-        },
-      ];
+    const response = await fetch(`${this.baseUrl}/integrations/third-party`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch third-party integrations: ${response.status} ${response.statusText}`);
     }
+    return response.json();
   }
 
   async connectThirdParty(
