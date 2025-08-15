@@ -7,6 +7,7 @@ import * as bulkRoutes from "./routes/bulk";
 import * as productRoutes from "./routes/products";
 import * as installationRoutes from "./routes/installation";
 import * as storeRoutes from "./routes/stores";
+import * as thirdPartyRoutes from "./routes/thirdPartyIntegrations";
 import { databaseService } from "./services/database";
 import { installationService } from "./services/installationService";
 
