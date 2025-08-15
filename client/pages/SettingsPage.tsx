@@ -1497,13 +1497,13 @@ export default function SettingsPage() {
                   </p>
                 </div>
                 <div className="flex space-x-2">
-                  <Button size="sm" variant="outline">
+                  <Button size="sm" variant="outline" onClick={handleShowApiKey}>
                     <Eye className="h-4 w-4" />
                   </Button>
-                  <Button size="sm" variant="outline">
+                  <Button size="sm" variant="outline" onClick={handleCopyApiKey}>
                     <Copy className="h-4 w-4" />
                   </Button>
-                  <Button size="sm" variant="outline">
+                  <Button size="sm" variant="outline" onClick={handleRegenerateApiKey}>
                     <RefreshCw className="h-4 w-4" />
                   </Button>
                 </div>
