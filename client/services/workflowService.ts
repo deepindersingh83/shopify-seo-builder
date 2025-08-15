@@ -95,25 +95,11 @@ class WorkflowService {
 
   // SEO Audits
   async getSEOAudits(): Promise<SEOAudit[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/seo/audits`);
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      return [
-        {
-          id: "1",
-          name: "Daily SEO Health Check",
-          description: "Comprehensive daily SEO audit",
-          enabled: true,
-          rules: [],
-          notifications: [],
-        },
-      ];
+    const response = await fetch(`${this.baseUrl}/seo/audits`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch SEO audits: ${response.status} ${response.statusText}`);
     }
+    return response.json();
   }
 
   async createSEOAudit(audit: Omit<SEOAudit, "id">): Promise<SEOAudit> {
