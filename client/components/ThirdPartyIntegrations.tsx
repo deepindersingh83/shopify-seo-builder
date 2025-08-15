@@ -68,90 +68,12 @@ export function ThirdPartyIntegrations() {
   const loadIntegrations = async () => {
     setIsLoading(true);
     try {
-      // Mock data for demonstration
-      const mockIntegrations: ThirdPartyIntegration[] = [
-        {
-          id: "1",
-          name: "Google Search Console",
-          type: "google_search_console",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true, syncInterval: 24 },
-          lastSync: new Date(Date.now() - 3600000).toISOString(),
-        },
-        {
-          id: "2",
-          name: "Google Analytics 4",
-          type: "google_analytics",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true, syncInterval: 12 },
-          lastSync: new Date(Date.now() - 7200000).toISOString(),
-        },
-        {
-          id: "3",
-          name: "Microsoft Clarity",
-          type: "microsoft_clarity",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true, syncInterval: 12 },
-          lastSync: new Date(Date.now() - 5400000).toISOString(),
-        },
-        {
-          id: "4",
-          name: "Microsoft Advertising",
-          type: "microsoft_ads",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true, syncInterval: 24 },
-          lastSync: new Date(Date.now() - 9000000).toISOString(),
-        },
-        {
-          id: "5",
-          name: "Azure Application Insights",
-          type: "azure_insights",
-          status: "disconnected",
-          credentials: {},
-          settings: { autoSync: false, syncInterval: 24 },
-        },
-        {
-          id: "6",
-          name: "LinkedIn Ads",
-          type: "linkedin_ads",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true, syncInterval: 24 },
-          lastSync: new Date(Date.now() - 10800000).toISOString(),
-        },
-        {
-          id: "7",
-          name: "SEMrush",
-          type: "semrush",
-          status: "disconnected",
-          credentials: {},
-          settings: { autoSync: false, syncInterval: 168 },
-        },
-        {
-          id: "8",
-          name: "Ahrefs",
-          type: "ahrefs",
-          status: "error",
-          credentials: {},
-          settings: { autoSync: false, syncInterval: 168 },
-          lastSync: new Date(Date.now() - 86400000).toISOString(),
-        },
-        {
-          id: "9",
-          name: "PageSpeed Insights",
-          type: "pagespeed",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true, syncInterval: 24 },
-          lastSync: new Date(Date.now() - 1800000).toISOString(),
-        },
-      ];
-
-      setIntegrations(mockIntegrations);
+      const response = await fetch('/api/third-party/integrations');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setIntegrations(data);
     } catch (error) {
       console.error("Failed to load integrations:", error);
     } finally {
@@ -274,21 +196,114 @@ export function ThirdPartyIntegrations() {
 
   const handleConnect = async (service: string, credentials: any) => {
     try {
-      console.log("Connecting to", service, credentials);
+      const response = await fetch('/api/third-party/connect', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          service,
+          credentials,
+          settings: { autoSync: true, syncInterval: 24 },
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to connect service');
+      }
+
+      const result = await response.json();
+
+      // Show connection result
+      if (result.testResult.success) {
+        alert(`✅ Successfully connected to ${service}!\n${result.testResult.message}`);
+      } else {
+        alert(`⚠️ Connected but with warnings:\n${result.testResult.message}`);
+      }
+
       await loadIntegrations();
       setShowConnectDialog(false);
     } catch (error) {
       console.error("Failed to connect:", error);
+      alert(`❌ Failed to connect: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
   const handleSync = async (integrationId: string) => {
     try {
-      console.log("Syncing integration:", integrationId);
+      const response = await fetch(`/api/third-party/integrations/${integrationId}/sync`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Sync failed');
+      }
+
+      const result = await response.json();
+      alert(`✅ Sync completed!\nProcessed ${result.recordsProcessed || 0} records\nLast sync: ${new Date(result.lastSync).toLocaleString()}`);
+
+      await loadIntegrations();
       await loadDashboardData();
     } catch (error) {
       console.error("Sync failed:", error);
+      alert(`❌ Sync failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  };
+
+  const handleDisconnect = async (integrationId: string, integrationName: string) => {
+    if (!confirm(`Are you sure you want to disconnect ${integrationName}? This will remove all stored credentials and stop data synchronization.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/third-party/integrations/${integrationId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to disconnect');
+      }
+
+      alert(`✅ Successfully disconnected ${integrationName}`);
+      await loadIntegrations();
+    } catch (error) {
+      console.error("Failed to disconnect:", error);
+      alert(`❌ Failed to disconnect: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  };
+
+  const handleTestConnection = async (integrationId: string, integrationName: string) => {
+    try {
+      const response = await fetch(`/api/third-party/integrations/${integrationId}/test`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Test failed');
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        alert(`✅ Connection test successful for ${integrationName}!\n${result.message}`);
+      } else {
+        alert(`❌ Connection test failed for ${integrationName}:\n${result.message}`);
+      }
+
+      await loadIntegrations();
+    } catch (error) {
+      console.error("Test failed:", error);
+      alert(`❌ Connection test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  };
+
+  const handleReconnect = async (integrationId: string, integrationName: string) => {
+    // For reconnection, we'll use the same connect flow
+    setSelectedService(integrations.find(i => i.id === integrationId)?.type || '');
+    setShowConnectDialog(true);
   };
 
   return (
