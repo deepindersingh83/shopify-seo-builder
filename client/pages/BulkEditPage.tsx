@@ -299,11 +299,11 @@ export default function BulkEditPage() {
               <Badge variant="outline" className="text-xs">
                 {selectedProducts.size} products selected
               </Badge>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={handleImportCSV}>
                 <Upload className="h-4 w-4 mr-2" />
                 Import CSV
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={handleExportCSV}>
                 <Download className="h-4 w-4 mr-2" />
                 Export CSV
               </Button>
