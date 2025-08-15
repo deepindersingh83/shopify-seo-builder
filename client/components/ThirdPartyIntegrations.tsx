@@ -288,7 +288,10 @@ export function ThirdPartyIntegrations() {
       await loadIntegrations();
     } catch (error) {
       console.error("Failed to disconnect:", error);
-      alert(`❌ Failed to disconnect: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      showError(
+        'Failed to disconnect service',
+        error instanceof Error ? error.message : 'Unknown error'
+      );
     }
   };
 
