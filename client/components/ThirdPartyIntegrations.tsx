@@ -757,9 +757,10 @@ export function ThirdPartyIntegrations() {
                     size="sm"
                     variant="outline"
                     onClick={() => handleTestConnection(integration.id, integration.name)}
+                    disabled={isLoading(`test-${integration.id}`)}
                   >
-                    <Settings className="h-3 w-3 mr-1" />
-                    Test Connection
+                    <Settings className={`h-3 w-3 mr-1 ${isLoading(`test-${integration.id}`) ? 'animate-spin' : ''}`} />
+                    {isLoading(`test-${integration.id}`) ? 'Testing...' : 'Test Connection'}
                   </Button>
 
                   {integration.status === "connected" && (
