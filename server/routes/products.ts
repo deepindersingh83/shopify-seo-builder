@@ -142,33 +142,38 @@ export const searchProducts = async (req: Request, res: Response) => {
       );
     } else {
       // Get products from store memory storage
-      const storeProducts = storeProductsService.getAllStoreProducts();
+      try {
+        const storeProducts = storeProductsService.getAllStoreProducts();
 
-      // Apply basic filtering
-      allProducts = storeProducts.filter(product => {
-        // Query filter
-        if (query) {
-          const searchQuery = query.toLowerCase();
-          const matchesQuery =
-            product.title?.toLowerCase().includes(searchQuery) ||
-            product.description?.toLowerCase().includes(searchQuery) ||
-            product.vendor?.toLowerCase().includes(searchQuery) ||
-            product.product_type?.toLowerCase().includes(searchQuery);
-          if (!matchesQuery) return false;
-        }
+        // Apply basic filtering
+        allProducts = storeProducts.filter(product => {
+          // Query filter
+          if (query) {
+            const searchQuery = query.toLowerCase();
+            const matchesQuery =
+              product.title?.toLowerCase().includes(searchQuery) ||
+              product.description?.toLowerCase().includes(searchQuery) ||
+              product.vendor?.toLowerCase().includes(searchQuery) ||
+              product.product_type?.toLowerCase().includes(searchQuery);
+            if (!matchesQuery) return false;
+          }
 
-        // Status filter
-        if (filters.status && filters.status.length > 0) {
-          if (!filters.status.includes(product.status)) return false;
-        }
+          // Status filter
+          if (filters.status && filters.status.length > 0) {
+            if (!filters.status.includes(product.status)) return false;
+          }
 
-        // Vendor filter
-        if (filters.vendor && filters.vendor.length > 0) {
-          if (!filters.vendor.includes(product.vendor)) return false;
-        }
+          // Vendor filter
+          if (filters.vendor && filters.vendor.length > 0) {
+            if (!filters.vendor.includes(product.vendor)) return false;
+          }
 
-        return true;
-      });
+          return true;
+        });
+      } catch (memoryError) {
+        console.error("Error accessing store products from memory:", memoryError);
+        allProducts = []; // Return empty array instead of crashing
+      }
     }
 
     // Apply sorting if requested
