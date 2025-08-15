@@ -308,9 +308,15 @@ export function ThirdPartyIntegrations() {
 
       const result = await response.json();
       if (result.success) {
-        alert(`✅ Connection test successful for ${integrationName}!\n${result.message}`);
+        showSuccess(
+          `Connection test successful for ${integrationName}!`,
+          result.message
+        );
       } else {
-        alert(`❌ Connection test failed for ${integrationName}:\n${result.message}`);
+        showError(
+          `Connection test failed for ${integrationName}`,
+          result.message
+        );
       }
 
       await loadIntegrations();
