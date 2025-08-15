@@ -284,7 +284,7 @@ export function ThirdPartyIntegrations() {
         throw new Error(errorData.error || 'Failed to disconnect');
       }
 
-      alert(`✅ Successfully disconnected ${integrationName}`);
+      showSuccess(`Successfully disconnected ${integrationName}`);
       await loadIntegrations();
     } catch (error) {
       console.error("Failed to disconnect:", error);
