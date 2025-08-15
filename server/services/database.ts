@@ -2,29 +2,22 @@ import { parseDatabaseConfig, validateDatabaseConfig, type DatabaseConfig } from
 import { createDatabaseAdapter, type DatabaseAdapter } from "./databaseAdapters";
 
 class DatabaseService {
-  private pool: mariadb.Pool | null = null;
+  private adapter: DatabaseAdapter | null = null;
   private config: DatabaseConfig;
   private isInitializing = false;
   private initializationPromise: Promise<void> | null = null;
 
   constructor() {
-    this.config = this.loadConfig();
+    this.config = parseDatabaseConfig();
+    this.logConfiguration();
   }
 
-  private loadConfig(): DatabaseConfig {
-    const config = {
-      host: process.env.DB_HOST || "localhost",
-      port: parseInt(process.env.DB_PORT || "3306"),
-      user: process.env.DB_USER || "root",
-      password: process.env.DB_PASSWORD || "",
-      database: process.env.DB_NAME || "seo_manager",
-      connectionLimit: parseInt(process.env.DB_POOL_SIZE || "10"),
-      acquireTimeout: parseInt(process.env.DB_ACQUIRE_TIMEOUT || "30000"),
-      timeout: parseInt(process.env.DB_TIMEOUT || "30000"),
-      ssl: process.env.DB_SSL === "true",
-    };
-
-    return DatabaseConfigSchema.parse(config);
+  private logConfiguration(): void {
+    const safeConfig = { ...this.config };
+    if (safeConfig.password) {
+      safeConfig.password = "***";
+    }
+    console.log("🔧 Database configuration:", safeConfig);
   }
 
   async initialize(): Promise<void> {
