@@ -14,36 +14,11 @@ class WorkflowService {
 
   // Workflow Rules Management
   async getWorkflowRules(): Promise<WorkflowRule[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/workflows/rules`);
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      return [
-        {
-          id: "1",
-          name: "Auto SEO Optimization",
-          description: "Automatically optimize SEO fields for new products",
-          enabled: true,
-          trigger: { type: "event", event: "product_created" },
-          conditions: [],
-          actions: [
-            {
-              id: "1",
-              type: "generate_meta",
-              config: { metaType: "both", useAI: true },
-            },
-            { id: "2", type: "generate_schema", config: {} },
-          ],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          executionCount: 156,
-        },
-      ];
+    const response = await fetch(`${this.baseUrl}/workflows/rules`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch workflow rules: ${response.status} ${response.statusText}`);
     }
+    return response.json();
   }
 
   async getWorkflowRule(id: string): Promise<WorkflowRule> {
