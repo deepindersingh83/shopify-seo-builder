@@ -38,26 +38,70 @@ export const getPaginatedProducts = async (req: Request, res: Response) => {
         }
       : undefined;
 
-    const result = await productRepository.findAll(productFilters, {
-      offset: startIndex,
-      limit: pageSize,
-      sortBy,
-    });
+    let allProducts: Product[] = [];
+    let totalCount = 0;
+
+    if (databaseService.isConnected()) {
+      // Get products from database
+      const result = await productRepository.findAll(productFilters, {
+        offset: startIndex,
+        limit: pageSize,
+        sortBy,
+      });
+
+      allProducts = result.products;
+      totalCount = result.totalCount; // Fixed: was trying to access result.totalCount instead of totalCount
+
+      console.log(`📊 Retrieved ${allProducts.length} products from database`);
+    } else {
+      // Get products from connected stores (memory storage)
+      const storeProducts = storeProductsService.getAllStoreProducts();
+
+      // Apply basic filtering for store products
+      let filteredProducts = storeProducts;
+
+      if (productFilters.query) {
+        const query = productFilters.query.toLowerCase();
+        filteredProducts = storeProducts.filter(product =>
+          product.title?.toLowerCase().includes(query) ||
+          product.description?.toLowerCase().includes(query) ||
+          product.vendor?.toLowerCase().includes(query)
+        );
+      }
+
+      if (productFilters.status && productFilters.status.length > 0) {
+        filteredProducts = filteredProducts.filter(product =>
+          productFilters.status!.includes(product.status)
+        );
+      }
+
+      if (productFilters.vendor && productFilters.vendor.length > 0) {
+        filteredProducts = filteredProducts.filter(product =>
+          productFilters.vendor!.includes(product.vendor)
+        );
+      }
+
+      // Apply pagination
+      totalCount = filteredProducts.length;
+      allProducts = filteredProducts.slice(startIndex, startIndex + pageSize);
+
+      console.log(`📊 Retrieved ${allProducts.length}/${totalCount} products from store memory`);
+    }
 
     const queryTime = Date.now() - startTime;
 
     res.json({
-      data: result.products,
-      totalCount: result.totalCount,
-      pageCount: Math.ceil(result.totalCount / pageSize),
-      hasNextPage: result.hasNextPage,
-      hasPreviousPage: result.hasPreviousPage,
+      data: allProducts,
+      totalCount: totalCount,
+      pageCount: Math.ceil(totalCount / pageSize),
+      hasNextPage: startIndex + pageSize < totalCount,
+      hasPreviousPage: startIndex > 0,
       queryTime,
       virtualScrollMetadata: {
         startIndex,
-        endIndex: startIndex + result.products.length - 1,
-        totalHeight: result.totalCount * 80,
-        visibleItems: result.products.length,
+        endIndex: startIndex + allProducts.length - 1,
+        totalHeight: totalCount * 80,
+        visibleItems: allProducts.length,
       },
     });
   } catch (error) {
