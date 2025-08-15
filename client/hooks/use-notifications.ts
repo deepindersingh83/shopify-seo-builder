@@ -1,8 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 export interface Notification {
   id: string;
-  type: 'success' | 'error' | 'warning' | 'info';
+  type: "success" | "error" | "warning" | "info";
   title: string;
   message?: string;
   duration?: number;
@@ -14,7 +14,7 @@ export interface Notification {
 
 interface NotificationState {
   notifications: Notification[];
-  addNotification: (notification: Omit<Notification, 'id'>) => void;
+  addNotification: (notification: Omit<Notification, "id">) => void;
   removeNotification: (id: string) => void;
   clearAll: () => void;
 }
@@ -22,26 +22,29 @@ interface NotificationState {
 export function useNotifications(): NotificationState {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
-  const addNotification = useCallback((notification: Omit<Notification, 'id'>) => {
-    const id = `notification-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    const newNotification: Notification = {
-      ...notification,
-      id,
-      duration: notification.duration || 5000,
-    };
+  const addNotification = useCallback(
+    (notification: Omit<Notification, "id">) => {
+      const id = `notification-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const newNotification: Notification = {
+        ...notification,
+        id,
+        duration: notification.duration || 5000,
+      };
 
-    setNotifications(prev => [...prev, newNotification]);
+      setNotifications((prev) => [...prev, newNotification]);
 
-    // Auto-remove after duration
-    if (newNotification.duration > 0) {
-      setTimeout(() => {
-        removeNotification(id);
-      }, newNotification.duration);
-    }
-  }, []);
+      // Auto-remove after duration
+      if (newNotification.duration > 0) {
+        setTimeout(() => {
+          removeNotification(id);
+        }, newNotification.duration);
+      }
+    },
+    [],
+  );
 
   const removeNotification = useCallback((id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
   }, []);
 
   const clearAll = useCallback(() => {
@@ -57,33 +60,44 @@ export function useNotifications(): NotificationState {
 }
 
 // Global notification functions for easy use
-let globalNotificationFn: ((notification: Omit<Notification, 'id'>) => void) | null = null;
+let globalNotificationFn:
+  | ((notification: Omit<Notification, "id">) => void)
+  | null = null;
 
-export function setGlobalNotificationFunction(fn: (notification: Omit<Notification, 'id'>) => void) {
+export function setGlobalNotificationFunction(
+  fn: (notification: Omit<Notification, "id">) => void,
+) {
   globalNotificationFn = fn;
 }
 
-export function showNotification(notification: Omit<Notification, 'id'>) {
+export function showNotification(notification: Omit<Notification, "id">) {
   if (globalNotificationFn) {
     globalNotificationFn(notification);
   } else {
     // Fallback to console if notification system not initialized
-    console.log(`[${notification.type.toUpperCase()}] ${notification.title}`, notification.message);
+    console.log(
+      `[${notification.type.toUpperCase()}] ${notification.title}`,
+      notification.message,
+    );
   }
 }
 
 export function showSuccess(title: string, message?: string) {
-  showNotification({ type: 'success', title, message });
+  showNotification({ type: "success", title, message });
 }
 
-export function showError(title: string, message?: string, action?: Notification['action']) {
-  showNotification({ type: 'error', title, message, action, duration: 7000 });
+export function showError(
+  title: string,
+  message?: string,
+  action?: Notification["action"],
+) {
+  showNotification({ type: "error", title, message, action, duration: 7000 });
 }
 
 export function showWarning(title: string, message?: string) {
-  showNotification({ type: 'warning', title, message, duration: 6000 });
+  showNotification({ type: "warning", title, message, duration: 6000 });
 }
 
 export function showInfo(title: string, message?: string) {
-  showNotification({ type: 'info', title, message });
+  showNotification({ type: "info", title, message });
 }

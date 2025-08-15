@@ -1,8 +1,12 @@
-import React, { useEffect } from 'react';
-import { X, CheckCircle, XCircle, AlertTriangle, Info } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { useNotifications, setGlobalNotificationFunction, type Notification } from '@/hooks/use-notifications';
+import React, { useEffect } from "react";
+import { X, CheckCircle, XCircle, AlertTriangle, Info } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  useNotifications,
+  setGlobalNotificationFunction,
+  type Notification,
+} from "@/hooks/use-notifications";
 
 interface NotificationItemProps {
   notification: Notification;
@@ -14,13 +18,13 @@ function NotificationItem({ notification, onRemove }: NotificationItemProps) {
 
   const getIcon = () => {
     switch (type) {
-      case 'success':
+      case "success":
         return <CheckCircle className="h-5 w-5 text-green-600" />;
-      case 'error':
+      case "error":
         return <XCircle className="h-5 w-5 text-red-600" />;
-      case 'warning':
+      case "warning":
         return <AlertTriangle className="h-5 w-5 text-yellow-600" />;
-      case 'info':
+      case "info":
       default:
         return <Info className="h-5 w-5 text-blue-600" />;
     }
@@ -28,15 +32,15 @@ function NotificationItem({ notification, onRemove }: NotificationItemProps) {
 
   const getBorderColor = () => {
     switch (type) {
-      case 'success':
-        return 'border-l-green-500';
-      case 'error':
-        return 'border-l-red-500';
-      case 'warning':
-        return 'border-l-yellow-500';
-      case 'info':
+      case "success":
+        return "border-l-green-500";
+      case "error":
+        return "border-l-red-500";
+      case "warning":
+        return "border-l-yellow-500";
+      case "info":
       default:
-        return 'border-l-blue-500';
+        return "border-l-blue-500";
     }
   };
 
@@ -78,7 +82,8 @@ function NotificationItem({ notification, onRemove }: NotificationItemProps) {
 }
 
 export function NotificationSystem() {
-  const { notifications, addNotification, removeNotification, clearAll } = useNotifications();
+  const { notifications, addNotification, removeNotification, clearAll } =
+    useNotifications();
 
   // Set up global notification function
   useEffect(() => {
@@ -105,7 +110,7 @@ export function NotificationSystem() {
             </Button>
           </div>
         )}
-        
+
         {notifications.slice(-5).map((notification) => (
           <NotificationItem
             key={notification.id}
@@ -113,7 +118,7 @@ export function NotificationSystem() {
             onRemove={removeNotification}
           />
         ))}
-        
+
         {notifications.length > 5 && (
           <Card className="border-dashed">
             <CardContent className="p-3 text-center">

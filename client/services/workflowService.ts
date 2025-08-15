@@ -16,7 +16,9 @@ class WorkflowService {
   async getWorkflowRules(): Promise<WorkflowRule[]> {
     const response = await fetch(`${this.baseUrl}/workflows/rules`);
     if (!response.ok) {
-      throw new Error(`Failed to fetch workflow rules: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch workflow rules: ${response.status} ${response.statusText}`,
+      );
     }
     return response.json();
   }
@@ -77,7 +79,9 @@ class WorkflowService {
       : `${this.baseUrl}/workflows/executions`;
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error(`Failed to fetch workflow executions: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch workflow executions: ${response.status} ${response.statusText}`,
+      );
     }
     return response.json();
   }
@@ -97,7 +101,9 @@ class WorkflowService {
   async getSEOAudits(): Promise<SEOAudit[]> {
     const response = await fetch(`${this.baseUrl}/seo/audits`);
     if (!response.ok) {
-      throw new Error(`Failed to fetch SEO audits: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch SEO audits: ${response.status} ${response.statusText}`,
+      );
     }
     return response.json();
   }
@@ -134,7 +140,9 @@ class WorkflowService {
   async getBulkOperations(): Promise<BulkOperation[]> {
     const response = await fetch(`${this.baseUrl}/bulk/operations`);
     if (!response.ok) {
-      throw new Error(`Failed to fetch bulk operations: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch bulk operations: ${response.status} ${response.statusText}`,
+      );
     }
     return response.json();
   }
@@ -187,7 +195,9 @@ class WorkflowService {
   async getPlatformIntegrations(): Promise<PlatformIntegration[]> {
     const response = await fetch(`${this.baseUrl}/integrations/platforms`);
     if (!response.ok) {
-      throw new Error(`Failed to fetch platform integrations: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch platform integrations: ${response.status} ${response.statusText}`,
+      );
     }
     return response.json();
   }
@@ -233,7 +243,9 @@ class WorkflowService {
   async getThirdPartyIntegrations(): Promise<ThirdPartyIntegration[]> {
     const response = await fetch(`${this.baseUrl}/integrations/third-party`);
     if (!response.ok) {
-      throw new Error(`Failed to fetch third-party integrations: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch third-party integrations: ${response.status} ${response.statusText}`,
+      );
     }
     return response.json();
   }

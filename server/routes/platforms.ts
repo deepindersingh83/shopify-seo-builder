@@ -11,7 +11,9 @@ const PlatformIntegrationSchema = z.object({
     autoSync: z.boolean().default(true),
     syncInterval: z.number().default(60),
     syncFields: z.array(z.string()).default([]),
-    conflictResolution: z.enum(["newest_wins", "manual", "local_wins", "remote_wins"]).default("newest_wins"),
+    conflictResolution: z
+      .enum(["newest_wins", "manual", "local_wins", "remote_wins"])
+      .default("newest_wins"),
     enableWebhooks: z.boolean().default(false),
   }),
 });
@@ -29,16 +31,22 @@ export const getPlatformIntegrations = async (req: Request, res: Response) => {
   try {
     if (databaseService.isConnected()) {
       const integrations = await databaseService.query(
-        "SELECT * FROM platform_integrations ORDER BY created_at DESC"
+        "SELECT * FROM platform_integrations ORDER BY created_at DESC",
       );
-      
+
       const parsedIntegrations = integrations.map((integration: any) => ({
         ...integration,
-        credentials: integration.credentials ? JSON.parse(integration.credentials) : {},
-        syncSettings: integration.sync_settings ? JSON.parse(integration.sync_settings) : {},
-        syncHistory: integration.sync_history ? JSON.parse(integration.sync_history) : [],
+        credentials: integration.credentials
+          ? JSON.parse(integration.credentials)
+          : {},
+        syncSettings: integration.sync_settings
+          ? JSON.parse(integration.sync_settings)
+          : {},
+        syncHistory: integration.sync_history
+          ? JSON.parse(integration.sync_history)
+          : [],
       }));
-      
+
       res.json(parsedIntegrations);
     } else {
       res.json(inMemoryIntegrations);
@@ -57,25 +65,35 @@ export const getPlatformIntegration = async (req: Request, res: Response) => {
     if (databaseService.isConnected()) {
       const integrations = await databaseService.query(
         "SELECT * FROM platform_integrations WHERE id = ?",
-        [id]
+        [id],
       );
 
       if (integrations.length === 0) {
-        return res.status(404).json({ error: "Platform integration not found" });
+        return res
+          .status(404)
+          .json({ error: "Platform integration not found" });
       }
 
       const integration = {
         ...integrations[0],
-        credentials: integrations[0].credentials ? JSON.parse(integrations[0].credentials) : {},
-        syncSettings: integrations[0].sync_settings ? JSON.parse(integrations[0].sync_settings) : {},
-        syncHistory: integrations[0].sync_history ? JSON.parse(integrations[0].sync_history) : [],
+        credentials: integrations[0].credentials
+          ? JSON.parse(integrations[0].credentials)
+          : {},
+        syncSettings: integrations[0].sync_settings
+          ? JSON.parse(integrations[0].sync_settings)
+          : {},
+        syncHistory: integrations[0].sync_history
+          ? JSON.parse(integrations[0].sync_history)
+          : [],
       };
 
       res.json(integration);
     } else {
-      const integration = inMemoryIntegrations.find(i => i.id === id);
+      const integration = inMemoryIntegrations.find((i) => i.id === id);
       if (!integration) {
-        return res.status(404).json({ error: "Platform integration not found" });
+        return res
+          .status(404)
+          .json({ error: "Platform integration not found" });
       }
       res.json(integration);
     }
@@ -122,7 +140,7 @@ export const connectPlatform = async (req: Request, res: Response) => {
           JSON.stringify(newIntegration.syncHistory),
           newIntegration.createdAt,
           newIntegration.updatedAt,
-        ]
+        ],
       );
     } else {
       inMemoryIntegrations.push(newIntegration);
@@ -135,7 +153,9 @@ export const connectPlatform = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error connecting platform:", error);
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: "Invalid request data", details: error.errors });
+      res
+        .status(400)
+        .json({ error: "Invalid request data", details: error.errors });
     } else {
       res.status(500).json({ error: "Failed to connect platform" });
     }
@@ -143,7 +163,10 @@ export const connectPlatform = async (req: Request, res: Response) => {
 };
 
 // Update a platform integration
-export const updatePlatformIntegration = async (req: Request, res: Response) => {
+export const updatePlatformIntegration = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const { id } = req.params;
     const updates = req.body;
@@ -153,10 +176,18 @@ export const updatePlatformIntegration = async (req: Request, res: Response) => 
       const updateValues: any[] = [];
 
       Object.entries(updates).forEach(([key, value]) => {
-        if (value !== undefined && key !== 'id') {
-          if (key === 'credentials' || key === 'syncSettings' || key === 'syncHistory') {
-            const dbKey = key === 'syncSettings' ? 'sync_settings' : 
-                         key === 'syncHistory' ? 'sync_history' : key;
+        if (value !== undefined && key !== "id") {
+          if (
+            key === "credentials" ||
+            key === "syncSettings" ||
+            key === "syncHistory"
+          ) {
+            const dbKey =
+              key === "syncSettings"
+                ? "sync_settings"
+                : key === "syncHistory"
+                  ? "sync_history"
+                  : key;
             updateFields.push(`${dbKey} = ?`);
             updateValues.push(JSON.stringify(value));
           } else {
@@ -173,31 +204,43 @@ export const updatePlatformIntegration = async (req: Request, res: Response) => 
 
         await databaseService.query(
           `UPDATE platform_integrations SET ${updateFields.join(", ")} WHERE id = ?`,
-          updateValues
+          updateValues,
         );
       }
 
       const updated = await databaseService.query(
         "SELECT * FROM platform_integrations WHERE id = ?",
-        [id]
+        [id],
       );
 
       if (updated.length === 0) {
-        return res.status(404).json({ error: "Platform integration not found" });
+        return res
+          .status(404)
+          .json({ error: "Platform integration not found" });
       }
 
       const integration = {
         ...updated[0],
-        credentials: updated[0].credentials ? JSON.parse(updated[0].credentials) : {},
-        syncSettings: updated[0].sync_settings ? JSON.parse(updated[0].sync_settings) : {},
-        syncHistory: updated[0].sync_history ? JSON.parse(updated[0].sync_history) : [],
+        credentials: updated[0].credentials
+          ? JSON.parse(updated[0].credentials)
+          : {},
+        syncSettings: updated[0].sync_settings
+          ? JSON.parse(updated[0].sync_settings)
+          : {},
+        syncHistory: updated[0].sync_history
+          ? JSON.parse(updated[0].sync_history)
+          : [],
       };
 
       res.json(integration);
     } else {
-      const integrationIndex = inMemoryIntegrations.findIndex(i => i.id === id);
+      const integrationIndex = inMemoryIntegrations.findIndex(
+        (i) => i.id === id,
+      );
       if (integrationIndex === -1) {
-        return res.status(404).json({ error: "Platform integration not found" });
+        return res
+          .status(404)
+          .json({ error: "Platform integration not found" });
       }
 
       inMemoryIntegrations[integrationIndex] = {
@@ -215,29 +258,41 @@ export const updatePlatformIntegration = async (req: Request, res: Response) => 
 };
 
 // Delete a platform integration
-export const deletePlatformIntegration = async (req: Request, res: Response) => {
+export const deletePlatformIntegration = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const { id } = req.params;
 
     if (databaseService.isConnected()) {
       const result = await databaseService.query(
         "DELETE FROM platform_integrations WHERE id = ?",
-        [id]
+        [id],
       );
 
       if (result.affectedRows === 0) {
-        return res.status(404).json({ error: "Platform integration not found" });
+        return res
+          .status(404)
+          .json({ error: "Platform integration not found" });
       }
     } else {
-      const integrationIndex = inMemoryIntegrations.findIndex(i => i.id === id);
+      const integrationIndex = inMemoryIntegrations.findIndex(
+        (i) => i.id === id,
+      );
       if (integrationIndex === -1) {
-        return res.status(404).json({ error: "Platform integration not found" });
+        return res
+          .status(404)
+          .json({ error: "Platform integration not found" });
       }
 
       inMemoryIntegrations.splice(integrationIndex, 1);
     }
 
-    res.json({ success: true, message: "Platform integration deleted successfully" });
+    res.json({
+      success: true,
+      message: "Platform integration deleted successfully",
+    });
   } catch (error) {
     console.error("Error deleting platform integration:", error);
     res.status(500).json({ error: "Failed to delete platform integration" });
@@ -253,22 +308,30 @@ export const testConnection = async (req: Request, res: Response) => {
     if (databaseService.isConnected()) {
       const integrations = await databaseService.query(
         "SELECT * FROM platform_integrations WHERE id = ?",
-        [id]
+        [id],
       );
 
       if (integrations.length === 0) {
-        return res.status(404).json({ error: "Platform integration not found" });
+        return res
+          .status(404)
+          .json({ error: "Platform integration not found" });
       }
 
       integration = {
         ...integrations[0],
-        credentials: integrations[0].credentials ? JSON.parse(integrations[0].credentials) : {},
-        syncSettings: integrations[0].sync_settings ? JSON.parse(integrations[0].sync_settings) : {},
+        credentials: integrations[0].credentials
+          ? JSON.parse(integrations[0].credentials)
+          : {},
+        syncSettings: integrations[0].sync_settings
+          ? JSON.parse(integrations[0].sync_settings)
+          : {},
       };
     } else {
-      integration = inMemoryIntegrations.find(i => i.id === id);
+      integration = inMemoryIntegrations.find((i) => i.id === id);
       if (!integration) {
-        return res.status(404).json({ error: "Platform integration not found" });
+        return res
+          .status(404)
+          .json({ error: "Platform integration not found" });
       }
     }
 
@@ -298,34 +361,48 @@ export const startSync = async (req: Request, res: Response) => {
     if (databaseService.isConnected()) {
       const integrations = await databaseService.query(
         "SELECT * FROM platform_integrations WHERE id = ?",
-        [id]
+        [id],
       );
 
       if (integrations.length === 0) {
-        return res.status(404).json({ error: "Platform integration not found" });
+        return res
+          .status(404)
+          .json({ error: "Platform integration not found" });
       }
 
       integration = {
         ...integrations[0],
-        credentials: integrations[0].credentials ? JSON.parse(integrations[0].credentials) : {},
-        syncSettings: integrations[0].sync_settings ? JSON.parse(integrations[0].sync_settings) : {},
+        credentials: integrations[0].credentials
+          ? JSON.parse(integrations[0].credentials)
+          : {},
+        syncSettings: integrations[0].sync_settings
+          ? JSON.parse(integrations[0].sync_settings)
+          : {},
       };
     } else {
-      integration = inMemoryIntegrations.find(i => i.id === id);
+      integration = inMemoryIntegrations.find((i) => i.id === id);
       if (!integration) {
-        return res.status(404).json({ error: "Platform integration not found" });
+        return res
+          .status(404)
+          .json({ error: "Platform integration not found" });
       }
     }
 
     if (integration.status !== "connected") {
-      return res.status(400).json({ error: "Platform integration is not connected" });
+      return res
+        .status(400)
+        .json({ error: "Platform integration is not connected" });
     }
 
     // Generate sync ID
     const syncId = `sync-${Date.now()}`;
-    
+
     // Start the sync process (would be implemented with actual platform APIs)
-    const syncResult = await performPlatformSync(integration, validatedData.direction, validatedData.options);
+    const syncResult = await performPlatformSync(
+      integration,
+      validatedData.direction,
+      validatedData.options,
+    );
 
     // Update last sync time
     const now = new Date().toISOString();
@@ -339,7 +416,9 @@ export const startSync = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error starting platform sync:", error);
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: "Invalid request data", details: error.errors });
+      res
+        .status(400)
+        .json({ error: "Invalid request data", details: error.errors });
     } else {
       res.status(500).json({ error: "Failed to start platform sync" });
     }
@@ -354,21 +433,26 @@ export const getSyncHistory = async (req: Request, res: Response) => {
     if (databaseService.isConnected()) {
       const integrations = await databaseService.query(
         "SELECT sync_history FROM platform_integrations WHERE id = ?",
-        [id]
+        [id],
       );
 
       if (integrations.length === 0) {
-        return res.status(404).json({ error: "Platform integration not found" });
+        return res
+          .status(404)
+          .json({ error: "Platform integration not found" });
       }
 
-      const syncHistory = integrations[0].sync_history ? 
-        JSON.parse(integrations[0].sync_history) : [];
+      const syncHistory = integrations[0].sync_history
+        ? JSON.parse(integrations[0].sync_history)
+        : [];
 
       res.json(syncHistory);
     } else {
-      const integration = inMemoryIntegrations.find(i => i.id === id);
+      const integration = inMemoryIntegrations.find((i) => i.id === id);
       if (!integration) {
-        return res.status(404).json({ error: "Platform integration not found" });
+        return res
+          .status(404)
+          .json({ error: "Platform integration not found" });
       }
       res.json(integration.syncHistory || []);
     }
@@ -388,7 +472,10 @@ async function testPlatformConnection(integration: any): Promise<{
     // Platform-specific connection testing
     switch (integration.type) {
       case "shopify":
-        if (!integration.credentials.domain || !integration.credentials.accessToken) {
+        if (
+          !integration.credentials.domain ||
+          !integration.credentials.accessToken
+        ) {
           return {
             success: false,
             message: "Shopify domain and access token are required",
@@ -401,10 +488,15 @@ async function testPlatformConnection(integration: any): Promise<{
         };
 
       case "woocommerce":
-        if (!integration.credentials.url || !integration.credentials.consumerKey || !integration.credentials.consumerSecret) {
+        if (
+          !integration.credentials.url ||
+          !integration.credentials.consumerKey ||
+          !integration.credentials.consumerSecret
+        ) {
           return {
             success: false,
-            message: "WooCommerce URL, consumer key, and consumer secret are required",
+            message:
+              "WooCommerce URL, consumer key, and consumer secret are required",
           };
         }
         return {
@@ -414,7 +506,10 @@ async function testPlatformConnection(integration: any): Promise<{
         };
 
       case "bigcommerce":
-        if (!integration.credentials.storeHash || !integration.credentials.accessToken) {
+        if (
+          !integration.credentials.storeHash ||
+          !integration.credentials.accessToken
+        ) {
           return {
             success: false,
             message: "BigCommerce store hash and access token are required",
@@ -435,12 +530,18 @@ async function testPlatformConnection(integration: any): Promise<{
   } catch (error) {
     return {
       success: false,
-      message: "Connection test failed: " + (error instanceof Error ? error.message : "Unknown error"),
+      message:
+        "Connection test failed: " +
+        (error instanceof Error ? error.message : "Unknown error"),
     };
   }
 }
 
-async function performPlatformSync(integration: any, direction: string, options: any = {}): Promise<{
+async function performPlatformSync(
+  integration: any,
+  direction: string,
+  options: any = {},
+): Promise<{
   recordsProcessed: number;
   errors: string[];
 }> {
@@ -460,32 +561,40 @@ async function performPlatformSync(integration: any, direction: string, options:
   };
 }
 
-async function updateIntegrationStatus(id: string, status: string): Promise<void> {
+async function updateIntegrationStatus(
+  id: string,
+  status: string,
+): Promise<void> {
   if (databaseService.isConnected()) {
     await databaseService.query(
       "UPDATE platform_integrations SET status = ?, updated_at = ? WHERE id = ?",
-      [status, new Date().toISOString(), id]
+      [status, new Date().toISOString(), id],
     );
   } else {
-    const integrationIndex = inMemoryIntegrations.findIndex(i => i.id === id);
+    const integrationIndex = inMemoryIntegrations.findIndex((i) => i.id === id);
     if (integrationIndex !== -1) {
       inMemoryIntegrations[integrationIndex].status = status;
-      inMemoryIntegrations[integrationIndex].updatedAt = new Date().toISOString();
+      inMemoryIntegrations[integrationIndex].updatedAt =
+        new Date().toISOString();
     }
   }
 }
 
-async function updateIntegrationLastSync(id: string, lastSync: string): Promise<void> {
+async function updateIntegrationLastSync(
+  id: string,
+  lastSync: string,
+): Promise<void> {
   if (databaseService.isConnected()) {
     await databaseService.query(
       "UPDATE platform_integrations SET last_sync = ?, updated_at = ? WHERE id = ?",
-      [lastSync, new Date().toISOString(), id]
+      [lastSync, new Date().toISOString(), id],
     );
   } else {
-    const integrationIndex = inMemoryIntegrations.findIndex(i => i.id === id);
+    const integrationIndex = inMemoryIntegrations.findIndex((i) => i.id === id);
     if (integrationIndex !== -1) {
       inMemoryIntegrations[integrationIndex].lastSync = lastSync;
-      inMemoryIntegrations[integrationIndex].updatedAt = new Date().toISOString();
+      inMemoryIntegrations[integrationIndex].updatedAt =
+        new Date().toISOString();
     }
   }
 }

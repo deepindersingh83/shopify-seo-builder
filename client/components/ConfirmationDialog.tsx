@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { AlertTriangle, Info, XCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React, { useEffect } from "react";
+import { AlertTriangle, Info, XCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,8 +8,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { useConfirmation, setGlobalConfirmationFunction } from '@/hooks/use-confirmation';
+} from "@/components/ui/dialog";
+import {
+  useConfirmation,
+  setGlobalConfirmationFunction,
+} from "@/hooks/use-confirmation";
 
 export function ConfirmationDialog() {
   const { isOpen, config, handleConfirm, handleCancel } = useConfirmation();
@@ -28,11 +31,11 @@ export function ConfirmationDialog() {
 
   const getIcon = () => {
     switch (config.variant) {
-      case 'destructive':
+      case "destructive":
         return <XCircle className="h-6 w-6 text-red-600" />;
-      case 'warning':
+      case "warning":
         return <AlertTriangle className="h-6 w-6 text-yellow-600" />;
-      case 'default':
+      case "default":
       default:
         return <Info className="h-6 w-6 text-blue-600" />;
     }
@@ -40,13 +43,13 @@ export function ConfirmationDialog() {
 
   const getConfirmButtonVariant = () => {
     switch (config.variant) {
-      case 'destructive':
-        return 'destructive';
-      case 'warning':
-        return 'default';
-      case 'default':
+      case "destructive":
+        return "destructive";
+      case "warning":
+        return "default";
+      case "default":
       default:
-        return 'default';
+        return "default";
     }
   };
 

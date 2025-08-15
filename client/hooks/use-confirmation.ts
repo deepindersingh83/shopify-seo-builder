@@ -1,11 +1,11 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 export interface ConfirmationConfig {
   title: string;
   message: string;
   confirmText?: string;
   cancelText?: string;
-  variant?: 'default' | 'destructive' | 'warning';
+  variant?: "default" | "destructive" | "warning";
   onConfirm: () => void | Promise<void>;
   onCancel?: () => void;
 }
@@ -33,9 +33,9 @@ export function useConfirmation(): UseConfirmationReturn {
     setState({
       isOpen: true,
       config: {
-        confirmText: 'Confirm',
-        cancelText: 'Cancel',
-        variant: 'default',
+        confirmText: "Confirm",
+        cancelText: "Cancel",
+        variant: "default",
         ...config,
       },
     });
@@ -67,7 +67,9 @@ export function useConfirmation(): UseConfirmationReturn {
 // Global confirmation function
 let globalConfirmationFn: ((config: ConfirmationConfig) => void) | null = null;
 
-export function setGlobalConfirmationFunction(fn: (config: ConfirmationConfig) => void) {
+export function setGlobalConfirmationFunction(
+  fn: (config: ConfirmationConfig) => void,
+) {
   globalConfirmationFn = fn;
 }
 

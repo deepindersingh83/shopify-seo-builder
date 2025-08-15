@@ -377,7 +377,9 @@ class FilterService {
   async getFilterPresets(): Promise<FilterPreset[]> {
     const response = await fetch(`${this.baseUrl}/presets`);
     if (!response.ok) {
-      throw new Error(`Failed to fetch filter presets: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch filter presets: ${response.status} ${response.statusText}`,
+      );
     }
     return response.json();
   }
@@ -396,7 +398,9 @@ class FilterService {
       body: JSON.stringify(preset),
     });
     if (!response.ok) {
-      throw new Error(`Failed to save filter preset: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to save filter preset: ${response.status} ${response.statusText}`,
+      );
     }
     return response.json();
   }
@@ -411,7 +415,9 @@ class FilterService {
       body: JSON.stringify(updates),
     });
     if (!response.ok) {
-      throw new Error(`Failed to update filter preset: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to update filter preset: ${response.status} ${response.statusText}`,
+      );
     }
     return response.json();
   }
@@ -635,7 +641,6 @@ class FilterService {
     // In a real implementation, you'd need to handle logical operators properly
     return [...filters1, ...filters2];
   }
-
 }
 
 export const filterService = new FilterService();

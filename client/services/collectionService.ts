@@ -72,7 +72,9 @@ class CollectionService {
     try {
       const response = await fetch(`${this.baseUrl}/seo-data`);
       if (!response.ok) {
-        throw new Error(`Failed to fetch collections data: ${response.statusText}`);
+        throw new Error(
+          `Failed to fetch collections data: ${response.statusText}`,
+        );
       }
       return response.json();
     } catch (error) {
@@ -91,11 +93,11 @@ class CollectionService {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
-      
+
       if (!response.ok) {
         throw new Error(`Sync failed: ${response.statusText}`);
       }
-      
+
       const result = await response.json();
       return result;
     } catch (error) {
@@ -104,11 +106,17 @@ class CollectionService {
   }
 
   // Get Shopify collections
-  async getShopifyCollections(integrationId: string): Promise<ShopifyCollection[]> {
+  async getShopifyCollections(
+    integrationId: string,
+  ): Promise<ShopifyCollection[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/shopify/${integrationId}/collections`);
+      const response = await fetch(
+        `${this.baseUrl}/shopify/${integrationId}/collections`,
+      );
       if (!response.ok) {
-        throw new Error(`Failed to fetch Shopify collections: ${response.statusText}`);
+        throw new Error(
+          `Failed to fetch Shopify collections: ${response.statusText}`,
+        );
       }
       return response.json();
     } catch (error) {
@@ -119,9 +127,13 @@ class CollectionService {
   // Get Shopify pages (for CMS pages)
   async getShopifyPages(integrationId: string): Promise<ShopifyPage[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/shopify/${integrationId}/pages`);
+      const response = await fetch(
+        `${this.baseUrl}/shopify/${integrationId}/pages`,
+      );
       if (!response.ok) {
-        throw new Error(`Failed to fetch Shopify pages: ${response.statusText}`);
+        throw new Error(
+          `Failed to fetch Shopify pages: ${response.statusText}`,
+        );
       }
       return response.json();
     } catch (error) {
@@ -145,11 +157,13 @@ class CollectionService {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(seoData),
       });
-      
+
       if (!response.ok) {
-        throw new Error(`Failed to update collection SEO: ${response.statusText}`);
+        throw new Error(
+          `Failed to update collection SEO: ${response.statusText}`,
+        );
       }
-      
+
       const result = await response.json();
       return result;
     } catch (error) {
@@ -158,17 +172,24 @@ class CollectionService {
   }
 
   // Generate AI-powered SEO recommendations
-  async generateSEORecommendations(collectionId: string): Promise<SEORecommendation[]> {
+  async generateSEORecommendations(
+    collectionId: string,
+  ): Promise<SEORecommendation[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/${collectionId}/ai-recommendations`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-      
+      const response = await fetch(
+        `${this.baseUrl}/${collectionId}/ai-recommendations`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+
       if (!response.ok) {
-        throw new Error(`Failed to generate recommendations: ${response.statusText}`);
+        throw new Error(
+          `Failed to generate recommendations: ${response.statusText}`,
+        );
       }
-      
+
       const recommendations = await response.json();
       return recommendations;
     } catch (error) {
@@ -182,16 +203,21 @@ class CollectionService {
     optimizationType: "title" | "description" | "keywords" | "all",
   ): Promise<Collection> {
     try {
-      const response = await fetch(`${this.baseUrl}/${collectionId}/ai-optimize`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: optimizationType }),
-      });
-      
+      const response = await fetch(
+        `${this.baseUrl}/${collectionId}/ai-optimize`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ type: optimizationType }),
+        },
+      );
+
       if (!response.ok) {
-        throw new Error(`Failed to apply AI optimization: ${response.statusText}`);
+        throw new Error(
+          `Failed to apply AI optimization: ${response.statusText}`,
+        );
       }
-      
+
       const result = await response.json();
       return result;
     } catch (error) {
@@ -215,11 +241,11 @@ class CollectionService {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ collectionIds, type: optimizationType }),
       });
-      
+
       if (!response.ok) {
         throw new Error(`Bulk optimization failed: ${response.statusText}`);
       }
-      
+
       const result = await response.json();
       return result;
     } catch (error) {
@@ -246,29 +272,30 @@ class CollectionService {
       const response = await fetch(`${this.baseUrl}/${id}`, {
         method: "DELETE",
       });
-      
+
       if (!response.ok) {
         throw new Error(`Failed to delete collection: ${response.statusText}`);
       }
-      
     } catch (error) {
       throw error;
     }
   }
 
   // Create new collection
-  async createCollection(collectionData: Partial<Collection>): Promise<Collection> {
+  async createCollection(
+    collectionData: Partial<Collection>,
+  ): Promise<Collection> {
     try {
       const response = await fetch(`${this.baseUrl}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(collectionData),
       });
-      
+
       if (!response.ok) {
         throw new Error(`Failed to create collection: ${response.statusText}`);
       }
-      
+
       const result = await response.json();
       return result;
     } catch (error) {
@@ -282,16 +309,19 @@ class CollectionService {
     platformId: string,
   ): Promise<{ success: boolean; message: string }> {
     try {
-      const response = await fetch(`${this.baseUrl}/${collectionId}/sync-to-platform`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ platformId }),
-      });
-      
+      const response = await fetch(
+        `${this.baseUrl}/${collectionId}/sync-to-platform`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ platformId }),
+        },
+      );
+
       if (!response.ok) {
         throw new Error(`Failed to sync to platform: ${response.statusText}`);
       }
-      
+
       const result = await response.json();
       return result;
     } catch (error) {
@@ -306,7 +336,10 @@ class CollectionService {
 
     // Meta title (25 points)
     if (collection.metaTitle) {
-      if (collection.metaTitle.length >= 30 && collection.metaTitle.length <= 60) {
+      if (
+        collection.metaTitle.length >= 30 &&
+        collection.metaTitle.length <= 60
+      ) {
         score += 25;
       } else if (collection.metaTitle.length > 0) {
         score += 15;
@@ -315,7 +348,10 @@ class CollectionService {
 
     // Meta description (25 points)
     if (collection.metaDescription) {
-      if (collection.metaDescription.length >= 120 && collection.metaDescription.length <= 160) {
+      if (
+        collection.metaDescription.length >= 120 &&
+        collection.metaDescription.length <= 160
+      ) {
         score += 25;
       } else if (collection.metaDescription.length > 0) {
         score += 15;
@@ -344,7 +380,7 @@ class CollectionService {
 
     // Slug optimization (10 points)
     if (collection.slug) {
-      if (collection.slug.includes('-') && collection.slug.length <= 50) {
+      if (collection.slug.includes("-") && collection.slug.length <= 50) {
         score += 10;
       } else if (collection.slug.length > 0) {
         score += 5;

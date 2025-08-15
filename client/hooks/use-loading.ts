@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 interface LoadingState {
   [key: string]: boolean;
@@ -14,26 +14,32 @@ interface UseLoadingReturn {
 export function useLoading(): UseLoadingReturn {
   const [loadingStates, setLoadingStates] = useState<LoadingState>({});
 
-  const isLoading = useCallback((key: string) => {
-    return loadingStates[key] || false;
-  }, [loadingStates]);
+  const isLoading = useCallback(
+    (key: string) => {
+      return loadingStates[key] || false;
+    },
+    [loadingStates],
+  );
 
   const setLoading = useCallback((key: string, loading: boolean) => {
-    setLoadingStates(prev => ({
+    setLoadingStates((prev) => ({
       ...prev,
       [key]: loading,
     }));
   }, []);
 
-  const withLoading = useCallback(async <T>(key: string, asyncFn: () => Promise<T>): Promise<T> => {
-    setLoading(key, true);
-    try {
-      const result = await asyncFn();
-      return result;
-    } finally {
-      setLoading(key, false);
-    }
-  }, [setLoading]);
+  const withLoading = useCallback(
+    async <T>(key: string, asyncFn: () => Promise<T>): Promise<T> => {
+      setLoading(key, true);
+      try {
+        const result = await asyncFn();
+        return result;
+      } finally {
+        setLoading(key, false);
+      }
+    },
+    [setLoading],
+  );
 
   const clearLoading = useCallback(() => {
     setLoadingStates({});
@@ -53,7 +59,7 @@ let globalIsLoadingFn: ((key: string) => boolean) | null = null;
 
 export function setGlobalLoadingFunctions(
   setLoading: (key: string, loading: boolean) => void,
-  isLoading: (key: string) => boolean
+  isLoading: (key: string) => boolean,
 ) {
   globalLoadingFn = setLoading;
   globalIsLoadingFn = isLoading;

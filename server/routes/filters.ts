@@ -6,29 +6,35 @@ import { z } from "zod";
 const FilterPresetSchema = z.object({
   name: z.string().min(1).max(255),
   description: z.string().optional(),
-  filters: z.array(z.object({
-    field: z.string(),
-    operator: z.string(),
-    value: z.any(),
-    value2: z.any().optional(),
-  })),
+  filters: z.array(
+    z.object({
+      field: z.string(),
+      operator: z.string(),
+      value: z.any(),
+      value2: z.any().optional(),
+    }),
+  ),
   isPublic: z.boolean().default(false),
   createdBy: z.string(),
 });
 
 const ApplyFiltersSchema = z.object({
-  filters: z.array(z.object({
-    field: z.string(),
-    operator: z.string(),
-    value: z.any(),
-    value2: z.any().optional(),
-  })),
-  options: z.object({
-    page: z.number().optional(),
-    limit: z.number().optional(),
-    sortBy: z.string().optional(),
-    sortDirection: z.enum(["asc", "desc"]).optional(),
-  }).optional(),
+  filters: z.array(
+    z.object({
+      field: z.string(),
+      operator: z.string(),
+      value: z.any(),
+      value2: z.any().optional(),
+    }),
+  ),
+  options: z
+    .object({
+      page: z.number().optional(),
+      limit: z.number().optional(),
+      sortBy: z.string().optional(),
+      sortDirection: z.enum(["asc", "desc"]).optional(),
+    })
+    .optional(),
 });
 
 // In-memory storage for when database is not available
@@ -39,14 +45,14 @@ export const getFilterPresets = async (req: Request, res: Response) => {
   try {
     if (databaseService.isConnected()) {
       const presets = await databaseService.query(
-        "SELECT * FROM filter_presets ORDER BY usage_count DESC, created_at DESC"
+        "SELECT * FROM filter_presets ORDER BY usage_count DESC, created_at DESC",
       );
-      
+
       const parsedPresets = presets.map((preset: any) => ({
         ...preset,
         filters: preset.filters ? JSON.parse(preset.filters) : [],
       }));
-      
+
       res.json(parsedPresets);
     } else {
       res.json(inMemoryPresets);
@@ -65,7 +71,7 @@ export const getFilterPreset = async (req: Request, res: Response) => {
     if (databaseService.isConnected()) {
       const presets = await databaseService.query(
         "SELECT * FROM filter_presets WHERE id = ?",
-        [id]
+        [id],
       );
 
       if (presets.length === 0) {
@@ -79,7 +85,7 @@ export const getFilterPreset = async (req: Request, res: Response) => {
 
       res.json(preset);
     } else {
-      const preset = inMemoryPresets.find(p => p.id === id);
+      const preset = inMemoryPresets.find((p) => p.id === id);
       if (!preset) {
         return res.status(404).json({ error: "Filter preset not found" });
       }
@@ -117,7 +123,7 @@ export const createFilterPreset = async (req: Request, res: Response) => {
           newPreset.createdBy,
           newPreset.usageCount,
           newPreset.createdAt,
-        ]
+        ],
       );
     } else {
       inMemoryPresets.push(newPreset);
@@ -127,7 +133,9 @@ export const createFilterPreset = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error creating filter preset:", error);
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: "Invalid request data", details: error.errors });
+      res
+        .status(400)
+        .json({ error: "Invalid request data", details: error.errors });
     } else {
       res.status(500).json({ error: "Failed to create filter preset" });
     }
@@ -145,8 +153,8 @@ export const updateFilterPreset = async (req: Request, res: Response) => {
       const updateValues: any[] = [];
 
       Object.entries(updates).forEach(([key, value]) => {
-        if (value !== undefined && key !== 'id') {
-          if (key === 'filters') {
+        if (value !== undefined && key !== "id") {
+          if (key === "filters") {
             updateFields.push("filters = ?");
             updateValues.push(JSON.stringify(value));
           } else {
@@ -160,13 +168,13 @@ export const updateFilterPreset = async (req: Request, res: Response) => {
         updateValues.push(id);
         await databaseService.query(
           `UPDATE filter_presets SET ${updateFields.join(", ")} WHERE id = ?`,
-          updateValues
+          updateValues,
         );
       }
 
       const updated = await databaseService.query(
         "SELECT * FROM filter_presets WHERE id = ?",
-        [id]
+        [id],
       );
 
       if (updated.length === 0) {
@@ -180,7 +188,7 @@ export const updateFilterPreset = async (req: Request, res: Response) => {
 
       res.json(preset);
     } else {
-      const presetIndex = inMemoryPresets.findIndex(p => p.id === id);
+      const presetIndex = inMemoryPresets.findIndex((p) => p.id === id);
       if (presetIndex === -1) {
         return res.status(404).json({ error: "Filter preset not found" });
       }
@@ -206,14 +214,14 @@ export const deleteFilterPreset = async (req: Request, res: Response) => {
     if (databaseService.isConnected()) {
       const result = await databaseService.query(
         "DELETE FROM filter_presets WHERE id = ?",
-        [id]
+        [id],
       );
 
       if (result.affectedRows === 0) {
         return res.status(404).json({ error: "Filter preset not found" });
       }
     } else {
-      const presetIndex = inMemoryPresets.findIndex(p => p.id === id);
+      const presetIndex = inMemoryPresets.findIndex((p) => p.id === id);
       if (presetIndex === -1) {
         return res.status(404).json({ error: "Filter preset not found" });
       }
@@ -245,7 +253,9 @@ export const applyFilters = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error applying filters:", error);
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: "Invalid request data", details: error.errors });
+      res
+        .status(400)
+        .json({ error: "Invalid request data", details: error.errors });
     } else {
       res.status(500).json({ error: "Failed to apply filters" });
     }
@@ -320,7 +330,7 @@ export const duplicateFilterPreset = async (req: Request, res: Response) => {
     if (databaseService.isConnected()) {
       const presets = await databaseService.query(
         "SELECT * FROM filter_presets WHERE id = ?",
-        [id]
+        [id],
       );
 
       if (presets.length === 0) {
@@ -332,7 +342,7 @@ export const duplicateFilterPreset = async (req: Request, res: Response) => {
         filters: presets[0].filters ? JSON.parse(presets[0].filters) : [],
       };
     } else {
-      originalPreset = inMemoryPresets.find(p => p.id === id);
+      originalPreset = inMemoryPresets.find((p) => p.id === id);
       if (!originalPreset) {
         return res.status(404).json({ error: "Filter preset not found" });
       }
@@ -360,7 +370,7 @@ export const duplicateFilterPreset = async (req: Request, res: Response) => {
           duplicatedPreset.createdBy,
           duplicatedPreset.usageCount,
           duplicatedPreset.createdAt,
-        ]
+        ],
       );
     } else {
       inMemoryPresets.push(duplicatedPreset);

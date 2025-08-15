@@ -63,7 +63,10 @@ function calculateSEOScore(collection: any): number {
 
   // Meta title (25 points)
   if (collection.meta_title) {
-    if (collection.meta_title.length >= 30 && collection.meta_title.length <= 60) {
+    if (
+      collection.meta_title.length >= 30 &&
+      collection.meta_title.length <= 60
+    ) {
       score += 25;
     } else if (collection.meta_title.length > 0) {
       score += 15;
@@ -72,7 +75,10 @@ function calculateSEOScore(collection: any): number {
 
   // Meta description (25 points)
   if (collection.meta_description) {
-    if (collection.meta_description.length >= 120 && collection.meta_description.length <= 160) {
+    if (
+      collection.meta_description.length >= 120 &&
+      collection.meta_description.length <= 160
+    ) {
       score += 25;
     } else if (collection.meta_description.length > 0) {
       score += 15;
@@ -100,7 +106,7 @@ function calculateSEOScore(collection: any): number {
 
   // Slug optimization (10 points)
   if (collection.slug) {
-    if (collection.slug.includes('-') && collection.slug.length <= 50) {
+    if (collection.slug.includes("-") && collection.slug.length <= 50) {
       score += 10;
     } else if (collection.slug.length > 0) {
       score += 5;
@@ -164,12 +170,22 @@ export const getCollectionsSEOData = async (req: Request, res: Response) => {
 
     // Calculate stats
     const totalCollections = transformedCollections.length;
-    const optimizedCount = transformedCollections.filter(c => c.status === "optimized").length;
-    const needsWorkCount = transformedCollections.filter(c => c.status === "needs_work").length;
-    const criticalCount = transformedCollections.filter(c => c.status === "critical").length;
-    const averageScore = totalCollections > 0 
-      ? Math.round(transformedCollections.reduce((sum, c) => sum + c.seoScore, 0) / totalCollections)
-      : 0;
+    const optimizedCount = transformedCollections.filter(
+      (c) => c.status === "optimized",
+    ).length;
+    const needsWorkCount = transformedCollections.filter(
+      (c) => c.status === "needs_work",
+    ).length;
+    const criticalCount = transformedCollections.filter(
+      (c) => c.status === "critical",
+    ).length;
+    const averageScore =
+      totalCollections > 0
+        ? Math.round(
+            transformedCollections.reduce((sum, c) => sum + c.seoScore, 0) /
+              totalCollections,
+          )
+        : 0;
 
     res.json({
       collections: transformedCollections,
@@ -189,14 +205,17 @@ export const getCollectionsSEOData = async (req: Request, res: Response) => {
 };
 
 // Sync collections from connected platforms
-export const syncCollectionsFromPlatforms = async (req: Request, res: Response) => {
+export const syncCollectionsFromPlatforms = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     let synced = 0;
     const errors: string[] = [];
 
     // Get connected platform integrations
     let platformIntegrations = [];
-    
+
     if (databaseService.isConnected()) {
       platformIntegrations = await databaseService.query(`
         SELECT * FROM platform_integrations WHERE enabled = true
@@ -226,7 +245,9 @@ export const syncCollectionsFromPlatforms = async (req: Request, res: Response) 
     });
   } catch (error) {
     console.error("Error syncing collections:", error);
-    res.status(500).json({ error: "Failed to sync collections from platforms" });
+    res
+      .status(500)
+      .json({ error: "Failed to sync collections from platforms" });
   }
 };
 
@@ -235,16 +256,19 @@ async function syncShopifyCollections(integration: any) {
   const { domain, accessToken } = JSON.parse(integration.credentials);
 
   // Fetch collections
-  const collectionsResponse = await fetch(`https://${domain}.myshopify.com/admin/api/2023-10/collections.json`, {
-    headers: {
-      'X-Shopify-Access-Token': accessToken,
-      'Content-Type': 'application/json',
+  const collectionsResponse = await fetch(
+    `https://${domain}.myshopify.com/admin/api/2023-10/collections.json`,
+    {
+      headers: {
+        "X-Shopify-Access-Token": accessToken,
+        "Content-Type": "application/json",
+      },
     },
-  });
+  );
 
   if (collectionsResponse.ok) {
     const collectionsData = await collectionsResponse.json();
-    
+
     for (const collection of collectionsData.collections) {
       await saveCollection({
         id: `shopify_collection_${collection.id}`,
@@ -265,16 +289,19 @@ async function syncShopifyCollections(integration: any) {
   }
 
   // Fetch pages (CMS pages)
-  const pagesResponse = await fetch(`https://${domain}.myshopify.com/admin/api/2023-10/pages.json`, {
-    headers: {
-      'X-Shopify-Access-Token': accessToken,
-      'Content-Type': 'application/json',
+  const pagesResponse = await fetch(
+    `https://${domain}.myshopify.com/admin/api/2023-10/pages.json`,
+    {
+      headers: {
+        "X-Shopify-Access-Token": accessToken,
+        "Content-Type": "application/json",
+      },
     },
-  });
+  );
 
   if (pagesResponse.ok) {
     const pagesData = await pagesResponse.json();
-    
+
     for (const page of pagesData.pages) {
       await saveCollection({
         id: `shopify_page_${page.id}`,
@@ -297,20 +324,27 @@ async function syncShopifyCollections(integration: any) {
 
 // Sync WooCommerce categories
 async function syncWooCommerceCategories(integration: any) {
-  const { url, consumerKey, consumerSecret } = JSON.parse(integration.credentials);
-  
-  const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
-  
-  const response = await fetch(`${url}/wp-json/wc/v3/products/categories?per_page=100`, {
-    headers: {
-      'Authorization': `Basic ${auth}`,
-      'Content-Type': 'application/json',
+  const { url, consumerKey, consumerSecret } = JSON.parse(
+    integration.credentials,
+  );
+
+  const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString(
+    "base64",
+  );
+
+  const response = await fetch(
+    `${url}/wp-json/wc/v3/products/categories?per_page=100`,
+    {
+      headers: {
+        Authorization: `Basic ${auth}`,
+        "Content-Type": "application/json",
+      },
     },
-  });
+  );
 
   if (response.ok) {
     const categories = await response.json();
-    
+
     for (const category of categories) {
       await saveCollection({
         id: `woocommerce_category_${category.id}`,
@@ -335,63 +369,78 @@ async function saveCollection(collectionData: any) {
   if (databaseService.isConnected()) {
     const existing = await databaseService.query(
       `SELECT id FROM collections WHERE id = ?`,
-      [collectionData.id]
+      [collectionData.id],
     );
 
     if (existing.length > 0) {
       // Update existing
-      await databaseService.query(`
+      await databaseService.query(
+        `
         UPDATE collections SET
           name = ?, type = ?, slug = ?, meta_title = ?, meta_description = ?,
           keywords = ?, content = ?, is_published = ?, template_suffix = ?,
           platform = ?, platform_id = ?, product_count = ?, updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
-      `, [
-        collectionData.name,
-        collectionData.type,
-        collectionData.slug,
-        collectionData.metaTitle,
-        collectionData.metaDescription,
-        JSON.stringify(collectionData.keywords),
-        collectionData.content,
-        collectionData.isPublished,
-        collectionData.templateSuffix,
-        collectionData.platform,
-        collectionData.platformId,
-        collectionData.productCount,
-        collectionData.id,
-      ]);
+      `,
+        [
+          collectionData.name,
+          collectionData.type,
+          collectionData.slug,
+          collectionData.metaTitle,
+          collectionData.metaDescription,
+          JSON.stringify(collectionData.keywords),
+          collectionData.content,
+          collectionData.isPublished,
+          collectionData.templateSuffix,
+          collectionData.platform,
+          collectionData.platformId,
+          collectionData.productCount,
+          collectionData.id,
+        ],
+      );
     } else {
       // Create new
-      await databaseService.query(`
+      await databaseService.query(
+        `
         INSERT INTO collections (
           id, name, type, slug, meta_title, meta_description, keywords,
           content, is_published, template_suffix, platform, platform_id,
           product_count, created_at, updated_at
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-      `, [
-        collectionData.id,
-        collectionData.name,
-        collectionData.type,
-        collectionData.slug,
-        collectionData.metaTitle,
-        collectionData.metaDescription,
-        JSON.stringify(collectionData.keywords),
-        collectionData.content,
-        collectionData.isPublished,
-        collectionData.templateSuffix,
-        collectionData.platform,
-        collectionData.platformId,
-        collectionData.productCount,
-      ]);
+      `,
+        [
+          collectionData.id,
+          collectionData.name,
+          collectionData.type,
+          collectionData.slug,
+          collectionData.metaTitle,
+          collectionData.metaDescription,
+          JSON.stringify(collectionData.keywords),
+          collectionData.content,
+          collectionData.isPublished,
+          collectionData.templateSuffix,
+          collectionData.platform,
+          collectionData.platformId,
+          collectionData.productCount,
+        ],
+      );
     }
   } else {
     // Save to memory
-    const existing = inMemoryCollections.findIndex(c => c.id === collectionData.id);
+    const existing = inMemoryCollections.findIndex(
+      (c) => c.id === collectionData.id,
+    );
     if (existing >= 0) {
-      inMemoryCollections[existing] = { ...collectionData, updated_at: new Date().toISOString() };
+      inMemoryCollections[existing] = {
+        ...collectionData,
+        updated_at: new Date().toISOString(),
+      };
     } else {
-      inMemoryCollections.push({ ...collectionData, created_at: new Date().toISOString(), updated_at: new Date().toISOString() });
+      inMemoryCollections.push({
+        ...collectionData,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
     }
   }
 }
@@ -405,11 +454,11 @@ export const getCollection = async (req: Request, res: Response) => {
     if (databaseService.isConnected()) {
       const results = await databaseService.query(
         `SELECT * FROM collections WHERE id = ?`,
-        [id]
+        [id],
       );
       collection = results[0];
     } else {
-      collection = inMemoryCollections.find(c => c.id === id);
+      collection = inMemoryCollections.find((c) => c.id === id);
     }
 
     if (!collection) {
@@ -450,19 +499,22 @@ export const updateCollectionSEO = async (req: Request, res: Response) => {
     const seoData = SEOUpdateSchema.parse(req.body);
 
     if (databaseService.isConnected()) {
-      await databaseService.query(`
+      await databaseService.query(
+        `
         UPDATE collections SET
           meta_title = ?, meta_description = ?, keywords = ?, content = ?, updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
-      `, [
-        seoData.metaTitle,
-        seoData.metaDescription,
-        JSON.stringify(seoData.keywords || []),
-        seoData.content,
-        id,
-      ]);
+      `,
+        [
+          seoData.metaTitle,
+          seoData.metaDescription,
+          JSON.stringify(seoData.keywords || []),
+          seoData.content,
+          id,
+        ],
+      );
     } else {
-      const existing = inMemoryCollections.findIndex(c => c.id === id);
+      const existing = inMemoryCollections.findIndex((c) => c.id === id);
       if (existing >= 0) {
         inMemoryCollections[existing] = {
           ...inMemoryCollections[existing],
@@ -484,20 +536,23 @@ export const updateCollectionSEO = async (req: Request, res: Response) => {
 };
 
 // Generate AI recommendations
-export const generateSEORecommendations = async (req: Request, res: Response) => {
+export const generateSEORecommendations = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const { id } = req.params;
-    
+
     // Get collection data
     let collection = null;
     if (databaseService.isConnected()) {
       const results = await databaseService.query(
         `SELECT * FROM collections WHERE id = ?`,
-        [id]
+        [id],
       );
       collection = results[0];
     } else {
-      collection = inMemoryCollections.find(c => c.id === id);
+      collection = inMemoryCollections.find((c) => c.id === id);
     }
 
     if (!collection) {
@@ -517,7 +572,10 @@ export const generateSEORecommendations = async (req: Request, res: Response) =>
       });
     }
 
-    if (!collection.meta_description || collection.meta_description.length < 120) {
+    if (
+      !collection.meta_description ||
+      collection.meta_description.length < 120
+    ) {
       recommendations.push({
         id: `${id}_description`,
         type: "description",
@@ -565,11 +623,11 @@ export const applySEOOptimization = async (req: Request, res: Response) => {
     if (databaseService.isConnected()) {
       const results = await databaseService.query(
         `SELECT * FROM collections WHERE id = ?`,
-        [id]
+        [id],
       );
       collection = results[0];
     } else {
-      collection = inMemoryCollections.find(c => c.id === id);
+      collection = inMemoryCollections.find((c) => c.id === id);
     }
 
     if (!collection) {
@@ -588,7 +646,12 @@ export const applySEOOptimization = async (req: Request, res: Response) => {
     }
 
     if (type === "keywords" || type === "all") {
-      const baseKeywords = [collection.name.toLowerCase(), "premium", "quality", "best deals"];
+      const baseKeywords = [
+        collection.name.toLowerCase(),
+        "premium",
+        "quality",
+        "best deals",
+      ];
       optimizations.keywords = baseKeywords.concat([
         `${collection.name.toLowerCase()} collection`,
         `buy ${collection.name.toLowerCase()}`,
@@ -598,27 +661,37 @@ export const applySEOOptimization = async (req: Request, res: Response) => {
 
     // Update the collection
     if (databaseService.isConnected()) {
-      await databaseService.query(`
+      await databaseService.query(
+        `
         UPDATE collections SET
           meta_title = COALESCE(?, meta_title),
           meta_description = COALESCE(?, meta_description),
           keywords = COALESCE(?, keywords),
           updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
-      `, [
-        optimizations.metaTitle,
-        optimizations.metaDescription,
-        optimizations.keywords ? JSON.stringify(optimizations.keywords) : null,
-        id,
-      ]);
+      `,
+        [
+          optimizations.metaTitle,
+          optimizations.metaDescription,
+          optimizations.keywords
+            ? JSON.stringify(optimizations.keywords)
+            : null,
+          id,
+        ],
+      );
     } else {
-      const existing = inMemoryCollections.findIndex(c => c.id === id);
+      const existing = inMemoryCollections.findIndex((c) => c.id === id);
       if (existing >= 0) {
         inMemoryCollections[existing] = {
           ...inMemoryCollections[existing],
-          meta_title: optimizations.metaTitle || inMemoryCollections[existing].meta_title,
-          meta_description: optimizations.metaDescription || inMemoryCollections[existing].meta_description,
-          keywords: optimizations.keywords ? JSON.stringify(optimizations.keywords) : inMemoryCollections[existing].keywords,
+          meta_title:
+            optimizations.metaTitle || inMemoryCollections[existing].meta_title,
+          meta_description:
+            optimizations.metaDescription ||
+            inMemoryCollections[existing].meta_description,
+          keywords: optimizations.keywords
+            ? JSON.stringify(optimizations.keywords)
+            : inMemoryCollections[existing].keywords,
           updated_at: new Date().toISOString(),
         };
       }
@@ -660,7 +733,7 @@ export const deleteCollection = async (req: Request, res: Response) => {
     if (databaseService.isConnected()) {
       await databaseService.query(`DELETE FROM collections WHERE id = ?`, [id]);
     } else {
-      const index = inMemoryCollections.findIndex(c => c.id === id);
+      const index = inMemoryCollections.findIndex((c) => c.id === id);
       if (index >= 0) {
         inMemoryCollections.splice(index, 1);
       }

@@ -102,10 +102,22 @@ export function createServer() {
   // Third-party integration routes
   app.get("/api/third-party/integrations", thirdPartyRoutes.getIntegrations);
   app.post("/api/third-party/connect", thirdPartyRoutes.connectService);
-  app.put("/api/third-party/integrations/:id", thirdPartyRoutes.updateIntegration);
-  app.delete("/api/third-party/integrations/:id", thirdPartyRoutes.disconnectIntegration);
-  app.post("/api/third-party/integrations/:id/test", thirdPartyRoutes.testIntegrationConnection);
-  app.post("/api/third-party/integrations/:id/sync", thirdPartyRoutes.syncIntegration);
+  app.put(
+    "/api/third-party/integrations/:id",
+    thirdPartyRoutes.updateIntegration,
+  );
+  app.delete(
+    "/api/third-party/integrations/:id",
+    thirdPartyRoutes.disconnectIntegration,
+  );
+  app.post(
+    "/api/third-party/integrations/:id/test",
+    thirdPartyRoutes.testIntegrationConnection,
+  );
+  app.post(
+    "/api/third-party/integrations/:id/sync",
+    thirdPartyRoutes.syncIntegration,
+  );
 
   // Filter routes
   app.get("/api/filters/presets", filterRoutes.getFilterPresets);
@@ -113,7 +125,10 @@ export function createServer() {
   app.post("/api/filters/presets", filterRoutes.createFilterPreset);
   app.put("/api/filters/presets/:id", filterRoutes.updateFilterPreset);
   app.delete("/api/filters/presets/:id", filterRoutes.deleteFilterPreset);
-  app.post("/api/filters/presets/:id/duplicate", filterRoutes.duplicateFilterPreset);
+  app.post(
+    "/api/filters/presets/:id/duplicate",
+    filterRoutes.duplicateFilterPreset,
+  );
   app.post("/api/filters/apply", filterRoutes.applyFilters);
   app.post("/api/filters/counts", filterRoutes.getFilterCounts);
   app.post("/api/filters/suggestions", filterRoutes.getFilterSuggestions);
@@ -121,25 +136,55 @@ export function createServer() {
   app.post("/api/filters/preview", filterRoutes.previewFilterResults);
 
   // Platform integration routes
-  app.get("/api/platforms/integrations", platformRoutes.getPlatformIntegrations);
-  app.get("/api/platforms/integrations/:id", platformRoutes.getPlatformIntegration);
+  app.get(
+    "/api/platforms/integrations",
+    platformRoutes.getPlatformIntegrations,
+  );
+  app.get(
+    "/api/platforms/integrations/:id",
+    platformRoutes.getPlatformIntegration,
+  );
   app.post("/api/platforms/connect", platformRoutes.connectPlatform);
-  app.put("/api/platforms/integrations/:id", platformRoutes.updatePlatformIntegration);
-  app.delete("/api/platforms/integrations/:id", platformRoutes.deletePlatformIntegration);
-  app.post("/api/platforms/integrations/:id/test", platformRoutes.testConnection);
+  app.put(
+    "/api/platforms/integrations/:id",
+    platformRoutes.updatePlatformIntegration,
+  );
+  app.delete(
+    "/api/platforms/integrations/:id",
+    platformRoutes.deletePlatformIntegration,
+  );
+  app.post(
+    "/api/platforms/integrations/:id/test",
+    platformRoutes.testConnection,
+  );
   app.post("/api/platforms/integrations/:id/sync", platformRoutes.startSync);
-  app.get("/api/platforms/integrations/:id/sync-history", platformRoutes.getSyncHistory);
+  app.get(
+    "/api/platforms/integrations/:id/sync-history",
+    platformRoutes.getSyncHistory,
+  );
 
   // Collections routes
   app.get("/api/collections/seo-data", collectionRoutes.getCollectionsSEOData);
-  app.post("/api/collections/sync-from-platforms", collectionRoutes.syncCollectionsFromPlatforms);
+  app.post(
+    "/api/collections/sync-from-platforms",
+    collectionRoutes.syncCollectionsFromPlatforms,
+  );
   app.get("/api/collections/:id", collectionRoutes.getCollection);
   app.put("/api/collections/:id/seo", collectionRoutes.updateCollectionSEO);
-  app.post("/api/collections/:id/ai-recommendations", collectionRoutes.generateSEORecommendations);
-  app.post("/api/collections/:id/ai-optimize", collectionRoutes.applySEOOptimization);
+  app.post(
+    "/api/collections/:id/ai-recommendations",
+    collectionRoutes.generateSEORecommendations,
+  );
+  app.post(
+    "/api/collections/:id/ai-optimize",
+    collectionRoutes.applySEOOptimization,
+  );
   app.post("/api/collections", collectionRoutes.createCollection);
   app.delete("/api/collections/:id", collectionRoutes.deleteCollection);
-  app.post("/api/collections/bulk-optimize", collectionRoutes.bulkOptimizeCollections);
+  app.post(
+    "/api/collections/bulk-optimize",
+    collectionRoutes.bulkOptimizeCollections,
+  );
 
   // Database health check
   app.get("/api/health/database", async (req, res) => {
