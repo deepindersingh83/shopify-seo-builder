@@ -201,15 +201,50 @@ export const searchProducts = async (req: Request, res: Response) => {
 export const getProductCount = async (req: Request, res: Response) => {
   try {
     const { query = "", filters = {} } = req.body;
+    let count = 0;
 
-    const productFilters: ProductFilters = {
-      status: filters.status,
-      vendor: filters.vendor,
-      product_type: filters.productType,
-      query,
-    };
+    if (databaseService.isConnected()) {
+      // Get count from database
+      const productFilters: ProductFilters = {
+        status: filters.status,
+        vendor: filters.vendor,
+        product_type: filters.productType,
+        query,
+      };
 
-    const count = await productRepository.getCount(productFilters);
+      count = await productRepository.getCount(productFilters);
+    } else {
+      // Get count from store memory storage
+      const storeProducts = storeProductsService.getAllStoreProducts();
+
+      // Apply basic filtering and count
+      const filteredProducts = storeProducts.filter(product => {
+        // Query filter
+        if (query) {
+          const searchQuery = query.toLowerCase();
+          const matchesQuery =
+            product.title?.toLowerCase().includes(searchQuery) ||
+            product.description?.toLowerCase().includes(searchQuery) ||
+            product.vendor?.toLowerCase().includes(searchQuery) ||
+            product.product_type?.toLowerCase().includes(searchQuery);
+          if (!matchesQuery) return false;
+        }
+
+        // Status filter
+        if (filters.status && filters.status.length > 0) {
+          if (!filters.status.includes(product.status)) return false;
+        }
+
+        // Vendor filter
+        if (filters.vendor && filters.vendor.length > 0) {
+          if (!filters.vendor.includes(product.vendor)) return false;
+        }
+
+        return true;
+      });
+
+      count = filteredProducts.length;
+    }
 
     res.json({ count });
   } catch (error) {
