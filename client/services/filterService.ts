@@ -636,50 +636,6 @@ class FilterService {
     return [...filters1, ...filters2];
   }
 
-  // Mock data generators
-  generateMockFilterPresets(): FilterPreset[] {
-    return [
-      {
-        id: "1",
-        name: "SEO Optimization Needed",
-        description: "Products that need SEO improvements",
-        filters: [
-          { field: "seoScore", operator: "less_than", value: 70 },
-          { field: "status", operator: "equals", value: "active" },
-        ],
-        isPublic: true,
-        createdBy: "admin",
-        createdAt: new Date().toISOString(),
-        usageCount: 45,
-      },
-      {
-        id: "2",
-        name: "High Value Electronics",
-        description: "Electronics products over $200",
-        filters: [
-          { field: "productType", operator: "equals", value: "Electronics" },
-          { field: "price", operator: "greater_than", value: 200 },
-        ],
-        isPublic: false,
-        createdBy: "admin",
-        createdAt: new Date().toISOString(),
-        usageCount: 23,
-      },
-      {
-        id: "3",
-        name: "Inventory Alerts",
-        description: "Products with low stock or missing data",
-        filters: [
-          { field: "inventory", operator: "less_than", value: 20 },
-          { field: "trackQuantity", operator: "equals", value: true },
-        ],
-        isPublic: true,
-        createdBy: "admin",
-        createdAt: new Date().toISOString(),
-        usageCount: 67,
-      },
-    ];
-  }
 }
 
 export const filterService = new FilterService();
