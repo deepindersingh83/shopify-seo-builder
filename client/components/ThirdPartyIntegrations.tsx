@@ -672,10 +672,13 @@ export function ThirdPartyIntegrations() {
                   onClick={() => {
                     const connectedIntegrations = integrations.filter(i => i.status === 'connected');
                     if (connectedIntegrations.length === 0) {
-                      alert('No connected integrations to export data from.');
+                      showWarning('No connected integrations to export data from.');
                       return;
                     }
-                    alert(`Exporting data from ${connectedIntegrations.length} connected services...`);
+                    showInfo(
+                      'Export started',
+                      `Exporting data from ${connectedIntegrations.length} connected services...`
+                    );
                   }}
                 >
                   <Download className="h-6 w-6 mb-2" />
