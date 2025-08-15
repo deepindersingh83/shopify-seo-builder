@@ -375,16 +375,11 @@ class FilterService {
 
   // Filter Presets Management
   async getFilterPresets(): Promise<FilterPreset[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/presets`);
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      return this.generateMockFilterPresets();
+    const response = await fetch(`${this.baseUrl}/presets`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch filter presets: ${response.status} ${response.statusText}`);
     }
+    return response.json();
   }
 
   async getFilterPreset(id: string): Promise<FilterPreset> {
