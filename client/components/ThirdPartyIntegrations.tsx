@@ -219,16 +219,25 @@ export function ThirdPartyIntegrations() {
 
       // Show connection result
       if (result.testResult.success) {
-        alert(`✅ Successfully connected to ${service}!\n${result.testResult.message}`);
+        showSuccess(
+          `Successfully connected to ${service}!`,
+          result.testResult.message
+        );
       } else {
-        alert(`⚠️ Connected but with warnings:\n${result.testResult.message}`);
+        showWarning(
+          `Connected with warnings`,
+          result.testResult.message
+        );
       }
 
       await loadIntegrations();
       setShowConnectDialog(false);
     } catch (error) {
       console.error("Failed to connect:", error);
-      alert(`❌ Failed to connect: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      showError(
+        'Failed to connect service',
+        error instanceof Error ? error.message : 'Unknown error'
+      );
     }
   };
 
