@@ -153,12 +153,7 @@ class ProductRepository {
         product_type LIKE ?
       )`);
       const queryParam = `%${filters.query}%`;
-      params.push(
-        queryParam,
-        queryParam,
-        queryParam,
-        queryParam,
-      );
+      params.push(queryParam, queryParam, queryParam, queryParam);
     }
 
     // Apply WHERE clauses

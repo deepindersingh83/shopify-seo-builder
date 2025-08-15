@@ -28,12 +28,14 @@ export default function SEOOverviewPage() {
     setIsRunningAudit(true);
     try {
       // Simulate SEO audit process
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       // In a real app, this would trigger an actual SEO audit
-      alert('SEO Audit completed! Check the Analytics section for detailed results.');
+      alert(
+        "SEO Audit completed! Check the Analytics section for detailed results.",
+      );
     } catch (error) {
-      console.error('Error running SEO audit:', error);
-      alert('Failed to run SEO audit. Please try again.');
+      console.error("Error running SEO audit:", error);
+      alert("Failed to run SEO audit. Please try again.");
     } finally {
       setIsRunningAudit(false);
     }
@@ -41,7 +43,7 @@ export default function SEOOverviewPage() {
 
   const handleExportReport = () => {
     // Simulate report export
-    alert('Report export started! You will receive an email when ready.');
+    alert("Report export started! You will receive an email when ready.");
   };
 
   return (
@@ -66,7 +68,7 @@ export default function SEOOverviewPage() {
                 ) : (
                   <Target className="h-4 w-4 mr-2" />
                 )}
-                {isRunningAudit ? 'Running Audit...' : 'Run SEO Audit'}
+                {isRunningAudit ? "Running Audit..." : "Run SEO Audit"}
               </Button>
             </div>
           </div>

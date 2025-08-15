@@ -61,16 +61,18 @@ export const getIntegrations = async (req: Request, res: Response) => {
   try {
     if (databaseService.isConnected()) {
       const integrations = await databaseService.query(
-        "SELECT * FROM third_party_integrations ORDER BY created_at DESC"
+        "SELECT * FROM third_party_integrations ORDER BY created_at DESC",
       );
-      
+
       // Parse JSON fields
       const parsedIntegrations = integrations.map((integration: any) => ({
         ...integration,
-        credentials: integration.credentials ? JSON.parse(integration.credentials) : {},
+        credentials: integration.credentials
+          ? JSON.parse(integration.credentials)
+          : {},
         settings: integration.settings ? JSON.parse(integration.settings) : {},
       }));
-      
+
       res.json(parsedIntegrations);
     } else {
       // Return in-memory data
@@ -119,7 +121,7 @@ export const connectService = async (req: Request, res: Response) => {
           newIntegration.lastSync,
           new Date().toISOString(),
           new Date().toISOString(),
-        ]
+        ],
       );
     } else {
       // Add to in-memory storage
@@ -133,7 +135,7 @@ export const connectService = async (req: Request, res: Response) => {
       if (databaseService.isConnected()) {
         await databaseService.query(
           "UPDATE third_party_integrations SET status = ? WHERE id = ?",
-          ["error", newIntegration.id]
+          ["error", newIntegration.id],
         );
       }
     }
@@ -145,7 +147,9 @@ export const connectService = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error connecting service:", error);
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: "Invalid request data", details: error.errors });
+      res
+        .status(400)
+        .json({ error: "Invalid request data", details: error.errors });
     } else {
       res.status(500).json({ error: "Failed to connect service" });
     }
@@ -181,14 +185,14 @@ export const updateIntegration = async (req: Request, res: Response) => {
 
         await databaseService.query(
           `UPDATE third_party_integrations SET ${updateFields.join(", ")} WHERE id = ?`,
-          updateValues
+          updateValues,
         );
       }
 
       // Fetch updated integration
       const updated = await databaseService.query(
         "SELECT * FROM third_party_integrations WHERE id = ?",
-        [id]
+        [id],
       );
 
       if (updated.length === 0) {
@@ -197,14 +201,18 @@ export const updateIntegration = async (req: Request, res: Response) => {
 
       const integration = {
         ...updated[0],
-        credentials: updated[0].credentials ? JSON.parse(updated[0].credentials) : {},
+        credentials: updated[0].credentials
+          ? JSON.parse(updated[0].credentials)
+          : {},
         settings: updated[0].settings ? JSON.parse(updated[0].settings) : {},
       };
 
       res.json(integration);
     } else {
       // Update in-memory storage
-      const integrationIndex = inMemoryIntegrations.findIndex(i => i.id === id);
+      const integrationIndex = inMemoryIntegrations.findIndex(
+        (i) => i.id === id,
+      );
       if (integrationIndex === -1) {
         return res.status(404).json({ error: "Integration not found" });
       }
@@ -219,7 +227,9 @@ export const updateIntegration = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error updating integration:", error);
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: "Invalid request data", details: error.errors });
+      res
+        .status(400)
+        .json({ error: "Invalid request data", details: error.errors });
     } else {
       res.status(500).json({ error: "Failed to update integration" });
     }
@@ -234,7 +244,7 @@ export const disconnectIntegration = async (req: Request, res: Response) => {
     if (databaseService.isConnected()) {
       const result = await databaseService.query(
         "DELETE FROM third_party_integrations WHERE id = ?",
-        [id]
+        [id],
       );
 
       if (result.affectedRows === 0) {
@@ -242,7 +252,9 @@ export const disconnectIntegration = async (req: Request, res: Response) => {
       }
     } else {
       // Remove from in-memory storage
-      const integrationIndex = inMemoryIntegrations.findIndex(i => i.id === id);
+      const integrationIndex = inMemoryIntegrations.findIndex(
+        (i) => i.id === id,
+      );
       if (integrationIndex === -1) {
         return res.status(404).json({ error: "Integration not found" });
       }
@@ -250,7 +262,10 @@ export const disconnectIntegration = async (req: Request, res: Response) => {
       inMemoryIntegrations.splice(integrationIndex, 1);
     }
 
-    res.json({ success: true, message: "Integration disconnected successfully" });
+    res.json({
+      success: true,
+      message: "Integration disconnected successfully",
+    });
   } catch (error) {
     console.error("Error disconnecting integration:", error);
     res.status(500).json({ error: "Failed to disconnect integration" });
@@ -258,7 +273,10 @@ export const disconnectIntegration = async (req: Request, res: Response) => {
 };
 
 // Test an integration connection
-export const testIntegrationConnection = async (req: Request, res: Response) => {
+export const testIntegrationConnection = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const { id } = req.params;
     let integration: ThirdPartyIntegration | undefined;
@@ -266,7 +284,7 @@ export const testIntegrationConnection = async (req: Request, res: Response) => 
     if (databaseService.isConnected()) {
       const result = await databaseService.query(
         "SELECT * FROM third_party_integrations WHERE id = ?",
-        [id]
+        [id],
       );
 
       if (result.length === 0) {
@@ -275,18 +293,20 @@ export const testIntegrationConnection = async (req: Request, res: Response) => 
 
       integration = {
         ...result[0],
-        credentials: result[0].credentials ? JSON.parse(result[0].credentials) : {},
+        credentials: result[0].credentials
+          ? JSON.parse(result[0].credentials)
+          : {},
         settings: result[0].settings ? JSON.parse(result[0].settings) : {},
       };
     } else {
-      integration = inMemoryIntegrations.find(i => i.id === id);
+      integration = inMemoryIntegrations.find((i) => i.id === id);
       if (!integration) {
         return res.status(404).json({ error: "Integration not found" });
       }
     }
 
     const testResult = await testConnection(integration);
-    
+
     // Update integration status based on test result
     const newStatus = testResult.success ? "connected" : "error";
     if (integration.status !== newStatus) {
@@ -309,7 +329,7 @@ export const syncIntegration = async (req: Request, res: Response) => {
     if (databaseService.isConnected()) {
       const result = await databaseService.query(
         "SELECT * FROM third_party_integrations WHERE id = ?",
-        [id]
+        [id],
       );
 
       if (result.length === 0) {
@@ -318,11 +338,13 @@ export const syncIntegration = async (req: Request, res: Response) => {
 
       integration = {
         ...result[0],
-        credentials: result[0].credentials ? JSON.parse(result[0].credentials) : {},
+        credentials: result[0].credentials
+          ? JSON.parse(result[0].credentials)
+          : {},
         settings: result[0].settings ? JSON.parse(result[0].settings) : {},
       };
     } else {
-      integration = inMemoryIntegrations.find(i => i.id === id);
+      integration = inMemoryIntegrations.find((i) => i.id === id);
       if (!integration) {
         return res.status(404).json({ error: "Integration not found" });
       }
@@ -334,16 +356,18 @@ export const syncIntegration = async (req: Request, res: Response) => {
 
     // Simulate data sync
     const syncResult = await performDataSync(integration);
-    
+
     // Update last sync time
     const now = new Date().toISOString();
     if (databaseService.isConnected()) {
       await databaseService.query(
         "UPDATE third_party_integrations SET last_sync = ?, updated_at = ? WHERE id = ?",
-        [now, now, id]
+        [now, now, id],
       );
     } else {
-      const integrationIndex = inMemoryIntegrations.findIndex(i => i.id === id);
+      const integrationIndex = inMemoryIntegrations.findIndex(
+        (i) => i.id === id,
+      );
       if (integrationIndex !== -1) {
         inMemoryIntegrations[integrationIndex].lastSync = now;
       }
@@ -474,7 +498,9 @@ async function testConnection(integration: ThirdPartyIntegration): Promise<{
     console.error("Connection test failed:", error);
     return {
       success: false,
-      message: "Connection test failed: " + (error instanceof Error ? error.message : "Unknown error"),
+      message:
+        "Connection test failed: " +
+        (error instanceof Error ? error.message : "Unknown error"),
     };
   }
 }
@@ -498,14 +524,17 @@ async function performDataSync(integration: ThirdPartyIntegration): Promise<{
   };
 }
 
-async function updateIntegrationStatus(id: string, status: string): Promise<void> {
+async function updateIntegrationStatus(
+  id: string,
+  status: string,
+): Promise<void> {
   if (databaseService.isConnected()) {
     await databaseService.query(
       "UPDATE third_party_integrations SET status = ?, updated_at = ? WHERE id = ?",
-      [status, new Date().toISOString(), id]
+      [status, new Date().toISOString(), id],
     );
   } else {
-    const integrationIndex = inMemoryIntegrations.findIndex(i => i.id === id);
+    const integrationIndex = inMemoryIntegrations.findIndex((i) => i.id === id);
     if (integrationIndex !== -1) {
       inMemoryIntegrations[integrationIndex].status = status as any;
     }

@@ -110,10 +110,12 @@ export default function WorkflowAutomation() {
 
   const handleRunWorkflow = async (workflowId: string) => {
     try {
-      const workflow = workflows.find(w => w.id === workflowId);
+      const workflow = workflows.find((w) => w.id === workflowId);
       if (!workflow) return;
 
-      alert(`Running workflow: ${workflow.name}. This would trigger the workflow execution.`);
+      alert(
+        `Running workflow: ${workflow.name}. This would trigger the workflow execution.`,
+      );
       // In a real app, this would call the workflow execution API
       await workflowService.executeWorkflow(workflowId, {});
       loadData(); // Refresh data
@@ -125,10 +127,12 @@ export default function WorkflowAutomation() {
 
   const handleSyncPlatform = async (platformId: string) => {
     try {
-      const platform = platforms.find(p => p.id === platformId);
+      const platform = platforms.find((p) => p.id === platformId);
       if (!platform) return;
 
-      alert(`Syncing with ${platform.platform}. This would trigger a platform sync.`);
+      alert(
+        `Syncing with ${platform.platform}. This would trigger a platform sync.`,
+      );
       // In a real app, this would call the platform sync API
     } catch (error) {
       console.error("Failed to sync platform:", error);
@@ -555,7 +559,11 @@ export default function WorkflowAutomation() {
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Button size="sm" variant="outline" onClick={() => handleRunWorkflow(workflow.id)}>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleRunWorkflow(workflow.id)}
+                          >
                             <Play className="h-4 w-4 mr-2" />
                             Run Now
                           </Button>

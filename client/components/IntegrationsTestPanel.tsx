@@ -52,7 +52,7 @@ export function IntegrationsTestPanel() {
         const endTime = Date.now();
         const data = await response.json();
 
-        setTestResults(prev => [
+        setTestResults((prev) => [
           ...prev,
           {
             name: test.name,
@@ -64,7 +64,7 @@ export function IntegrationsTestPanel() {
           },
         ]);
       } catch (error) {
-        setTestResults(prev => [
+        setTestResults((prev) => [
           ...prev,
           {
             name: test.name,
@@ -78,7 +78,7 @@ export function IntegrationsTestPanel() {
       }
 
       // Small delay between tests
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
     }
 
     setIsRunning(false);

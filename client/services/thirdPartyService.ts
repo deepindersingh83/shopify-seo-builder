@@ -439,7 +439,11 @@ class ThirdPartyService {
     return response.json();
   }
 
-  async connectService(service: string, credentials: any, settings?: any): Promise<ThirdPartyIntegration> {
+  async connectService(
+    service: string,
+    credentials: any,
+    settings?: any,
+  ): Promise<ThirdPartyIntegration> {
     const response = await fetch(`${this.baseUrl}/connect`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -447,7 +451,7 @@ class ThirdPartyService {
     });
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to connect service');
+      throw new Error(errorData.error || "Failed to connect service");
     }
     return response.json();
   }
@@ -488,7 +492,14 @@ class ThirdPartyService {
     return response.json();
   }
 
-  async syncIntegration(id: string): Promise<{ success: boolean; message: string; recordsProcessed?: number; lastSync?: string }> {
+  async syncIntegration(
+    id: string,
+  ): Promise<{
+    success: boolean;
+    message: string;
+    recordsProcessed?: number;
+    lastSync?: string;
+  }> {
     const response = await fetch(`${this.baseUrl}/integrations/${id}/sync`, {
       method: "POST",
     });
