@@ -74,7 +74,7 @@ import { bulkOperationService } from "@/services/bulkOperationService";
 import { BulkOperation } from "@shared/workflows";
 
 interface BulkOperationsProps {
-  selectedProducts: string[];
+  selectedProducts?: string[];
   onClearSelection?: () => void;
 }
 
