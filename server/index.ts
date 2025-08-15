@@ -8,6 +8,8 @@ import * as productRoutes from "./routes/products";
 import * as installationRoutes from "./routes/installation";
 import * as storeRoutes from "./routes/stores";
 import * as thirdPartyRoutes from "./routes/thirdPartyIntegrations";
+import * as filterRoutes from "./routes/filters";
+import * as platformRoutes from "./routes/platforms";
 import { databaseService } from "./services/database";
 import { installationService } from "./services/installationService";
 
@@ -99,22 +101,10 @@ export function createServer() {
   // Third-party integration routes
   app.get("/api/third-party/integrations", thirdPartyRoutes.getIntegrations);
   app.post("/api/third-party/connect", thirdPartyRoutes.connectService);
-  app.put(
-    "/api/third-party/integrations/:id",
-    thirdPartyRoutes.updateIntegration,
-  );
-  app.delete(
-    "/api/third-party/integrations/:id",
-    thirdPartyRoutes.disconnectIntegration,
-  );
-  app.post(
-    "/api/third-party/integrations/:id/test",
-    thirdPartyRoutes.testIntegrationConnection,
-  );
-  app.post(
-    "/api/third-party/integrations/:id/sync",
-    thirdPartyRoutes.syncIntegration,
-  );
+  app.put("/api/third-party/integrations/:id", thirdPartyRoutes.updateIntegration);
+  app.delete("/api/third-party/integrations/:id", thirdPartyRoutes.disconnectIntegration);
+  app.post("/api/third-party/integrations/:id/test", thirdPartyRoutes.testIntegrationConnection);
+  app.post("/api/third-party/integrations/:id/sync", thirdPartyRoutes.syncIntegration);
 
   // Database health check
   app.get("/api/health/database", async (req, res) => {
