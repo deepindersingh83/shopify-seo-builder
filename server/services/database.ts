@@ -320,6 +320,22 @@ class DatabaseService {
           )
         `,
       },
+      {
+        name: "005_create_third_party_integrations_table",
+        sql: `
+          CREATE TABLE IF NOT EXISTS third_party_integrations (
+            id VARCHAR(50) PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            type VARCHAR(50) NOT NULL,
+            status VARCHAR(20) DEFAULT 'disconnected',
+            credentials ${jsonType},
+            settings ${jsonType},
+            last_sync ${timestampType},
+            created_at ${timestampType} DEFAULT ${currentTimestamp},
+            updated_at ${timestampType} DEFAULT ${currentTimestamp}
+          )
+        `,
+      },
     ];
   }
 
