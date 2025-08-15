@@ -587,11 +587,26 @@ export function ThirdPartyIntegrations() {
                   <RefreshCw className="h-6 w-6 mb-2" />
                   Sync All Data
                 </Button>
-                <Button variant="outline" className="h-20 flex-col">
+                <Button
+                  variant="outline"
+                  className="h-20 flex-col"
+                  onClick={() => {
+                    const connectedIntegrations = integrations.filter(i => i.status === 'connected');
+                    if (connectedIntegrations.length === 0) {
+                      alert('No connected integrations to export data from.');
+                      return;
+                    }
+                    alert(`Exporting data from ${connectedIntegrations.length} connected services...`);
+                  }}
+                >
                   <Download className="h-6 w-6 mb-2" />
                   Export Report
                 </Button>
-                <Button variant="outline" className="h-20 flex-col">
+                <Button
+                  variant="outline"
+                  className="h-20 flex-col"
+                  onClick={() => setShowConnectDialog(true)}
+                >
                   <Settings className="h-6 w-6 mb-2" />
                   Configure APIs
                 </Button>
@@ -652,13 +667,31 @@ export function ThirdPartyIntegrations() {
                     </>
                   )}
 
-                  <Button size="sm" variant="outline">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleTestConnection(integration.id, integration.name)}
+                  >
                     <Settings className="h-3 w-3 mr-1" />
-                    Configure
+                    Test Connection
                   </Button>
 
+                  {integration.status === "connected" && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleDisconnect(integration.id, integration.name)}
+                    >
+                      <XCircle className="h-3 w-3 mr-1" />
+                      Disconnect
+                    </Button>
+                  )}
+
                   {integration.status !== "connected" && (
-                    <Button size="sm">
+                    <Button
+                      size="sm"
+                      onClick={() => handleReconnect(integration.id, integration.name)}
+                    >
                       <CheckCircle className="h-3 w-3 mr-1" />
                       {integration.status === "error" ? "Reconnect" : "Connect"}
                     </Button>
