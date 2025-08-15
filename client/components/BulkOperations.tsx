@@ -79,7 +79,7 @@ interface BulkOperationsProps {
 }
 
 export function BulkOperations({
-  selectedProducts,
+  selectedProducts = [],
   onClearSelection,
 }: BulkOperationsProps) {
   const [operations, setOperations] = useState<BulkOperation[]>([]);
