@@ -375,16 +375,13 @@ class FilterService {
 
   // Filter Presets Management
   async getFilterPresets(): Promise<FilterPreset[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/presets`);
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      return this.generateMockFilterPresets();
+    const response = await fetch(`${this.baseUrl}/presets`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch filter presets: ${response.status} ${response.statusText}`,
+      );
     }
+    return response.json();
   }
 
   async getFilterPreset(id: string): Promise<FilterPreset> {
@@ -395,49 +392,34 @@ class FilterService {
   async saveFilterPreset(
     preset: Omit<FilterPreset, "id" | "createdAt" | "usageCount">,
   ): Promise<FilterPreset> {
-    try {
-      const response = await fetch(`${this.baseUrl}/presets`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(preset),
-      });
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      return {
-        ...preset,
-        id: `mock-${Date.now()}`,
-        createdAt: new Date().toISOString(),
-        usageCount: 0,
-      };
+    const response = await fetch(`${this.baseUrl}/presets`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(preset),
+    });
+    if (!response.ok) {
+      throw new Error(
+        `Failed to save filter preset: ${response.status} ${response.statusText}`,
+      );
     }
+    return response.json();
   }
 
   async updateFilterPreset(
     id: string,
     updates: Partial<FilterPreset>,
   ): Promise<FilterPreset> {
-    try {
-      const response = await fetch(`${this.baseUrl}/presets/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updates),
-      });
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      const mockPresets = this.generateMockFilterPresets();
-      const preset = mockPresets.find((p) => p.id === id);
-      return preset
-        ? { ...preset, ...updates }
-        : ({ id, ...updates } as FilterPreset);
+    const response = await fetch(`${this.baseUrl}/presets/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates),
+    });
+    if (!response.ok) {
+      throw new Error(
+        `Failed to update filter preset: ${response.status} ${response.statusText}`,
+      );
     }
+    return response.json();
   }
 
   async deleteFilterPreset(id: string): Promise<void> {
@@ -658,51 +640,6 @@ class FilterService {
     // For simplicity, just concatenate filters
     // In a real implementation, you'd need to handle logical operators properly
     return [...filters1, ...filters2];
-  }
-
-  // Mock data generators
-  generateMockFilterPresets(): FilterPreset[] {
-    return [
-      {
-        id: "1",
-        name: "SEO Optimization Needed",
-        description: "Products that need SEO improvements",
-        filters: [
-          { field: "seoScore", operator: "less_than", value: 70 },
-          { field: "status", operator: "equals", value: "active" },
-        ],
-        isPublic: true,
-        createdBy: "admin",
-        createdAt: new Date().toISOString(),
-        usageCount: 45,
-      },
-      {
-        id: "2",
-        name: "High Value Electronics",
-        description: "Electronics products over $200",
-        filters: [
-          { field: "productType", operator: "equals", value: "Electronics" },
-          { field: "price", operator: "greater_than", value: 200 },
-        ],
-        isPublic: false,
-        createdBy: "admin",
-        createdAt: new Date().toISOString(),
-        usageCount: 23,
-      },
-      {
-        id: "3",
-        name: "Inventory Alerts",
-        description: "Products with low stock or missing data",
-        filters: [
-          { field: "inventory", operator: "less_than", value: 20 },
-          { field: "trackQuantity", operator: "equals", value: true },
-        ],
-        isPublic: true,
-        createdBy: "admin",
-        createdAt: new Date().toISOString(),
-        usageCount: 67,
-      },
-    ];
   }
 }
 

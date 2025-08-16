@@ -64,10 +64,9 @@ class ProductRepository {
     if (!databaseService.isConnected()) {
       return {
         products: [],
-        total: 0,
-        hasMore: false,
-        page: Math.floor(pagination.offset / pagination.limit) + 1,
-        totalPages: 0,
+        totalCount: 0,
+        hasNextPage: false,
+        hasPreviousPage: false,
       };
     }
 
@@ -146,21 +145,15 @@ class ProductRepository {
     }
 
     if (filters.query) {
+      // Use LIKE search for better compatibility across database types
       whereClauses.push(`(
-        MATCH(title, description) AGAINST(? IN NATURAL LANGUAGE MODE) OR
         title LIKE ? OR
         description LIKE ? OR
         vendor LIKE ? OR
         product_type LIKE ?
       )`);
       const queryParam = `%${filters.query}%`;
-      params.push(
-        filters.query,
-        queryParam,
-        queryParam,
-        queryParam,
-        queryParam,
-      );
+      params.push(queryParam, queryParam, queryParam, queryParam);
     }
 
     // Apply WHERE clauses
@@ -423,14 +416,15 @@ class ProductRepository {
     }
 
     if (filters.query) {
+      // Use LIKE search for better compatibility across database types
       whereClauses.push(`(
-        MATCH(title, description) AGAINST(? IN NATURAL LANGUAGE MODE) OR
         title LIKE ? OR
         description LIKE ? OR
-        vendor LIKE ?
+        vendor LIKE ? OR
+        product_type LIKE ?
       )`);
       const queryParam = `%${filters.query}%`;
-      params.push(filters.query, queryParam, queryParam, queryParam);
+      params.push(queryParam, queryParam, queryParam, queryParam);
     }
 
     if (whereClauses.length > 0) {

@@ -51,14 +51,23 @@ import {
 } from "@/components/ui/select";
 import { thirdPartyService } from "@/services/thirdPartyService";
 import { ThirdPartyIntegration } from "@shared/workflows";
+import { IntegrationsTestPanel } from "./IntegrationsTestPanel";
+import {
+  showSuccess,
+  showError,
+  showWarning,
+  showInfo,
+} from "@/hooks/use-notifications";
+import { useLoading } from "@/hooks/use-loading";
 
 export function ThirdPartyIntegrations() {
   const [integrations, setIntegrations] = useState<ThirdPartyIntegration[]>([]);
   const [selectedIntegration, setSelectedIntegration] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const [showConnectDialog, setShowConnectDialog] = useState(false);
   const [selectedService, setSelectedService] = useState("");
   const [dashboardData, setDashboardData] = useState<any>({});
+  const { isLoading, withLoading } = useLoading();
 
   useEffect(() => {
     loadIntegrations();
@@ -66,96 +75,22 @@ export function ThirdPartyIntegrations() {
   }, []);
 
   const loadIntegrations = async () => {
-    setIsLoading(true);
+    setIsPageLoading(true);
     try {
-      // Mock data for demonstration
-      const mockIntegrations: ThirdPartyIntegration[] = [
-        {
-          id: "1",
-          name: "Google Search Console",
-          type: "google_search_console",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true, syncInterval: 24 },
-          lastSync: new Date(Date.now() - 3600000).toISOString(),
-        },
-        {
-          id: "2",
-          name: "Google Analytics 4",
-          type: "google_analytics",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true, syncInterval: 12 },
-          lastSync: new Date(Date.now() - 7200000).toISOString(),
-        },
-        {
-          id: "3",
-          name: "Microsoft Clarity",
-          type: "microsoft_clarity",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true, syncInterval: 12 },
-          lastSync: new Date(Date.now() - 5400000).toISOString(),
-        },
-        {
-          id: "4",
-          name: "Microsoft Advertising",
-          type: "microsoft_ads",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true, syncInterval: 24 },
-          lastSync: new Date(Date.now() - 9000000).toISOString(),
-        },
-        {
-          id: "5",
-          name: "Azure Application Insights",
-          type: "azure_insights",
-          status: "disconnected",
-          credentials: {},
-          settings: { autoSync: false, syncInterval: 24 },
-        },
-        {
-          id: "6",
-          name: "LinkedIn Ads",
-          type: "linkedin_ads",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true, syncInterval: 24 },
-          lastSync: new Date(Date.now() - 10800000).toISOString(),
-        },
-        {
-          id: "7",
-          name: "SEMrush",
-          type: "semrush",
-          status: "disconnected",
-          credentials: {},
-          settings: { autoSync: false, syncInterval: 168 },
-        },
-        {
-          id: "8",
-          name: "Ahrefs",
-          type: "ahrefs",
-          status: "error",
-          credentials: {},
-          settings: { autoSync: false, syncInterval: 168 },
-          lastSync: new Date(Date.now() - 86400000).toISOString(),
-        },
-        {
-          id: "9",
-          name: "PageSpeed Insights",
-          type: "pagespeed",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true, syncInterval: 24 },
-          lastSync: new Date(Date.now() - 1800000).toISOString(),
-        },
-      ];
-
-      setIntegrations(mockIntegrations);
+      const response = await fetch("/api/third-party/integrations");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setIntegrations(data);
     } catch (error) {
       console.error("Failed to load integrations:", error);
+      showError(
+        "Failed to load integrations",
+        error instanceof Error ? error.message : "Unknown error",
+      );
     } finally {
-      setIsLoading(false);
+      setIsPageLoading(false);
     }
   };
 
@@ -274,20 +209,221 @@ export function ThirdPartyIntegrations() {
 
   const handleConnect = async (service: string, credentials: any) => {
     try {
-      console.log("Connecting to", service, credentials);
+      const response = await fetch("/api/third-party/connect", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          service,
+          credentials,
+          settings: { autoSync: true, syncInterval: 24 },
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to connect service");
+      }
+
+      const result = await response.json();
+
+      // Show connection result
+      if (result.testResult.success) {
+        showSuccess(
+          `Successfully connected to ${service}!`,
+          result.testResult.message,
+        );
+      } else {
+        showWarning(`Connected with warnings`, result.testResult.message);
+      }
+
       await loadIntegrations();
       setShowConnectDialog(false);
     } catch (error) {
       console.error("Failed to connect:", error);
+      showError(
+        "Failed to connect service",
+        error instanceof Error ? error.message : "Unknown error",
+      );
     }
   };
 
   const handleSync = async (integrationId: string) => {
+    await withLoading(`sync-${integrationId}`, async () => {
+      try {
+        const response = await fetch(
+          `/api/third-party/integrations/${integrationId}/sync`,
+          {
+            method: "POST",
+          },
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Sync failed");
+        }
+
+        const result = await response.json();
+        showSuccess(
+          "Sync completed!",
+          `Processed ${result.recordsProcessed || 0} records. Last sync: ${new Date(result.lastSync).toLocaleString()}`,
+        );
+
+        await loadIntegrations();
+        await loadDashboardData();
+      } catch (error) {
+        console.error("Sync failed:", error);
+        showError(
+          "Sync failed",
+          error instanceof Error ? error.message : "Unknown error",
+        );
+      }
+    });
+  };
+
+  const handleDisconnect = async (
+    integrationId: string,
+    integrationName: string,
+  ) => {
+    if (
+      !confirm(
+        `Are you sure you want to disconnect ${integrationName}? This will remove all stored credentials and stop data synchronization.`,
+      )
+    ) {
+      return;
+    }
+
     try {
-      console.log("Syncing integration:", integrationId);
-      await loadDashboardData();
+      const response = await fetch(
+        `/api/third-party/integrations/${integrationId}`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to disconnect");
+      }
+
+      showSuccess(`Successfully disconnected ${integrationName}`);
+      await loadIntegrations();
     } catch (error) {
-      console.error("Sync failed:", error);
+      console.error("Failed to disconnect:", error);
+      showError(
+        "Failed to disconnect service",
+        error instanceof Error ? error.message : "Unknown error",
+      );
+    }
+  };
+
+  const handleTestConnection = async (
+    integrationId: string,
+    integrationName: string,
+  ) => {
+    try {
+      const response = await fetch(
+        `/api/third-party/integrations/${integrationId}/test`,
+        {
+          method: "POST",
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Test failed");
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        showSuccess(
+          `Connection test successful for ${integrationName}!`,
+          result.message,
+        );
+      } else {
+        showError(
+          `Connection test failed for ${integrationName}`,
+          result.message,
+        );
+      }
+
+      await loadIntegrations();
+    } catch (error) {
+      console.error("Test failed:", error);
+      showError(
+        "Connection test failed",
+        error instanceof Error ? error.message : "Unknown error",
+      );
+    }
+  };
+
+  const handleReconnect = async (
+    integrationId: string,
+    integrationName: string,
+  ) => {
+    // For reconnection, we'll use the same connect flow
+    setSelectedService(
+      integrations.find((i) => i.id === integrationId)?.type || "",
+    );
+    setShowConnectDialog(true);
+  };
+
+  const handleSyncAll = async () => {
+    const connectedIntegrations = integrations.filter(
+      (i) => i.status === "connected",
+    );
+
+    if (connectedIntegrations.length === 0) {
+      showWarning("No connected integrations to sync.");
+      return;
+    }
+
+    if (
+      !confirm(
+        `Sync data from ${connectedIntegrations.length} connected services? This may take several minutes.`,
+      )
+    ) {
+      return;
+    }
+
+    try {
+      let totalProcessed = 0;
+      let totalErrors = 0;
+
+      for (const integration of connectedIntegrations) {
+        try {
+          const response = await fetch(
+            `/api/third-party/integrations/${integration.id}/sync`,
+            {
+              method: "POST",
+            },
+          );
+
+          if (response.ok) {
+            const result = await response.json();
+            totalProcessed += result.recordsProcessed || 0;
+          } else {
+            totalErrors++;
+          }
+        } catch (error) {
+          totalErrors++;
+        }
+      }
+
+      await loadIntegrations();
+      await loadDashboardData();
+
+      showSuccess(
+        "Sync completed!",
+        `Processed: ${totalProcessed} records, Services synced: ${connectedIntegrations.length}, Errors: ${totalErrors}`,
+      );
+    } catch (error) {
+      console.error("Sync all failed:", error);
+      showError(
+        "Failed to sync all services",
+        "Please try individual sync operations.",
+      );
     }
   };
 
@@ -391,6 +527,7 @@ export function ThirdPartyIntegrations() {
           <TabsTrigger value="services">Services</TabsTrigger>
           <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsTrigger value="test">API Test</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -567,16 +704,38 @@ export function ThirdPartyIntegrations() {
                 <Button
                   variant="outline"
                   className="h-20 flex-col"
-                  onClick={() => handleSync("all")}
+                  onClick={handleSyncAll}
                 >
                   <RefreshCw className="h-6 w-6 mb-2" />
                   Sync All Data
                 </Button>
-                <Button variant="outline" className="h-20 flex-col">
+                <Button
+                  variant="outline"
+                  className="h-20 flex-col"
+                  onClick={() => {
+                    const connectedIntegrations = integrations.filter(
+                      (i) => i.status === "connected",
+                    );
+                    if (connectedIntegrations.length === 0) {
+                      showWarning(
+                        "No connected integrations to export data from.",
+                      );
+                      return;
+                    }
+                    showInfo(
+                      "Export started",
+                      `Exporting data from ${connectedIntegrations.length} connected services...`,
+                    );
+                  }}
+                >
                   <Download className="h-6 w-6 mb-2" />
                   Export Report
                 </Button>
-                <Button variant="outline" className="h-20 flex-col">
+                <Button
+                  variant="outline"
+                  className="h-20 flex-col"
+                  onClick={() => setShowConnectDialog(true)}
+                >
                   <Settings className="h-6 w-6 mb-2" />
                   Configure APIs
                 </Button>
@@ -626,9 +785,14 @@ export function ThirdPartyIntegrations() {
                         size="sm"
                         variant="outline"
                         onClick={() => handleSync(integration.id)}
+                        disabled={isLoading(`sync-${integration.id}`)}
                       >
-                        <RefreshCw className="h-3 w-3 mr-1" />
-                        Sync Now
+                        <RefreshCw
+                          className={`h-3 w-3 mr-1 ${isLoading(`sync-${integration.id}`) ? "animate-spin" : ""}`}
+                        />
+                        {isLoading(`sync-${integration.id}`)
+                          ? "Syncing..."
+                          : "Sync Now"}
                       </Button>
                       <Button size="sm" variant="outline">
                         <Eye className="h-3 w-3 mr-1" />
@@ -637,13 +801,42 @@ export function ThirdPartyIntegrations() {
                     </>
                   )}
 
-                  <Button size="sm" variant="outline">
-                    <Settings className="h-3 w-3 mr-1" />
-                    Configure
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() =>
+                      handleTestConnection(integration.id, integration.name)
+                    }
+                    disabled={isLoading(`test-${integration.id}`)}
+                  >
+                    <Settings
+                      className={`h-3 w-3 mr-1 ${isLoading(`test-${integration.id}`) ? "animate-spin" : ""}`}
+                    />
+                    {isLoading(`test-${integration.id}`)
+                      ? "Testing..."
+                      : "Test Connection"}
                   </Button>
 
+                  {integration.status === "connected" && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() =>
+                        handleDisconnect(integration.id, integration.name)
+                      }
+                    >
+                      <XCircle className="h-3 w-3 mr-1" />
+                      Disconnect
+                    </Button>
+                  )}
+
                   {integration.status !== "connected" && (
-                    <Button size="sm">
+                    <Button
+                      size="sm"
+                      onClick={() =>
+                        handleReconnect(integration.id, integration.name)
+                      }
+                    >
                       <CheckCircle className="h-3 w-3 mr-1" />
                       {integration.status === "error" ? "Reconnect" : "Connect"}
                     </Button>
@@ -886,6 +1079,11 @@ export function ThirdPartyIntegrations() {
             </CardContent>
           </Card>
         </TabsContent>
+
+        {/* Test Tab */}
+        <TabsContent value="test" className="space-y-4">
+          <IntegrationsTestPanel />
+        </TabsContent>
       </Tabs>
     </div>
   );
@@ -900,18 +1098,73 @@ function ConnectServiceForm({
 }) {
   const [service, setService] = useState("");
   const [credentials, setCredentials] = useState<any>({});
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<{
+    [key: string]: string;
+  }>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = (): boolean => {
+    const errors: { [key: string]: string } = {};
+
+    if (!service) {
+      errors.service = "Please select a service type";
+    }
+
+    // Service-specific validation
+    if (service === "semrush" || service === "ahrefs") {
+      if (!credentials.apiKey?.trim()) {
+        errors.apiKey = "API key is required";
+      }
+    }
+
+    if (service === "linkedin_ads" || service === "facebook") {
+      if (!credentials.accessToken?.trim()) {
+        errors.accessToken = "Access token is required";
+      }
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onConnect(service, credentials);
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsConnecting(true);
+    try {
+      await onConnect(service, credentials);
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
+  const handleCredentialChange = (key: string, value: string) => {
+    setCredentials({ ...credentials, [key]: value });
+    // Clear validation error when user starts typing
+    if (validationErrors[key]) {
+      setValidationErrors({ ...validationErrors, [key]: "" });
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <Label>Service Type</Label>
-        <Select value={service} onValueChange={setService}>
-          <SelectTrigger>
+        <Select
+          value={service}
+          onValueChange={(value) => {
+            setService(value);
+            setCredentials({});
+            setValidationErrors({});
+          }}
+        >
+          <SelectTrigger
+            className={validationErrors.service ? "border-red-500" : ""}
+          >
             <SelectValue placeholder="Choose service" />
           </SelectTrigger>
           <SelectContent>
@@ -931,6 +1184,11 @@ function ConnectServiceForm({
             <SelectItem value="twitter">Twitter/X</SelectItem>
           </SelectContent>
         </Select>
+        {validationErrors.service && (
+          <p className="text-sm text-red-500 mt-1">
+            {validationErrors.service}
+          </p>
+        )}
       </div>
 
       {(service === "semrush" || service === "ahrefs") && (
@@ -940,10 +1198,14 @@ function ConnectServiceForm({
             type="password"
             placeholder="Enter your API key"
             value={credentials.apiKey || ""}
-            onChange={(e) =>
-              setCredentials({ ...credentials, apiKey: e.target.value })
-            }
+            onChange={(e) => handleCredentialChange("apiKey", e.target.value)}
+            className={validationErrors.apiKey ? "border-red-500" : ""}
           />
+          {validationErrors.apiKey && (
+            <p className="text-sm text-red-500 mt-1">
+              {validationErrors.apiKey}
+            </p>
+          )}
         </div>
       )}
 
@@ -987,9 +1249,15 @@ function ConnectServiceForm({
               placeholder="LinkedIn Ads API access token"
               value={credentials.accessToken || ""}
               onChange={(e) =>
-                setCredentials({ ...credentials, accessToken: e.target.value })
+                handleCredentialChange("accessToken", e.target.value)
               }
+              className={validationErrors.accessToken ? "border-red-500" : ""}
             />
+            {validationErrors.accessToken && (
+              <p className="text-sm text-red-500 mt-1">
+                {validationErrors.accessToken}
+              </p>
+            )}
           </div>
           <div className="p-4 bg-muted/50 rounded-lg">
             <p className="text-sm text-muted-foreground">
@@ -1008,9 +1276,15 @@ function ConnectServiceForm({
             placeholder="Facebook access token"
             value={credentials.accessToken || ""}
             onChange={(e) =>
-              setCredentials({ ...credentials, accessToken: e.target.value })
+              handleCredentialChange("accessToken", e.target.value)
             }
+            className={validationErrors.accessToken ? "border-red-500" : ""}
           />
+          {validationErrors.accessToken && (
+            <p className="text-sm text-red-500 mt-1">
+              {validationErrors.accessToken}
+            </p>
+          )}
         </div>
       )}
 
@@ -1018,14 +1292,22 @@ function ConnectServiceForm({
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" disabled={!service}>
-          {service === "google_search_console" || service === "google_analytics"
-            ? "Authenticate with Google"
-            : service === "microsoft_clarity" ||
-                service === "microsoft_ads" ||
-                service === "azure_insights"
-              ? "Authenticate with Microsoft"
-              : "Connect Service"}
+        <Button type="submit" disabled={!service || isConnecting}>
+          {isConnecting ? (
+            <>
+              <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+              Connecting...
+            </>
+          ) : service === "google_search_console" ||
+            service === "google_analytics" ? (
+            "Authenticate with Google"
+          ) : service === "microsoft_clarity" ||
+            service === "microsoft_ads" ||
+            service === "azure_insights" ? (
+            "Authenticate with Microsoft"
+          ) : (
+            "Connect Service"
+          )}
         </Button>
       </DialogFooter>
     </form>

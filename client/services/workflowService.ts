@@ -14,36 +14,13 @@ class WorkflowService {
 
   // Workflow Rules Management
   async getWorkflowRules(): Promise<WorkflowRule[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/workflows/rules`);
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      return [
-        {
-          id: "1",
-          name: "Auto SEO Optimization",
-          description: "Automatically optimize SEO fields for new products",
-          enabled: true,
-          trigger: { type: "event", event: "product_created" },
-          conditions: [],
-          actions: [
-            {
-              id: "1",
-              type: "generate_meta",
-              config: { metaType: "both", useAI: true },
-            },
-            { id: "2", type: "generate_schema", config: {} },
-          ],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          executionCount: 156,
-        },
-      ];
+    const response = await fetch(`${this.baseUrl}/workflows/rules`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch workflow rules: ${response.status} ${response.statusText}`,
+      );
     }
+    return response.json();
   }
 
   async getWorkflowRule(id: string): Promise<WorkflowRule> {
@@ -97,33 +74,16 @@ class WorkflowService {
 
   // Workflow Executions
   async getWorkflowExecutions(ruleId?: string): Promise<WorkflowExecution[]> {
-    try {
-      const url = ruleId
-        ? `${this.baseUrl}/workflows/executions?ruleId=${ruleId}`
-        : `${this.baseUrl}/workflows/executions`;
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      return [
-        {
-          id: "1",
-          workflowId: "1",
-          status: "completed",
-          startedAt: new Date(Date.now() - 3600000).toISOString(),
-          completedAt: new Date(Date.now() - 3000000).toISOString(),
-          progress: 100,
-          totalItems: 25,
-          processedItems: 25,
-          errors: [],
-          results: [],
-          canCancel: false,
-        },
-      ];
+    const url = ruleId
+      ? `${this.baseUrl}/workflows/executions?ruleId=${ruleId}`
+      : `${this.baseUrl}/workflows/executions`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch workflow executions: ${response.status} ${response.statusText}`,
+      );
     }
+    return response.json();
   }
 
   async getWorkflowExecution(id: string): Promise<WorkflowExecution> {
@@ -139,25 +99,13 @@ class WorkflowService {
 
   // SEO Audits
   async getSEOAudits(): Promise<SEOAudit[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/seo/audits`);
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      return [
-        {
-          id: "1",
-          name: "Daily SEO Health Check",
-          description: "Comprehensive daily SEO audit",
-          enabled: true,
-          rules: [],
-          notifications: [],
-        },
-      ];
+    const response = await fetch(`${this.baseUrl}/seo/audits`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch SEO audits: ${response.status} ${response.statusText}`,
+      );
     }
+    return response.json();
   }
 
   async createSEOAudit(audit: Omit<SEOAudit, "id">): Promise<SEOAudit> {
@@ -190,33 +138,13 @@ class WorkflowService {
 
   // Bulk Operations
   async getBulkOperations(): Promise<BulkOperation[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/bulk/operations`);
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      return [
-        {
-          id: "1",
-          type: "optimize",
-          name: "SEO Optimization Batch",
-          status: "completed",
-          progress: 100,
-          totalItems: 500,
-          processedItems: 500,
-          successfulItems: 485,
-          failedItems: 15,
-          startedAt: new Date(Date.now() - 3600000).toISOString(),
-          completedAt: new Date(Date.now() - 3300000).toISOString(),
-          canCancel: false,
-          results: [],
-          errors: [],
-        },
-      ];
+    const response = await fetch(`${this.baseUrl}/bulk/operations`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch bulk operations: ${response.status} ${response.statusText}`,
+      );
     }
+    return response.json();
   }
 
   async getBulkOperation(id: string): Promise<BulkOperation> {
@@ -265,33 +193,13 @@ class WorkflowService {
 
   // Platform Integrations
   async getPlatformIntegrations(): Promise<PlatformIntegration[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/integrations/platforms`);
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      return [
-        {
-          id: "1",
-          name: "Main Shopify Store",
-          type: "shopify",
-          status: "connected",
-          credentials: { shopifyDomain: "mystore.myshopify.com" },
-          syncSettings: {
-            autoSync: true,
-            syncInterval: 60,
-            syncFields: ["title", "description", "price", "inventory"],
-            conflictResolution: "newest_wins",
-            enableWebhooks: true,
-          },
-          lastSync: new Date(Date.now() - 1800000).toISOString(),
-          syncHistory: [],
-        },
-      ];
+    const response = await fetch(`${this.baseUrl}/integrations/platforms`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch platform integrations: ${response.status} ${response.statusText}`,
+      );
     }
+    return response.json();
   }
 
   async connectPlatform(
@@ -333,35 +241,13 @@ class WorkflowService {
 
   // Third-party Integrations
   async getThirdPartyIntegrations(): Promise<ThirdPartyIntegration[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/integrations/third-party`);
-      if (!response.ok) {
-        throw new Error("API not available");
-      }
-      return response.json();
-    } catch (error) {
-      // Return mock data if API is not available
-      return [
-        {
-          id: "1",
-          name: "Google Search Console",
-          type: "google_search_console",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true },
-          lastSync: new Date(Date.now() - 3600000).toISOString(),
-        },
-        {
-          id: "2",
-          name: "Google Analytics 4",
-          type: "google_analytics",
-          status: "connected",
-          credentials: {},
-          settings: { autoSync: true },
-          lastSync: new Date(Date.now() - 7200000).toISOString(),
-        },
-      ];
+    const response = await fetch(`${this.baseUrl}/integrations/third-party`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch third-party integrations: ${response.status} ${response.statusText}`,
+      );
     }
+    return response.json();
   }
 
   async connectThirdParty(

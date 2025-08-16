@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import {
   Target,
   TrendingUp,
@@ -17,9 +18,34 @@ import {
   Users,
   Eye,
   Zap,
+  Loader2,
 } from "lucide-react";
 
 export default function SEOOverviewPage() {
+  const [isRunningAudit, setIsRunningAudit] = useState(false);
+
+  const handleRunSEOAudit = async () => {
+    setIsRunningAudit(true);
+    try {
+      // Simulate SEO audit process
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // In a real app, this would trigger an actual SEO audit
+      alert(
+        "SEO Audit completed! Check the Analytics section for detailed results.",
+      );
+    } catch (error) {
+      console.error("Error running SEO audit:", error);
+      alert("Failed to run SEO audit. Please try again.");
+    } finally {
+      setIsRunningAudit(false);
+    }
+  };
+
+  const handleExportReport = () => {
+    // Simulate report export
+    alert("Report export started! You will receive an email when ready.");
+  };
+
   return (
     <Layout>
       <div className="flex-1 overflow-auto">
@@ -32,13 +58,17 @@ export default function SEOOverviewPage() {
               </p>
             </div>
             <div className="flex space-x-3">
-              <Button variant="outline">
+              <Button variant="outline" onClick={handleExportReport}>
                 <BarChart3 className="h-4 w-4 mr-2" />
                 Export Report
               </Button>
-              <Button>
-                <Target className="h-4 w-4 mr-2" />
-                Run SEO Audit
+              <Button onClick={handleRunSEOAudit} disabled={isRunningAudit}>
+                {isRunningAudit ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Target className="h-4 w-4 mr-2" />
+                )}
+                {isRunningAudit ? "Running Audit..." : "Run SEO Audit"}
               </Button>
             </div>
           </div>

@@ -6,6 +6,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { NotificationSystem } from "@/components/NotificationSystem";
+import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import Index from "./pages/Index";
 import EditProduct from "./pages/EditProduct";
 import WorkflowAutomation from "./pages/WorkflowAutomation";
@@ -61,6 +63,8 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <NotificationSystem />
+      <ConfirmationDialog />
       <BrowserRouter>
         <InstallationCheck>
           <Routes>

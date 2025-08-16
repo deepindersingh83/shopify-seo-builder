@@ -320,6 +320,174 @@ class DatabaseService {
           )
         `,
       },
+      {
+        name: "005_create_third_party_integrations_table",
+        sql: `
+          CREATE TABLE IF NOT EXISTS third_party_integrations (
+            id VARCHAR(50) PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            type VARCHAR(50) NOT NULL,
+            status VARCHAR(20) DEFAULT 'disconnected',
+            credentials ${jsonType},
+            settings ${jsonType},
+            last_sync ${timestampType},
+            created_at ${timestampType} DEFAULT ${currentTimestamp},
+            updated_at ${timestampType} DEFAULT ${currentTimestamp}
+          )
+        `,
+      },
+      {
+        name: "006_create_platform_integrations_table",
+        sql: `
+          CREATE TABLE IF NOT EXISTS platform_integrations (
+            id VARCHAR(50) PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            type VARCHAR(50) NOT NULL,
+            status VARCHAR(20) DEFAULT 'disconnected',
+            credentials ${jsonType},
+            sync_settings ${jsonType},
+            last_sync ${timestampType},
+            sync_history ${jsonType},
+            created_at ${timestampType} DEFAULT ${currentTimestamp},
+            updated_at ${timestampType} DEFAULT ${currentTimestamp}
+          )
+        `,
+      },
+      {
+        name: "007_create_filter_presets_table",
+        sql: `
+          CREATE TABLE IF NOT EXISTS filter_presets (
+            id VARCHAR(50) PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            description ${textType},
+            filters ${jsonType},
+            is_public BOOLEAN DEFAULT FALSE,
+            created_by VARCHAR(255),
+            usage_count INT DEFAULT 0,
+            created_at ${timestampType} DEFAULT ${currentTimestamp}
+          )
+        `,
+      },
+      {
+        name: "008_create_workflow_rules_table",
+        sql: `
+          CREATE TABLE IF NOT EXISTS workflow_rules (
+            id VARCHAR(50) PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            description ${textType},
+            enabled BOOLEAN DEFAULT TRUE,
+            trigger_config ${jsonType},
+            conditions_config ${jsonType},
+            actions_config ${jsonType},
+            execution_count INT DEFAULT 0,
+            created_at ${timestampType} DEFAULT ${currentTimestamp},
+            updated_at ${timestampType} DEFAULT ${currentTimestamp}
+          )
+        `,
+      },
+      {
+        name: "009_create_workflow_executions_table",
+        sql: `
+          CREATE TABLE IF NOT EXISTS workflow_executions (
+            id VARCHAR(50) PRIMARY KEY,
+            workflow_id VARCHAR(50),
+            status VARCHAR(20) DEFAULT 'pending',
+            started_at ${timestampType},
+            completed_at ${timestampType},
+            progress INT DEFAULT 0,
+            total_items INT DEFAULT 0,
+            processed_items INT DEFAULT 0,
+            errors ${jsonType},
+            results ${jsonType},
+            can_cancel BOOLEAN DEFAULT TRUE,
+            FOREIGN KEY (workflow_id) REFERENCES workflow_rules(id) ON DELETE CASCADE
+          )
+        `,
+      },
+      {
+        name: "010_create_seo_audits_table",
+        sql: `
+          CREATE TABLE IF NOT EXISTS seo_audits (
+            id VARCHAR(50) PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            description ${textType},
+            enabled BOOLEAN DEFAULT TRUE,
+            rules ${jsonType},
+            notifications ${jsonType},
+            schedule_config ${jsonType},
+            created_at ${timestampType} DEFAULT ${currentTimestamp},
+            updated_at ${timestampType} DEFAULT ${currentTimestamp}
+          )
+        `,
+      },
+      {
+        name: "011_create_audit_results_table",
+        sql: `
+          CREATE TABLE IF NOT EXISTS audit_results (
+            id VARCHAR(50) PRIMARY KEY,
+            audit_id VARCHAR(50),
+            product_id VARCHAR(50),
+            score INT DEFAULT 0,
+            issues ${jsonType},
+            recommendations ${jsonType},
+            executed_at ${timestampType} DEFAULT ${currentTimestamp},
+            FOREIGN KEY (audit_id) REFERENCES seo_audits(id) ON DELETE CASCADE,
+            FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+          )
+        `,
+      },
+      {
+        name: "012_create_collections_table",
+        sql: `
+          CREATE TABLE IF NOT EXISTS collections (
+            id VARCHAR(50) PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            type VARCHAR(20) NOT NULL,
+            slug VARCHAR(255) NOT NULL,
+            meta_title VARCHAR(255),
+            meta_description ${textType},
+            keywords ${jsonType},
+            content ${textType},
+            is_published BOOLEAN DEFAULT TRUE,
+            template_suffix VARCHAR(100),
+            platform VARCHAR(50),
+            platform_id VARCHAR(50),
+            product_count INT DEFAULT 0,
+            created_at ${timestampType} DEFAULT ${currentTimestamp},
+            updated_at ${timestampType} DEFAULT ${currentTimestamp}
+          )
+        `,
+      },
+      {
+        name: "013_create_bulk_operations_table",
+        sql: `
+          CREATE TABLE IF NOT EXISTS bulk_operations (
+            id VARCHAR(50) PRIMARY KEY,
+            type VARCHAR(50) NOT NULL,
+            name VARCHAR(255),
+            status VARCHAR(20) DEFAULT 'pending',
+            progress INT DEFAULT 0,
+            total_items INT DEFAULT 0,
+            processed_items INT DEFAULT 0,
+            successful_items INT DEFAULT 0,
+            failed_items INT DEFAULT 0,
+            started_at ${timestampType},
+            completed_at ${timestampType},
+            can_cancel BOOLEAN DEFAULT TRUE,
+            results ${jsonType},
+            errors ${jsonType},
+            created_at ${timestampType} DEFAULT ${currentTimestamp}
+          )
+        `,
+      },
+      {
+        name: "013_add_foreign_keys_to_products",
+        sql: `
+          ALTER TABLE products
+          ADD COLUMN store_id VARCHAR(50),
+          ADD COLUMN integration_id VARCHAR(50)
+        `,
+      },
     ];
   }
 

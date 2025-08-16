@@ -183,9 +183,15 @@ export interface ThirdPartyIntegration {
   type:
     | "google_search_console"
     | "google_analytics"
+    | "microsoft_clarity"
+    | "microsoft_ads"
+    | "azure_insights"
+    | "linkedin_ads"
     | "semrush"
     | "ahrefs"
     | "pagespeed"
+    | "facebook"
+    | "twitter"
     | "social_media";
   status: "connected" | "disconnected" | "error";
   credentials: any;

@@ -1,25 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Layout } from "@/components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Folder,
   Tags,
   FileText,
-  Star,
   Search,
   Target,
   BarChart3,
@@ -28,147 +27,263 @@ import {
   ArrowLeft,
   Zap,
   Bot,
-  Globe,
   Crown,
   Navigation,
+  RefreshCw,
+  Save,
+  Loader,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-
-interface Collection {
-  id: string;
-  name: string;
-  type: "collection" | "category" | "cms_page" | "brand_page";
-  slug: string;
-  products: number;
-  seoScore: number;
-  metaTitle?: string;
-  metaDescription?: string;
-  keywords: string[];
-  lastOptimized: string;
-  status: "optimized" | "needs_work" | "critical";
-}
-
-interface SEORecommendation {
-  id: string;
-  type: "title" | "description" | "keywords" | "content" | "breadcrumbs";
-  priority: "high" | "medium" | "low";
-  description: string;
-  impact: string;
-}
+import {
+  collectionService,
+  Collection,
+  SEORecommendation,
+  CollectionSEOData,
+} from "@/services/collectionService";
+import { useNotifications } from "@/hooks/use-notifications";
+import { useLoading } from "@/hooks/use-loading";
+import { useConfirmation } from "@/hooks/use-confirmation";
 
 export default function CollectionSEOPage() {
   const [activeTab, setActiveTab] = useState("collections");
-  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
+  const [selectedCollection, setSelectedCollection] =
+    useState<Collection | null>(null);
+  const [seoData, setSeoData] = useState<CollectionSEOData | null>(null);
+  const [editingCollection, setEditingCollection] = useState<Collection | null>(
+    null,
+  );
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editForm, setEditForm] = useState({
+    metaTitle: "",
+    metaDescription: "",
+    keywords: [] as string[],
+    content: "",
+  });
 
-  const collections: Collection[] = [
-    {
-      id: "1",
-      name: "Premium Electronics",
-      type: "collection",
-      slug: "premium-electronics",
-      products: 247,
-      seoScore: 78,
-      metaTitle: "Premium Electronics | High-End Tech Gadgets",
-      metaDescription: "Discover premium electronics and high-end tech gadgets...",
-      keywords: ["premium electronics", "high-end gadgets", "luxury tech"],
-      lastOptimized: "2024-01-15",
-      status: "optimized",
-    },
-    {
-      id: "2",
-      name: "Men's Fashion",
-      type: "category",
-      slug: "mens-fashion",
-      products: 892,
-      seoScore: 45,
-      keywords: ["mens fashion", "menswear", "style"],
-      lastOptimized: "2023-12-20",
-      status: "needs_work",
-    },
-    {
-      id: "3",
-      name: "About Our Brand",
-      type: "cms_page",
-      slug: "about-brand",
-      products: 0,
-      seoScore: 32,
-      keywords: ["brand story", "company history"],
-      lastOptimized: "2023-11-10",
-      status: "critical",
-    },
-    {
-      id: "4",
-      name: "Apple Products",
-      type: "brand_page",
-      slug: "apple-products",
-      products: 156,
-      seoScore: 85,
-      metaTitle: "Apple Products | Official Apple Store",
-      metaDescription: "Shop the latest Apple products including iPhone, iPad, Mac...",
-      keywords: ["apple products", "iphone", "ipad", "macbook"],
-      lastOptimized: "2024-01-18",
-      status: "optimized",
-    },
-  ];
+  const notifications = useNotifications();
+  const loading = useLoading();
+  const confirmation = useConfirmation();
 
-  const recommendations: SEORecommendation[] = [
-    {
-      id: "1",
-      type: "title",
-      priority: "high",
-      description: "Add target keywords to meta title",
-      impact: "Can improve rankings by 15-25%",
-    },
-    {
-      id: "2",
-      type: "description",
-      priority: "medium",
-      description: "Optimize meta description length (120-160 chars)",
-      impact: "Better CTR from search results",
-    },
-    {
-      id: "3",
-      type: "keywords",
-      priority: "high",
-      description: "Add long-tail keyword variations",
-      impact: "Capture more specific search queries",
-    },
-    {
-      id: "4",
-      type: "breadcrumbs",
-      priority: "low",
-      description: "Implement breadcrumb schema markup",
-      impact: "Enhanced search result display",
-    },
-  ];
+  // Load collections data
+  useEffect(() => {
+    loadCollectionsData();
+  }, []);
+
+  const loadCollectionsData = async () => {
+    loading.start("loadCollections");
+    try {
+      const data = await collectionService.getCollectionsSEOData();
+      setSeoData(data);
+    } catch (error) {
+      console.error("Failed to load collections data:", error);
+    } finally {
+      loading.stop("loadCollections");
+    }
+  };
+
+  const handleSyncFromPlatforms = async () => {
+    const confirmed = await confirmation.confirm({
+      title: "Sync Collections from Platforms",
+      description:
+        "This will fetch and sync collections, categories, CMS pages, and brand pages from your connected platforms. This may take a few minutes.",
+      confirmText: "Sync Now",
+    });
+
+    if (!confirmed) return;
+
+    loading.start("syncPlatforms");
+    try {
+      const result = await collectionService.syncCollectionsFromPlatforms();
+
+      if (result.success) {
+        notifications.showSuccess(
+          `Successfully synced ${result.synced} collections`,
+        );
+        await loadCollectionsData(); // Reload data
+      } else {
+        notifications.showWarning("Sync completed with some issues");
+        result.errors.forEach((error) => notifications.showError(error));
+      }
+    } catch (error) {
+      console.error("Sync failed:", error);
+    } finally {
+      loading.stop("syncPlatforms");
+    }
+  };
+
+  const handleEditCollection = (collection: Collection) => {
+    setEditingCollection(collection);
+    setEditForm({
+      metaTitle: collection.metaTitle || "",
+      metaDescription: collection.metaDescription || "",
+      keywords: collection.keywords || [],
+      content: collection.content || "",
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleSaveCollection = async () => {
+    if (!editingCollection) return;
+
+    loading.start("saveCollection");
+    try {
+      const updated = await collectionService.updateCollectionSEO(
+        editingCollection.id,
+        editForm,
+      );
+
+      // Update local data
+      if (seoData) {
+        const updatedCollections = seoData.collections.map((c) =>
+          c.id === editingCollection.id ? updated : c,
+        );
+        setSeoData({
+          ...seoData,
+          collections: updatedCollections,
+        });
+      }
+
+      setIsEditDialogOpen(false);
+      setEditingCollection(null);
+    } catch (error) {
+      console.error("Failed to save collection:", error);
+    } finally {
+      loading.stop("saveCollection");
+    }
+  };
+
+  const handleApplyAIOptimization = async (
+    collectionId: string,
+    type: "title" | "description" | "keywords" | "all",
+  ) => {
+    loading.start(`optimize_${collectionId}`);
+    try {
+      const optimized = await collectionService.applySEOOptimization(
+        collectionId,
+        type,
+      );
+
+      // Update local data
+      if (seoData) {
+        const updatedCollections = seoData.collections.map((c) =>
+          c.id === collectionId ? optimized : c,
+        );
+        setSeoData({
+          ...seoData,
+          collections: updatedCollections,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to apply AI optimization:", error);
+    } finally {
+      loading.stop(`optimize_${collectionId}`);
+    }
+  };
+
+  const handleBulkOptimize = async () => {
+    const collectionsToOptimize =
+      seoData?.collections.filter((c) => c.status !== "optimized") || [];
+
+    if (collectionsToOptimize.length === 0) {
+      notifications.showInfo("All collections are already optimized!");
+      return;
+    }
+
+    const confirmed = await confirmation.confirm({
+      title: "Bulk SEO Optimization",
+      description: `This will apply AI optimization to ${collectionsToOptimize.length} collections that need improvement. Continue?`,
+      confirmText: "Optimize All",
+    });
+
+    if (!confirmed) return;
+
+    loading.start("bulkOptimize");
+    try {
+      const result = await collectionService.bulkOptimizeCollections(
+        collectionsToOptimize.map((c) => c.id),
+        "all",
+      );
+
+      if (result.success) {
+        notifications.showSuccess(
+          `Successfully optimized ${result.processed} collections`,
+        );
+        await loadCollectionsData(); // Reload data
+      } else {
+        notifications.showWarning(
+          "Bulk optimization completed with some issues",
+        );
+        result.errors.forEach((error) => notifications.showError(error));
+      }
+    } catch (error) {
+      console.error("Bulk optimization failed:", error);
+    } finally {
+      loading.stop("bulkOptimize");
+    }
+  };
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case "collection": return <Folder className="h-4 w-4" />;
-      case "category": return <Tags className="h-4 w-4" />;
-      case "cms_page": return <FileText className="h-4 w-4" />;
-      case "brand_page": return <Crown className="h-4 w-4" />;
-      default: return <Folder className="h-4 w-4" />;
+      case "collection":
+        return <Folder className="h-4 w-4" />;
+      case "category":
+        return <Tags className="h-4 w-4" />;
+      case "cms_page":
+        return <FileText className="h-4 w-4" />;
+      case "brand_page":
+        return <Crown className="h-4 w-4" />;
+      default:
+        return <Folder className="h-4 w-4" />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "optimized": return "text-green-600";
-      case "needs_work": return "text-yellow-600";
-      case "critical": return "text-red-600";
-      default: return "text-gray-600";
+      case "optimized":
+        return "text-green-600";
+      case "needs_work":
+        return "text-yellow-600";
+      case "critical":
+        return "text-red-600";
+      default:
+        return "text-gray-600";
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "high": return "destructive";
-      case "medium": return "secondary";
-      case "low": return "outline";
-      default: return "outline";
+      case "high":
+        return "destructive";
+      case "medium":
+        return "secondary";
+      case "low":
+        return "outline";
+      default:
+        return "outline";
     }
   };
+
+  const getFilteredCollections = (type: string) => {
+    if (!seoData) return [];
+    return seoData.collections.filter((c) => c.type === type);
+  };
+
+  if (loading.isLoading("loadCollections")) {
+    return (
+      <Layout>
+        <div className="container mx-auto px-6 py-6">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center">
+              <Loader className="h-8 w-8 animate-spin mx-auto mb-4" />
+              <p className="text-muted-foreground">
+                Loading collections data...
+              </p>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -184,28 +299,50 @@ export default function CollectionSEOPage() {
 
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Collection & Category SEO</h1>
+            <h1 className="text-3xl font-bold text-foreground">
+              Collection & Category SEO
+            </h1>
             <p className="text-muted-foreground">
-              Optimize collections, categories, CMS pages, and brand pages for maximum search visibility
+              Optimize collections, categories, CMS pages, and brand pages for
+              maximum search visibility
             </p>
           </div>
           <div className="flex items-center space-x-3">
             <Badge variant="secondary" className="text-xs">
               🤖 AI-Powered SEO
             </Badge>
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Create Collection
+            <Button
+              onClick={handleSyncFromPlatforms}
+              disabled={loading.isLoading("syncPlatforms")}
+            >
+              {loading.isLoading("syncPlatforms") ? (
+                <Loader className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <RefreshCw className="h-4 w-4 mr-2" />
+              )}
+              Sync from Platforms
             </Button>
           </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-6"
+        >
           <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="collections">Collections</TabsTrigger>
-            <TabsTrigger value="categories">Categories</TabsTrigger>
-            <TabsTrigger value="cms">CMS Pages</TabsTrigger>
-            <TabsTrigger value="brands">Brand Pages</TabsTrigger>
+            <TabsTrigger value="collections">
+              Collections ({getFilteredCollections("collection").length})
+            </TabsTrigger>
+            <TabsTrigger value="categories">
+              Categories ({getFilteredCollections("category").length})
+            </TabsTrigger>
+            <TabsTrigger value="cms">
+              CMS Pages ({getFilteredCollections("cms_page").length})
+            </TabsTrigger>
+            <TabsTrigger value="brands">
+              Brand Pages ({getFilteredCollections("brand_page").length})
+            </TabsTrigger>
             <TabsTrigger value="optimization">AI Optimization</TabsTrigger>
           </TabsList>
 
@@ -220,43 +357,78 @@ export default function CollectionSEOPage() {
                       Smart Collections
                     </CardTitle>
                     <p className="text-sm text-muted-foreground">
-                      SEO-optimized collections based on keyword data and search trends
+                      SEO-optimized collections based on keyword data and search
+                      trends
                     </p>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {collections
-                        .filter(c => c.type === "collection")
-                        .map((collection) => (
-                          <div
-                            key={collection.id}
-                            className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 cursor-pointer"
-                            onClick={() => setSelectedCollection(collection)}
-                          >
-                            <div className="flex items-center space-x-4">
-                              <div className="flex items-center gap-2">
-                                {getTypeIcon(collection.type)}
-                                <div>
-                                  <h3 className="font-medium">{collection.name}</h3>
-                                  <p className="text-sm text-muted-foreground">
-                                    /{collection.slug} • {collection.products} products
-                                  </p>
+                      {getFilteredCollections("collection").length === 0 ? (
+                        <div className="text-center py-8">
+                          <p className="text-muted-foreground">
+                            No collections found. Sync from your connected
+                            platforms to get started.
+                          </p>
+                        </div>
+                      ) : (
+                        getFilteredCollections("collection").map(
+                          (collection) => (
+                            <div
+                              key={collection.id}
+                              className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 cursor-pointer"
+                              onClick={() => setSelectedCollection(collection)}
+                            >
+                              <div className="flex items-center space-x-4">
+                                <div className="flex items-center gap-2">
+                                  {getTypeIcon(collection.type)}
+                                  <div>
+                                    <h3 className="font-medium">
+                                      {collection.name}
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground">
+                                      /{collection.slug} • {collection.products}{" "}
+                                      products
+                                      {collection.platform &&
+                                        ` • ${collection.platform}`}
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                            <div className="flex items-center space-x-4">
-                              <div className="text-center">
-                                <div className={`text-lg font-bold ${getStatusColor(collection.status)}`}>
-                                  {collection.seoScore}/100
+                              <div className="flex items-center space-x-4">
+                                <div className="text-center">
+                                  <div
+                                    className={`text-lg font-bold ${getStatusColor(collection.status)}`}
+                                  >
+                                    {collection.seoScore}/100
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    SEO Score
+                                  </div>
                                 </div>
-                                <div className="text-xs text-muted-foreground">SEO Score</div>
+                                <Badge
+                                  variant={
+                                    collection.status === "optimized"
+                                      ? "default"
+                                      : "destructive"
+                                  }
+                                >
+                                  {collection.status}
+                                </Badge>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleEditCollection(collection);
+                                  }}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
                               </div>
-                              <Badge variant={collection.status === "optimized" ? "default" : "destructive"}>
-                                {collection.status}
-                              </Badge>
                             </div>
-                          </div>
-                        ))}
+                          ),
+                        )
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -271,9 +443,18 @@ export default function CollectionSEOPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <Button className="w-full" variant="outline">
-                      <Bot className="h-4 w-4 mr-2" />
-                      AI Collection Generator
+                    <Button
+                      className="w-full"
+                      variant="outline"
+                      onClick={handleBulkOptimize}
+                      disabled={loading.isLoading("bulkOptimize")}
+                    >
+                      {loading.isLoading("bulkOptimize") ? (
+                        <Loader className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Bot className="h-4 w-4 mr-2" />
+                      )}
+                      Bulk SEO Optimization
                     </Button>
                     <Button className="w-full" variant="outline">
                       <Search className="h-4 w-4 mr-2" />
@@ -281,7 +462,7 @@ export default function CollectionSEOPage() {
                     </Button>
                     <Button className="w-full" variant="outline">
                       <Target className="h-4 w-4 mr-2" />
-                      Bulk SEO Optimization
+                      SEO Analysis Report
                     </Button>
                     <Button className="w-full" variant="outline">
                       <Navigation className="h-4 w-4 mr-2" />
@@ -290,29 +471,48 @@ export default function CollectionSEOPage() {
                   </CardContent>
                 </Card>
 
-                <Card className="mt-6">
-                  <CardHeader>
-                    <CardTitle>SEO Performance</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div>
-                        <div className="flex justify-between text-sm mb-1">
-                          <span>Average SEO Score</span>
-                          <span className="font-medium">67/100</span>
+                {seoData && (
+                  <Card className="mt-6">
+                    <CardHeader>
+                      <CardTitle>SEO Performance</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>Average SEO Score</span>
+                            <span className="font-medium">
+                              {seoData.stats.averageScore}/100
+                            </span>
+                          </div>
+                          <Progress
+                            value={seoData.stats.averageScore}
+                            className="h-2"
+                          />
                         </div>
-                        <Progress value={67} className="h-2" />
-                      </div>
-                      <div>
-                        <div className="flex justify-between text-sm mb-1">
-                          <span>Optimized Collections</span>
-                          <span className="font-medium">12/28</span>
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>Optimized Collections</span>
+                            <span className="font-medium">
+                              {seoData.stats.optimizedCount}/
+                              {seoData.stats.totalCollections}
+                            </span>
+                          </div>
+                          <Progress
+                            value={
+                              seoData.stats.totalCollections > 0
+                                ? (seoData.stats.optimizedCount /
+                                    seoData.stats.totalCollections) *
+                                  100
+                                : 0
+                            }
+                            className="h-2"
+                          />
                         </div>
-                        <Progress value={43} className="h-2" />
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             </div>
           </TabsContent>
@@ -328,22 +528,43 @@ export default function CollectionSEOPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {collections
-                    .filter(c => c.type === "category")
-                    .map((category) => (
+                  {getFilteredCollections("category").length === 0 ? (
+                    <div className="text-center py-8">
+                      <p className="text-muted-foreground">
+                        No categories found. Sync from your connected platforms
+                        to get started.
+                      </p>
+                    </div>
+                  ) : (
+                    getFilteredCollections("category").map((category) => (
                       <div key={category.id} className="border rounded-lg p-4">
                         <div className="flex items-center justify-between mb-4">
                           <div>
                             <h3 className="font-semibold">{category.name}</h3>
                             <p className="text-sm text-muted-foreground">
-                              {category.products} products • Last optimized: {category.lastOptimized}
+                              {category.products} products • Last optimized:{" "}
+                              {new Date(
+                                category.lastOptimized,
+                              ).toLocaleDateString()}
+                              {category.platform &&
+                                ` • Platform: ${category.platform}`}
                             </p>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <Badge variant={category.status === "optimized" ? "default" : "destructive"}>
+                            <Badge
+                              variant={
+                                category.status === "optimized"
+                                  ? "default"
+                                  : "destructive"
+                              }
+                            >
                               SEO Score: {category.seoScore}/100
                             </Badge>
-                            <Button size="sm" variant="outline">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleEditCollection(category)}
+                            >
                               <Edit className="h-4 w-4" />
                             </Button>
                           </div>
@@ -351,25 +572,68 @@ export default function CollectionSEOPage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <label className="text-sm font-medium">Category Keywords:</label>
+                            <label className="text-sm font-medium">
+                              Category Keywords:
+                            </label>
                             <div className="flex flex-wrap gap-1 mt-1">
                               {category.keywords.map((keyword, index) => (
-                                <Badge key={index} variant="secondary" className="text-xs">
+                                <Badge
+                                  key={index}
+                                  variant="secondary"
+                                  className="text-xs"
+                                >
                                   {keyword}
                                 </Badge>
                               ))}
                             </div>
                           </div>
                           <div>
-                            <label className="text-sm font-medium">Quick Actions:</label>
+                            <label className="text-sm font-medium">
+                              Quick Actions:
+                            </label>
                             <div className="flex gap-2 mt-1">
-                              <Button size="sm" variant="outline">Generate Description</Button>
-                              <Button size="sm" variant="outline">Optimize Keywords</Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  handleApplyAIOptimization(
+                                    category.id,
+                                    "description",
+                                  )
+                                }
+                                disabled={loading.isLoading(
+                                  `optimize_${category.id}`,
+                                )}
+                              >
+                                {loading.isLoading(
+                                  `optimize_${category.id}`,
+                                ) ? (
+                                  <Loader className="h-3 w-3 animate-spin" />
+                                ) : (
+                                  "Generate Description"
+                                )}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  handleApplyAIOptimization(
+                                    category.id,
+                                    "keywords",
+                                  )
+                                }
+                                disabled={loading.isLoading(
+                                  `optimize_${category.id}`,
+                                )}
+                              >
+                                Optimize Keywords
+                              </Button>
                             </div>
                           </div>
                         </div>
                       </div>
-                    ))}
+                    ))
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -389,72 +653,122 @@ export default function CollectionSEOPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  {collections
-                    .filter(c => c.type === "cms_page")
-                    .map((page) => (
+                  {getFilteredCollections("cms_page").length === 0 ? (
+                    <div className="text-center py-8">
+                      <p className="text-muted-foreground">
+                        No CMS pages found. Sync from your connected platforms
+                        to get started.
+                      </p>
+                    </div>
+                  ) : (
+                    getFilteredCollections("cms_page").map((page) => (
                       <div key={page.id} className="border rounded-lg p-6">
                         <div className="flex items-center justify-between mb-4">
                           <div>
-                            <h3 className="font-semibold text-lg">{page.name}</h3>
-                            <p className="text-sm text-muted-foreground">/{page.slug}</p>
+                            <h3 className="font-semibold text-lg">
+                              {page.name}
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              /{page.slug}
+                              {page.platform && ` • Platform: ${page.platform}`}
+                            </p>
                           </div>
-                          <Badge variant="destructive">
-                            Critical: {page.seoScore}/100
-                          </Badge>
+                          <div className="flex items-center space-x-2">
+                            <Badge
+                              variant={
+                                page.status === "critical"
+                                  ? "destructive"
+                                  : page.status === "optimized"
+                                    ? "default"
+                                    : "secondary"
+                              }
+                            >
+                              {page.status === "critical"
+                                ? "Critical"
+                                : `SEO Score`}
+                              : {page.seoScore}/100
+                            </Badge>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleEditCollection(page)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="space-y-4">
                             <div>
-                              <label className="text-sm font-medium">Meta Title:</label>
-                              <Input
-                                placeholder="Add compelling meta title..."
-                                className="mt-1"
-                              />
+                              <label className="text-sm font-medium">
+                                Meta Title:
+                              </label>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {page.metaTitle || "Not set"}
+                              </p>
                             </div>
                             <div>
-                              <label className="text-sm font-medium">Meta Description:</label>
-                              <Textarea
-                                placeholder="Add engaging meta description..."
-                                className="mt-1"
-                                rows={3}
-                              />
+                              <label className="text-sm font-medium">
+                                Meta Description:
+                              </label>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {page.metaDescription || "Not set"}
+                              </p>
                             </div>
                           </div>
                           <div className="space-y-4">
                             <div>
-                              <label className="text-sm font-medium">Target Keywords:</label>
-                              <Input
-                                placeholder="brand story, company history..."
-                                className="mt-1"
-                              />
+                              <label className="text-sm font-medium">
+                                Target Keywords:
+                              </label>
+                              <div className="flex flex-wrap gap-1 mt-1">
+                                {page.keywords.length > 0 ? (
+                                  page.keywords.map((keyword, index) => (
+                                    <Badge
+                                      key={index}
+                                      variant="secondary"
+                                      className="text-xs"
+                                    >
+                                      {keyword}
+                                    </Badge>
+                                  ))
+                                ) : (
+                                  <span className="text-sm text-muted-foreground">
+                                    No keywords set
+                                  </span>
+                                )}
+                              </div>
                             </div>
                             <div>
-                              <label className="text-sm font-medium">SEO Recommendations:</label>
-                              <div className="space-y-2 mt-1">
-                                <div className="flex items-center justify-between text-sm p-2 border rounded">
-                                  <span>Add schema markup</span>
-                                  <Badge variant="destructive" className="text-xs">High</Badge>
-                                </div>
-                                <div className="flex items-center justify-between text-sm p-2 border rounded">
-                                  <span>Optimize content length</span>
-                                  <Badge variant="secondary" className="text-xs">Medium</Badge>
-                                </div>
+                              <label className="text-sm font-medium">
+                                Quick Actions:
+                              </label>
+                              <div className="flex gap-2 mt-1">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() =>
+                                    handleApplyAIOptimization(page.id, "all")
+                                  }
+                                  disabled={loading.isLoading(
+                                    `optimize_${page.id}`,
+                                  )}
+                                >
+                                  {loading.isLoading(`optimize_${page.id}`) ? (
+                                    <Loader className="h-3 w-3 mr-1 animate-spin" />
+                                  ) : (
+                                    <Bot className="h-3 w-3 mr-1" />
+                                  )}
+                                  AI Optimize
+                                </Button>
                               </div>
                             </div>
                           </div>
                         </div>
-
-                        <div className="flex gap-2 mt-4">
-                          <Button>Save Changes</Button>
-                          <Button variant="outline">Preview</Button>
-                          <Button variant="outline">
-                            <Bot className="h-4 w-4 mr-2" />
-                            AI Optimize
-                          </Button>
-                        </div>
                       </div>
-                    ))}
+                    ))
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -474,9 +788,15 @@ export default function CollectionSEOPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {collections
-                    .filter(c => c.type === "brand_page")
-                    .map((brand) => (
+                  {getFilteredCollections("brand_page").length === 0 ? (
+                    <div className="text-center py-8">
+                      <p className="text-muted-foreground">
+                        No brand pages found. Sync from your connected platforms
+                        to get started.
+                      </p>
+                    </div>
+                  ) : (
+                    getFilteredCollections("brand_page").map((brand) => (
                       <div key={brand.id} className="border rounded-lg p-4">
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-3">
@@ -484,42 +804,85 @@ export default function CollectionSEOPage() {
                             <div>
                               <h3 className="font-semibold">{brand.name}</h3>
                               <p className="text-sm text-muted-foreground">
-                                {brand.products} products • Excellent SEO performance
+                                {brand.products} products • SEO Score:{" "}
+                                {brand.seoScore}/100
+                                {brand.platform &&
+                                  ` • Platform: ${brand.platform}`}
                               </p>
                             </div>
                           </div>
-                          <Badge variant="default">
-                            Optimized: {brand.seoScore}/100
-                          </Badge>
+                          <div className="flex items-center space-x-2">
+                            <Badge
+                              variant={
+                                brand.status === "optimized"
+                                  ? "default"
+                                  : "secondary"
+                              }
+                            >
+                              {brand.status}
+                            </Badge>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleEditCollection(brand)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div>
-                            <label className="text-sm font-medium">Brand Keywords:</label>
+                            <label className="text-sm font-medium">
+                              Brand Keywords:
+                            </label>
                             <div className="flex flex-wrap gap-1 mt-1">
                               {brand.keywords.map((keyword, index) => (
-                                <Badge key={index} variant="secondary" className="text-xs">
+                                <Badge
+                                  key={index}
+                                  variant="secondary"
+                                  className="text-xs"
+                                >
                                   {keyword}
                                 </Badge>
                               ))}
                             </div>
                           </div>
                           <div>
-                            <label className="text-sm font-medium">Meta Title:</label>
+                            <label className="text-sm font-medium">
+                              Meta Title:
+                            </label>
                             <p className="text-sm text-muted-foreground mt-1">
-                              {brand.metaTitle}
+                              {brand.metaTitle || "Not set"}
                             </p>
                           </div>
                           <div>
-                            <label className="text-sm font-medium">Actions:</label>
+                            <label className="text-sm font-medium">
+                              Actions:
+                            </label>
                             <div className="flex gap-2 mt-1">
-                              <Button size="sm" variant="outline">Edit</Button>
-                              <Button size="sm" variant="outline">Analytics</Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  handleApplyAIOptimization(brand.id, "all")
+                                }
+                                disabled={loading.isLoading(
+                                  `optimize_${brand.id}`,
+                                )}
+                              >
+                                {loading.isLoading(`optimize_${brand.id}`) ? (
+                                  <Loader className="h-3 w-3 animate-spin" />
+                                ) : (
+                                  "Optimize"
+                                )}
+                              </Button>
                             </div>
                           </div>
                         </div>
                       </div>
-                    ))}
+                    ))
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -537,21 +900,37 @@ export default function CollectionSEOPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {recommendations.map((rec) => (
+                    {seoData?.recommendations.map((rec) => (
                       <div key={rec.id} className="border rounded-lg p-4">
                         <div className="flex items-start justify-between mb-2">
                           <h4 className="font-medium">{rec.description}</h4>
-                          <Badge variant={getPriorityColor(rec.priority)} className="text-xs">
+                          <Badge
+                            variant={getPriorityColor(rec.priority)}
+                            className="text-xs"
+                          >
                             {rec.priority}
                           </Badge>
                         </div>
-                        <p className="text-sm text-muted-foreground mb-3">{rec.impact}</p>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {rec.impact}
+                        </p>
                         <div className="flex gap-2">
-                          <Button size="sm">Apply Fix</Button>
-                          <Button size="sm" variant="outline">Learn More</Button>
+                          <Button size="sm" onClick={handleBulkOptimize}>
+                            Apply Fix
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            Learn More
+                          </Button>
                         </div>
                       </div>
-                    ))}
+                    )) || (
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground">
+                          No recommendations available. Add some collections
+                          first.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -564,57 +943,217 @@ export default function CollectionSEOPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-6">
-                    <div>
-                      <h4 className="font-medium mb-3">Potential Traffic Increase</h4>
-                      <div className="space-y-3">
-                        <div>
-                          <div className="flex justify-between text-sm mb-1">
-                            <span>Collections Optimization</span>
-                            <span className="font-medium">+25%</span>
+                  {seoData ? (
+                    <div className="space-y-6">
+                      <div>
+                        <h4 className="font-medium mb-3">
+                          Collection Status Overview
+                        </h4>
+                        <div className="space-y-3">
+                          <div>
+                            <div className="flex justify-between text-sm mb-1">
+                              <span>Optimized</span>
+                              <span className="font-medium">
+                                {seoData.stats.optimizedCount}
+                              </span>
+                            </div>
+                            <Progress
+                              value={
+                                seoData.stats.totalCollections > 0
+                                  ? (seoData.stats.optimizedCount /
+                                      seoData.stats.totalCollections) *
+                                    100
+                                  : 0
+                              }
+                              className="h-2"
+                            />
                           </div>
-                          <Progress value={75} className="h-2" />
-                        </div>
-                        <div>
-                          <div className="flex justify-between text-sm mb-1">
-                            <span>Category Pages</span>
-                            <span className="font-medium">+18%</span>
+                          <div>
+                            <div className="flex justify-between text-sm mb-1">
+                              <span>Needs Work</span>
+                              <span className="font-medium">
+                                {seoData.stats.needsWorkCount}
+                              </span>
+                            </div>
+                            <Progress
+                              value={
+                                seoData.stats.totalCollections > 0
+                                  ? (seoData.stats.needsWorkCount /
+                                      seoData.stats.totalCollections) *
+                                    100
+                                  : 0
+                              }
+                              className="h-2"
+                            />
                           </div>
-                          <Progress value={60} className="h-2" />
-                        </div>
-                        <div>
-                          <div className="flex justify-between text-sm mb-1">
-                            <span>Brand Pages</span>
-                            <span className="font-medium">+35%</span>
+                          <div>
+                            <div className="flex justify-between text-sm mb-1">
+                              <span>Critical</span>
+                              <span className="font-medium">
+                                {seoData.stats.criticalCount}
+                              </span>
+                            </div>
+                            <Progress
+                              value={
+                                seoData.stats.totalCollections > 0
+                                  ? (seoData.stats.criticalCount /
+                                      seoData.stats.totalCollections) *
+                                    100
+                                  : 0
+                              }
+                              className="h-2"
+                            />
                           </div>
-                          <Progress value={85} className="h-2" />
                         </div>
                       </div>
-                    </div>
 
-                    <div>
-                      <h4 className="font-medium mb-3">Implementation Priority</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-sm p-2 bg-red-50 rounded">
-                          <span>Fix critical CMS pages</span>
-                          <Badge variant="destructive" className="text-xs">Urgent</Badge>
-                        </div>
-                        <div className="flex items-center justify-between text-sm p-2 bg-yellow-50 rounded">
-                          <span>Optimize category structure</span>
-                          <Badge variant="secondary" className="text-xs">High</Badge>
-                        </div>
-                        <div className="flex items-center justify-between text-sm p-2 bg-green-50 rounded">
-                          <span>Enhance brand pages</span>
-                          <Badge variant="outline" className="text-xs">Medium</Badge>
+                      <div>
+                        <h4 className="font-medium mb-3">
+                          Implementation Priority
+                        </h4>
+                        <div className="space-y-2">
+                          {seoData.stats.criticalCount > 0 && (
+                            <div className="flex items-center justify-between text-sm p-2 bg-red-50 rounded">
+                              <span>
+                                Fix critical pages (
+                                {seoData.stats.criticalCount})
+                              </span>
+                              <Badge variant="destructive" className="text-xs">
+                                Urgent
+                              </Badge>
+                            </div>
+                          )}
+                          {seoData.stats.needsWorkCount > 0 && (
+                            <div className="flex items-center justify-between text-sm p-2 bg-yellow-50 rounded">
+                              <span>
+                                Optimize pages needing work (
+                                {seoData.stats.needsWorkCount})
+                              </span>
+                              <Badge variant="secondary" className="text-xs">
+                                High
+                              </Badge>
+                            </div>
+                          )}
+                          {seoData.stats.optimizedCount > 0 && (
+                            <div className="flex items-center justify-between text-sm p-2 bg-green-50 rounded">
+                              <span>
+                                Maintain optimized pages (
+                                {seoData.stats.optimizedCount})
+                              </span>
+                              <Badge variant="outline" className="text-xs">
+                                Low
+                              </Badge>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <p className="text-muted-foreground">
+                        No data available. Sync collections first.
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
           </TabsContent>
         </Tabs>
+
+        {/* Edit Collection Dialog */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Edit Collection SEO</DialogTitle>
+              <DialogDescription>
+                Update the SEO settings for {editingCollection?.name}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <label htmlFor="metaTitle">Meta Title</label>
+                <Input
+                  id="metaTitle"
+                  value={editForm.metaTitle}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, metaTitle: e.target.value })
+                  }
+                  placeholder="Enter compelling meta title..."
+                />
+                <p className="text-xs text-muted-foreground">
+                  {editForm.metaTitle.length}/60 characters
+                </p>
+              </div>
+              <div className="grid gap-2">
+                <label htmlFor="metaDescription">Meta Description</label>
+                <Textarea
+                  id="metaDescription"
+                  value={editForm.metaDescription}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      metaDescription: e.target.value,
+                    })
+                  }
+                  placeholder="Enter engaging meta description..."
+                  rows={3}
+                />
+                <p className="text-xs text-muted-foreground">
+                  {editForm.metaDescription.length}/160 characters
+                </p>
+              </div>
+              <div className="grid gap-2">
+                <label htmlFor="keywords">Keywords (comma-separated)</label>
+                <Input
+                  id="keywords"
+                  value={editForm.keywords.join(", ")}
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      keywords: e.target.value
+                        .split(",")
+                        .map((k) => k.trim())
+                        .filter((k) => k.length > 0),
+                    })
+                  }
+                  placeholder="keyword1, keyword2, keyword3..."
+                />
+              </div>
+              <div className="grid gap-2">
+                <label htmlFor="content">Content</label>
+                <Textarea
+                  id="content"
+                  value={editForm.content}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, content: e.target.value })
+                  }
+                  placeholder="Enter collection description/content..."
+                  rows={4}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setIsEditDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSaveCollection}
+                disabled={loading.isLoading("saveCollection")}
+              >
+                {loading.isLoading("saveCollection") ? (
+                  <Loader className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Save className="h-4 w-4 mr-2" />
+                )}
+                Save Changes
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </Layout>
   );

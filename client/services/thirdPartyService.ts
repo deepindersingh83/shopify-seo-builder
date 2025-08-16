@@ -433,6 +433,26 @@ class ThirdPartyService {
   // Integration Management
   async getThirdPartyIntegrations(): Promise<ThirdPartyIntegration[]> {
     const response = await fetch(`${this.baseUrl}/integrations`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch integrations: ${response.statusText}`);
+    }
+    return response.json();
+  }
+
+  async connectService(
+    service: string,
+    credentials: any,
+    settings?: any,
+  ): Promise<ThirdPartyIntegration> {
+    const response = await fetch(`${this.baseUrl}/connect`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ service, credentials, settings }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to connect service");
+    }
     return response.json();
   }
 
@@ -445,13 +465,19 @@ class ThirdPartyService {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updates),
     });
+    if (!response.ok) {
+      throw new Error(`Failed to update integration: ${response.statusText}`);
+    }
     return response.json();
   }
 
   async deleteIntegration(id: string): Promise<void> {
-    await fetch(`${this.baseUrl}/integrations/${id}`, {
+    const response = await fetch(`${this.baseUrl}/integrations/${id}`, {
       method: "DELETE",
     });
+    if (!response.ok) {
+      throw new Error(`Failed to delete integration: ${response.statusText}`);
+    }
   }
 
   async testIntegration(
@@ -460,6 +486,26 @@ class ThirdPartyService {
     const response = await fetch(`${this.baseUrl}/integrations/${id}/test`, {
       method: "POST",
     });
+    if (!response.ok) {
+      throw new Error(`Failed to test integration: ${response.statusText}`);
+    }
+    return response.json();
+  }
+
+  async syncIntegration(
+    id: string,
+  ): Promise<{
+    success: boolean;
+    message: string;
+    recordsProcessed?: number;
+    lastSync?: string;
+  }> {
+    const response = await fetch(`${this.baseUrl}/integrations/${id}/sync`, {
+      method: "POST",
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to sync integration: ${response.statusText}`);
+    }
     return response.json();
   }
 
@@ -502,78 +548,6 @@ class ThirdPartyService {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(schedule),
     });
-  }
-
-  // Mock data generators
-  generateMockSearchConsoleData(): GoogleSearchConsoleData {
-    return {
-      url: "https://example.com/product/123",
-      clicks: 1250,
-      impressions: 15000,
-      ctr: 8.33,
-      position: 3.2,
-      queries: [
-        "premium electronics device",
-        "best wireless headphones",
-        "noise cancelling headphones",
-        "bluetooth headphones review",
-      ],
-    };
-  }
-
-  generateMockAnalyticsData(): GoogleAnalyticsData {
-    return {
-      pageviews: 5420,
-      uniquePageviews: 4350,
-      bounceRate: 35.5,
-      avgTimeOnPage: 145.8,
-      conversions: 89,
-      conversionRate: 2.05,
-    };
-  }
-
-  generateMockPageSpeedData(): PageSpeedData {
-    return {
-      desktopScore: 94,
-      mobileScore: 87,
-      coreWebVitals: {
-        lcp: 2.1,
-        fid: 85,
-        cls: 0.08,
-      },
-      opportunities: [
-        {
-          title: "Optimize images",
-          description:
-            "Properly size images to save cellular data and improve load time",
-          impact: "medium",
-          savings: 0.8,
-        },
-        {
-          title: "Enable text compression",
-          description:
-            "Text-based resources should be served with compression to minimize network bytes",
-          impact: "low",
-          savings: 0.3,
-        },
-      ],
-    };
-  }
-
-  generateMockSEMrushData(): SEOToolData {
-    return {
-      difficulty: 68,
-      searchVolume: 12000,
-      competitorCount: 45,
-      suggestions: [
-        "wireless bluetooth headphones",
-        "noise cancelling earbuds",
-        "premium audio devices",
-        "professional headphones",
-      ],
-      backlinks: 156,
-      domainAuthority: 72,
-    };
   }
 }
 

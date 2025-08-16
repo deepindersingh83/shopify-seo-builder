@@ -151,6 +151,62 @@ export default function BulkEditPage() {
     }
   };
 
+  const handleImportCSV = () => {
+    // Create a hidden input element for file selection
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".csv";
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        alert(
+          `File selected: ${file.name}. Import functionality would parse CSV and update products.`,
+        );
+        // In a real app, you would parse the CSV and process it
+      }
+    };
+    input.click();
+  };
+
+  const handleExportCSV = () => {
+    const csvData = Array.from(selectedProducts).map((productId) => {
+      const product = products.find((p) => p.id === productId);
+      return {
+        id: product?.id || "",
+        title: product?.title || "",
+        status: product?.status || "",
+        vendor: product?.vendor || "",
+        price: product?.price || 0,
+      };
+    });
+
+    if (csvData.length === 0) {
+      alert("No products selected for export. Please select products first.");
+      return;
+    }
+
+    // Convert to CSV format
+    const headers = ["ID", "Title", "Status", "Vendor", "Price"];
+    const csvContent = [
+      headers.join(","),
+      ...csvData.map(
+        (row) =>
+          `"${row.id}","${row.title}","${row.status}","${row.vendor}",${row.price}`,
+      ),
+    ].join("\n");
+
+    // Create and download the file
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `products-export-${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+
+    alert(`Exported ${csvData.length} products to CSV file.`);
+  };
+
   const startBulkOperation = (type: BulkOperation["type"]) => {
     const operation: BulkOperation = {
       id: `bulk-${Date.now()}`,
@@ -248,11 +304,11 @@ export default function BulkEditPage() {
               <Badge variant="outline" className="text-xs">
                 {selectedProducts.size} products selected
               </Badge>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={handleImportCSV}>
                 <Upload className="h-4 w-4 mr-2" />
                 Import CSV
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={handleExportCSV}>
                 <Download className="h-4 w-4 mr-2" />
                 Export CSV
               </Button>
